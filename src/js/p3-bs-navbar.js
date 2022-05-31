@@ -1,6 +1,13 @@
 "use strict";
 
-const P3BsNavbar = (function($) {
+(function ($) {
+
+    const $window = $(window);
+    const $document = $(document);
+
+    /**
+     * Constants
+     */
 
     const P3_NAME = 'p3bsnavbar';
 
@@ -49,35 +56,312 @@ const P3BsNavbar = (function($) {
     const isRTL = document.documentElement.dir === 'rtl';
 
 
+    $.fn.p3bsnavbar = function (options) {
+
+        var OPTIONS = $.extend($.fn.p3bsnavbar.defaults, options);
+
+        this.each(function() {
+            const $navbar = $(this);
+            const $toggles = $navbar.find(BS_SELECTOR_DATA_TOGGLE);
+            const OPT = {...OPTIONS};
+
+            // Determine navbar expand breakpoint
+            let breakpoint = getNavbarBreakpoint(this);
+            if (breakpoint) {
+                //console.log(breakpoint);
+                OPT.breakpoint = breakpoint;
+            }
+
+            // Dispatch custom event
+            $toggles.on(BS_EVENT_SHOW, function (e) {
+                //$(this).trigger(P3_EVENT_SHOW);
+                this.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
+            });
+
+            // Dispatch custom event
+            $toggles.on(BS_EVENT_HIDE, function (e) {
+                //$(this).trigger(P3_EVENT_HIDE);
+                this.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
+            });
+
+            $toggles.on(BS_EVENT_SHOWN, function (e) {
+                const $toggle = $(this);
+                const $dropdown = $toggle.closest(BS_SELECTOR_DROPDOWN);
+
+                let clientWidth = getClientWidth();
+                const $dropdownMenu = $dropdown.children(BS_SELECTOR_MENU).first();
+
+                if ($dropdown.length > 0) {
+                    $dropdown.addClass(BS_CLASS_SHOW);
+                }
+
+                setChildrenDropDirection($dropdown, $dropdownMenu, clientWidth, OPT.breakpoint);
+
+                if (OPT.closeOthers || clientWidth >= OPT.breakpoint) {
+                    closeOtherNavs($dropdown);
+                    closeSiblingDropdowns($dropdown);
+                }
+
+                // Dispatch custom event
+                //$(this).trigger(P3_EVENT_SHOWN);
+                this.dispatchEvent(new Event(P3_EVENT_SHOWN, P3_EVENT_OPTS));
+            });
+
+            $toggles.on(BS_EVENT_HIDDEN, function (e) {
+                const $toggle = $(this);
+                const $dropdown = $toggle.closest(BS_SELECTOR_DROPDOWN);
+
+                if ($dropdown.length > 0) {
+                    $dropdown.removeClass(BS_CLASS_SHOW);
+                }
+
+                closeInnerDropdowns($dropdown);
+
+                // Dispatch custom event
+                //$(this).trigger(P3_EVENT_HIDDEN);
+                this.dispatchEvent(new Event(P3_EVENT_HIDDEN, P3_EVENT_OPTS));
+            });
+
+            $toggles.on(BS_EVENT_CLICK_DATA_API, function (e) {
+                // Prevent bubbling and arent menu from closing
+                e.stopPropagation();
+
+                const $toggle = $(this);
+
+                //$toggle.trigger(P3_EVENT_CLICK);
+                this.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
+
+                // Remove any running timer
+                if (OPT.hover && OPT.timeout > 0) {
+                    let timeoutID = $toggle.data(P3_DATA_TIMEOUT_ID);
+                    if (timeoutID > 0) {
+                        clearTimeout(timeoutID);
+                    }
+                }
+            });
+
+            //------------------------------------------------------------------
+            // CLOSE MENUS ON OPT.breakpoint CROSSING
+            //------------------------------------------------------------------
+            handleBreakpointCrossing($navbar, OPT.breakpoint);
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
+            // HOVER DROPDOWN
+            //------------------------------------------------------------------
+            if (OPT.hover) {
+                activateHover($navbar, OPT.breakpoint, OPT.timeout)
+            }
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
+            // CLOSE EXTERNAL DROPDOWNS ON SHOWING NAVBAR DROPDOWNS
+            //------------------------------------------------------------------
+            $document.on(P3_EVENT_SHOWN, function (e) {
+                $(BS_SELECTOR_DATA_TOGGLE_SHOWN).each(function () {
+                    if (!$.contains($navbar[0], this)) {
+                        let toggle = bootstrap.Dropdown.getOrCreateInstance(this);
+                        toggle.hide();
+                    }
+                });
+            });
+            //------------------------------------------------------------------
+        });
+    };
+
+    $.fn.p3bsnavbar.defaults = {
+        breakpoint: 768,
+        hover: false,
+        timeout: 250,
+        closeOthers: false,
+    };
+
     function getClientWidth() {
         return Math.max(window.innerWidth, document.documentElement.clientWidth);
     }
 
     /**
-     * Get an Array of siblings of an HTMLElement
-     * @param {HTMLElement} element
-     * @param {string} selector
-     * @returns {Array}
+     * Hides all dropdowns inside the given container
+     *
+     * @param {jQuery} $container
+     * @param {Event} event
+     * @param {boolean} [stopPropagation=true]
+     * @returns {undefined}
      */
-    function getSiblings(element, selector = '*') {
-        let siblings = [];
+    function closeInnerDropdowns($container, event, stopPropagation = false) {
+        $container.find(BS_SELECTOR_DATA_TOGGLE_SHOWN).each(function () {
+            let toggle = bootstrap.Dropdown.getOrCreateInstance(this);
+            toggle.hide();
+        });
 
-        if (element instanceof HTMLElement) {
-            let parent = element.parentElement;
-            if (parent instanceof HTMLElement) {
-                parent.querySelectorAll(`:scope > ${selector}`).forEach(function(child) {
-                    if (child !== element && child instanceof HTMLElement) {
-                        siblings.push(child);
-                    }
-                });
-            }
-        }
-        
-        return siblings;
+        if (event instanceof $.Event && stopPropagation === true) {
+            event.stopPropagation();
+    }
     }
 
     /**
-     * Determine navbar expand breakpoint form expand-(sm|md|lg|xl) class if present
+     * Close siblings nav menu-items
+     *
+     * @param {type} $dropdown
+     * @param {type} event
+     * @param {type} stopPropagation
+     * @returns {undefined}
+     */
+    function closeSiblingDropdowns($dropdown, event, stopPropagation = false) {
+        $dropdown.siblings(BS_SELECTOR_DROPDOWN).find(BS_SELECTOR_DATA_TOGGLE_SHOWN).each(function () {
+            let toggle = bootstrap.Dropdown.getOrCreateInstance(this);
+            toggle.hide();
+        })
+    }
+
+    /**
+     * Close other navbar-nav in the same navbar
+     *
+     * @param {type} $dropdown
+     * @param {type} event
+     * @param {type} stopPropagation
+     * @returns {undefined}
+     */
+    function closeOtherNavs($dropdown, event, stopPropagation = false) {
+        closeInnerDropdowns(
+        $dropdown.closest(BS_SELECTOR_NAVBAR_NAV).siblings(BS_SELECTOR_NAVBAR_NAV),
+        event,
+        stopPropagation
+        );
+    }
+
+    /**
+     * Set the direction of a dropdown's children/submenu
+     *
+     * @param jQuery $dropdown
+     * @param jQuery $dropdownMenu
+     * @param number clientWidth
+     * @param number breakpoint
+     * @returns {undefined}
+     */
+    function setChildrenDropDirection($dropdown, $dropdownMenu, clientWidth, breakpoint) {
+        if (clientWidth < breakpoint) {
+            $dropdownMenu.children(BS_SELECTOR_DROPDOWN).removeClass(`${BS_CLASS_DROPEND} ${BS_CLASS_DROPSTART}`);
+            return;
+        }
+
+        let left = $dropdownMenu.offset().left;
+        let right = left + $dropdownMenu.outerWidth();
+
+        const rootMenuEnd = $dropdown.closest(`.${BS_CLASS_MENU_END}`).length > 0;
+        const isDropStart = $dropdown.hasClass(BS_CLASS_DROPSTART) || (
+        !$dropdown.hasClass(BS_CLASS_DROPEND) && rootMenuEnd
+        );
+
+        $dropdownMenu.children(BS_SELECTOR_DROPDOWN).each(function () {
+            const $this = $(this);
+            const $submenu = $this.children(BS_SELECTOR_MENU).first();
+
+            $submenu.css({visibility: 'hidden'}).addClass(BS_CLASS_SHOW);
+            let subwidth = $submenu.outerWidth();
+
+            $submenu.removeClass(BS_CLASS_SHOW).css({visibility: ''});
+
+            if (isRTL) {
+                if (isDropStart) {
+                    if (right + subwidth > clientWidth) {
+                        $this.removeClass(BS_CLASS_DROPSTART).addClass(BS_CLASS_DROPEND);
+                    } else {
+                        $this.removeClass(BS_CLASS_DROPEND).addClass(BS_CLASS_DROPSTART);
+                    }
+                } else {
+                    if (left - subwidth < 0) {
+                        $this.removeClass(BS_CLASS_DROPEND).addClass(BS_CLASS_DROPSTART);
+                    } else {
+                        $this.removeClass(BS_CLASS_DROPSTART).addClass(BS_CLASS_DROPEND);
+                    }
+                }
+            } else {
+                if (isDropStart) {
+                    if (left - subwidth < 0) {
+                        $this.removeClass(BS_CLASS_DROPSTART).addClass(BS_CLASS_DROPEND);
+                    } else {
+                        $this.removeClass(BS_CLASS_DROPEND).addClass(BS_CLASS_DROPSTART);
+                    }
+                } else {
+                    if (right + subwidth > clientWidth) {
+                        $this.removeClass(BS_CLASS_DROPEND).addClass(BS_CLASS_DROPSTART);
+                    } else {
+                        $this.removeClass(BS_CLASS_DROPSTART).addClass(BS_CLASS_DROPEND);
+                    }
+                }
+            }
+        });
+    }
+
+//------------------------------------------------------------------
+// CLOSE MENUS ON OPT.breakpoint CROSSING
+//------------------------------------------------------------------
+    function handleBreakpointCrossing($navbar, breakpoint, initialWidth) {
+        let previousWidth = initialWidth || getClientWidth();
+        $window.on('resize', function (e) {
+            let currentWidth = getClientWidth();
+            if (previousWidth < breakpoint && currentWidth >= breakpoint) {
+                closeInnerDropdowns($navbar);
+            } else if (previousWidth >= breakpoint && currentWidth < breakpoint) {
+                $navbar.find(`.${BS_CLASS_DROPEND}, .${BS_CLASS_DROPEND}`)
+                .removeClass(`${BS_CLASS_DROPEND} ${BS_CLASS_DROPEND}`);
+            }
+            previousWidth = currentWidth;
+        });
+    }
+//------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
+// SHOW/HIDE ON HOVER
+//--------------------------------------------------------------------------
+    function activateHover($navbar, breakpoint, timeout) {
+
+        const $dropdowns = $navbar.find(BS_SELECTOR_DROPDOWN);
+
+        $dropdowns.on('mouseenter', function (e) {
+            if (getClientWidth() < breakpoint) {
+                return;
+            }
+            const $toggle = $(this).find(BS_SELECTOR_DATA_TOGGLE).first();
+            if (!$toggle || $toggle.length === 0) {
+                return;
+            }
+            if (timeout > 0) {
+                let timeoutID = $toggle.data(P3_DATA_TIMEOUT_ID);
+                if (timeoutID > 0) {
+                    clearTimeout(timeoutID);
+                }
+            }
+            if (!$toggle.hasClass(BS_CLASS_SHOW)) {
+                $toggle.dropdown('show');
+            }
+        });
+
+        $dropdowns.on('mouseleave', function (e) {
+            if (getClientWidth() < breakpoint) {
+                return;
+            }
+            const $toggle = $(this).find(BS_SELECTOR_DATA_TOGGLE).first();
+            if (!$toggle || $toggle.length === 0) {
+                return;
+            }
+            if ($toggle.hasClass(BS_CLASS_SHOW) && timeout > 0) {
+                let timeoutID = $toggle.data(P3_DATA_TIMEOUT_ID);
+                if (timeoutID > 0) {
+                    clearTimeout(timeoutID);
+                }
+                $toggle.data(P3_DATA_TIMEOUT_ID, setTimeout(function () {
+                    if ($toggle.hasClass(BS_CLASS_SHOW)) {
+                        $toggle.dropdown('hide');
+                    }
+                }, timeout));
+            }
+        });
+    }
+
+    /**
+     * Determine navbar expand breakpoint
      *
      * @param {HTMLElement} navbar
      * @returns {integer|null}
@@ -92,444 +376,5 @@ const P3BsNavbar = (function($) {
         }
         return null;
     }
-
-    /**
-     * Helper function for BS_EVENT_SHOWN event handlers
-     *
-     * @param {HTMLElement} toggle
-     * @param {Event} e
-     * @param {Number} breakpoint
-     * @param {Boolean} closeOthers
-     * @returns {undefined}
-     */
-    function handleShownEvent(toggle, e, breakpoint, closeOthers) {
-        const dropdown = toggle.closest(BS_SELECTOR_DROPDOWN);
-
-        if (dropdown instanceof HTMLElement) {
-            let clientWidth = getClientWidth();
-
-            dropdown.classList.add(BS_CLASS_SHOW);
-
-            setChildrenDropDirection(dropdown, clientWidth, breakpoint);
-
-            if (closeOthers || clientWidth >= breakpoint) {
-                closeOtherNavs(dropdown);
-                closeSiblingDropdowns(dropdown);
-            }
-        }
-
-        // Dispatch custom event
-        toggle.dispatchEvent(new Event(P3_EVENT_SHOWN, P3_EVENT_OPTS));
-    }
-
-    /**
-     * Helper function for BS_EVENT_HIDDEN event handlers
-     *
-     * @param {HTMLElement} toggle
-     * @param {Event} e
-     * @returns {undefined}
-     */
-    function handleHiddenEvent(toggle, e) {
-        const dropdown = toggle.parentElement.closest(BS_SELECTOR_DROPDOWN);
-
-        if (dropdown instanceof HTMLElement) {
-            dropdown.classList.remove(BS_CLASS_SHOW);
-            closeInnerDropdowns(dropdown);
-        }
- 
-        // Dispatch custom event
-        toggle.dispatchEvent(new Event(P3_EVENT_HIDDEN, P3_EVENT_OPTS));
-    }
-
-    /**
-     *  Helper function for BS_EVENT_CLICK_DATA_API event handlers
-     *
-     * @param {HTMLElement} toggle
-     * @param {Event} e
-     * @param {Boolean} hover
-     * @param {Number} timeout
-     * @returns {undefined}
-     */
-    function handleClickDataApiEvent(toggle, e, hover, timeout) {
-        // Prevent bubbling and arent menu from closing
-        e.stopPropagation();
-
-        toggle.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
-
-        // Remove any running timer
-        if (hover && timeout > 0) {
-            let timeoutID = toggle.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
-            if (timeoutID > 0) {
-                clearTimeout(timeoutID);
-            }
-        }
-    }
-
-    /**
-     * 
-     * @param {HTMLElement} navbar
-     * @returns {undefined}
-     */
-    function closeExternalDropdowns(navbar) {
-        document.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function(toggleElement) {
-            if (!navbar.contains(toggleElement)) {
-                let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle) toggle.hide();
-            }
-        });
-    }
-
-    /**
-     * Hides all dropdowns inside the given container
-     *
-     * @param {HTMLElement|Array|NodeList} container
-     * @param {Event} event
-     * @param {boolean} [stopPropagation=true]
-     * @returns {undefined}
-     */
-    function closeInnerDropdowns(container, event, stopPropagation = false) {
-        let containers = [];
-
-        if (container instanceof Array || container instanceof NodeList) {
-            container.forEach(function(c) {
-                if (c instanceof HTMLElement) {
-                    containers.push(c);
-                }
-            });
-        } else if (container instanceof HTMLElement) {
-            containers.push(container);
-        }
-
-        if (containers.length > 0) {
-            containers.forEach(function(container) {
-                container.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function(toggleElement) {
-                    const toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                    if (toggle) {
-                        toggle.hide();
-                    }
-                });
-            });
-        }
-
-        if (event instanceof Event && stopPropagation === true) {
-            event.stopPropagation();
-        }
-    }
-
-    /**
-     * Close siblings nav menu-items
-     *
-     * @param {HTMLElement} dropdown
-     * @param {Event} event
-     * @param {Boolean} stopPropagation
-     * @returns {undefined}
-     */
-    function closeSiblingDropdowns(dropdown, event, stopPropagation = false) {
-        getSiblings(dropdown, BS_SELECTOR_DROPDOWN).forEach(function(sibling) {
-            const toggleElement = sibling.querySelector(BS_SELECTOR_DATA_TOGGLE_SHOWN);
-            if (toggleElement) {
-                let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle) toggle.hide();
-            }
-        });
-    }
-
-    /**
-     * Close other navbar-nav in the same navbar
-     *
-     * @param {HTMLElement} dropdown
-     * @param {Event} event
-     * @param {Boolean} stopPropagation
-     * @returns {undefined}
-     */
-    function closeOtherNavs(dropdown, event, stopPropagation = false) {
-        let otherNavs = getSiblings(
-            dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV),
-            BS_SELECTOR_NAVBAR_NAV
-        );
-        //console.log(otherNavs);
-        if (otherNavs && otherNavs.length > 0) {
-            closeInnerDropdowns(otherNavs, event, stopPropagation);
-        }
-    }
-
-    /**
-     * Set the direction of a dropdown's children/submenu
-     *
-     * @param HTMLElement dropdown
-     * @param number clientWidth
-     * @param number breakpoint
-     * @returns {undefined}
-     */
-    function setChildrenDropDirection(dropdown, clientWidth, breakpoint) {
-        const dropdownMenu = dropdown.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
-        if (!dropdownMenu || dropdownMenu.length === 0) {
-            return;
-        }
-
-        if (clientWidth < breakpoint) {
-            dropdownMenu.children(BS_SELECTOR_DROPDOWN).forEach(function(child) {
-                child.classList.remove(BS_CLASS_DROPEND).remove(BS_CLASS_DROPSTART);
-            });
-            return;
-        }
-
-        let left = dropdownMenu.getBoundingClientRect().left;
-        let right = left + dropdownMenu.offsetWidth;
-
-        const rootMenuEnd = !!dropdown.closest(`.${BS_CLASS_MENU_END}`);
-        const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
-            dropdown.classList.contains(BS_CLASS_DROPEND) && rootMenuEnd
-        );
-
-        dropdownMenu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
-
-            const submenu = menuItem.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
-
-            submenu.style.visibility = 'hidden';
-            submenu.classList.add(BS_CLASS_SHOW);
-
-            let subwidth = submenu.offsetWidth;
-
-            submenu.classList.remove(BS_CLASS_SHOW);
-            submenu.style.visibility = '';
-
-            const classList = menuItem.classList;
-
-            if (isRTL) {
-                if (isDropStart) {
-                    if (right + subwidth > clientWidth) {
-                        classList.remove(BS_CLASS_DROPSTART);
-                        classList.add(BS_CLASS_DROPEND);
-                    } else {
-                        classList.remove(BS_CLASS_DROPEND);
-                        classList.add(BS_CLASS_DROPSTART);
-                    }
-                } else {
-                    if (left - subwidth < 0) {
-                        classList.remove(BS_CLASS_DROPEND);
-                        classList.add(BS_CLASS_DROPSTART);
-                    } else {
-                        classList.remove(BS_CLASS_DROPSTART);
-                        classList.add(BS_CLASS_DROPEND);
-                    }
-                }
-            } else {
-                if (isDropStart) {
-                    if (left - subwidth < 0) {
-                        classList.remove(BS_CLASS_DROPSTART);
-                        classList.add(BS_CLASS_DROPEND);
-                    } else {
-                        classList.remove(BS_CLASS_DROPEND);
-                        classList.add(BS_CLASS_DROPSTART);
-                    }
-                } else {
-                    if (right + subwidth > clientWidth) {
-                        classList.remove(BS_CLASS_DROPEND);
-                        classList.add(BS_CLASS_DROPSTART);
-                    } else {
-                        classList.remove(BS_CLASS_DROPSTART);
-                        classList.add(BS_CLASS_DROPEND);
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * CLOSE MENUS AND REMOVE DROP-CLASSES ON OPT.breakpoint CROSSING
-     *
-     * @param {HTMLElement} navbar
-     * @param {Number} breakpoint
-     * @param {Number|undefined} initialWidth
-     * @returns {undefined}
-     */
-    function handleBreakpointCrossing(navbar, breakpoint, previousWidth) {
-        let currentWidth = getClientWidth();
-        if (previousWidth < breakpoint && currentWidth >= breakpoint) {
-            closeInnerDropdowns(navbar);
-        } else if (previousWidth >= breakpoint && currentWidth < breakpoint) {
-            closeInnerDropdowns(navbar);
-            navbar.querySelectorAll(`.${BS_CLASS_DROPEND}, .${BS_CLASS_DROPEND}`).forEach(function(menuItem) {
-                menuItem.classList.remove(BS_CLASS_DROPSTART);
-                menuItem.classList.remove(BS_CLASS_DROPEND);
-            });
-        }
-
-        return currentWidth;
-    }
-
-    /**
-     * SHOW/HIDE ON HOVER
-     *
-     * @param {HTMLElement} navbar
-     * @param {Number} breakpoint
-     * @param {Number} timeout
-     * @returns {undefined}
-     */
-    function activateHover(navbar, breakpoint, timeout) {
-
-        const dropdowns = navbar.querySelectorAll(BS_SELECTOR_DROPDOWN);
-
-        dropdowns.forEach(function(menuItem) {
-            menuItem.addEventListener('mouseenter', function(e) {
-                handleMouseEnter(this, breakpoint, timeout);
-            });
-            menuItem.addEventListener('mouseleave', function(e) {
-                handleMouseLeave(this, breakpoint, timeout);
-            });
-        });
-    }
-
-    function handleMouseEnter(menuItem, breakpoint, timeout) {
-        if (getClientWidth() < breakpoint) {
-            return;
-        }
-        const toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
-        if (toggleElement instanceof HTMLElement) {
-            if (timeout > 0) {
-                let timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
-                if (timeoutID > 0) {
-                    clearTimeout(timeoutID);
-                }
-            }
-            if (!toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle) toggle.show();
-            }
-        }
-    }
-
-    function handleMouseLeave(menuItem, breakpoint, timeout) {
-        if (getClientWidth() < breakpoint) {
-            return;
-        }
-        const toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
-        if (toggleElement instanceof HTMLElement) {
-            if (toggleElement.classList.contains(BS_CLASS_SHOW) && timeout > 0) {
-                let timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
-                if (timeoutID > 0) {
-                    clearTimeout(timeoutID);
-                }
-            }
-            toggleElement.setAttribute(`data-${P3_DATA_TIMEOUT_ID}`, setTimeout(
-                function() {
-                    if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                        let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                        if (toggle) toggle.hide();
-                    }
-                },
-                timeout
-            ));
-        }
-    }
-
-    /**
-     * P3BsNavbar MAIN FUNCTION
-     * 
-     * @param {string} selector A valid string selector, an HTMLElement, an
-     *      Array of elements or a NodeList
-     * @param {Object} options
-     * @returns {P3BsNavbar}
-     */
-    let P3BsNavbar = function(selector, options) {
-
-        const OPTIONS = Object.assign({}, P3BsNavbar.defaults, options);
-        let navbars = [];
-
-        if (typeof(selector) === 'string') {
-            navbars = document.querySelectorAll(selector);
-        } else if (selector instanceof HTMLElement) {
-            navbars = [selector];
-        } else if (selector instanceof Array || selector instanceof NodeList) {
-            selector.forEach(function(element) {
-                if (element instanceof HTMLElement) {
-                    navbars.push(element);
-                }
-            });
-        }
-
-        navbars.forEach(function(navbar) {
-            const OPT = Object.assign({}, OPTIONS);
-            const toggles = navbar.querySelectorAll(BS_SELECTOR_DATA_TOGGLE);
-
-            // Determine navbar expand breakpoint
-            let breakpoint = getNavbarBreakpoint(navbar);
-            if (breakpoint > 0) {
-                OPT.breakpoint = breakpoint;
-            }
-
-            toggles.forEach(function(toggle) {
-                // Dispatch custom event on BS_EVENT_SHOW
-                toggle.addEventListener(BS_EVENT_SHOW, function(e) {
-                    toggle.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
-                });
-
-                // Dispatch custom event on BS_EVENT_HIDE
-                toggle.addEventListener(BS_EVENT_HIDE, function(e) {
-                    toggle.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
-                });
-
-                // handle BS_EVENT_SHOWN events
-                toggle.addEventListener(BS_EVENT_SHOWN, function(e) {
-                    return handleShownEvent(this, e, OPT.breakpoint, OPT.closeOthers);
-                });
-
-                // handle BS_EVENT_HIDDEN events
-                toggle.addEventListener(BS_EVENT_HIDDEN, function(e) {
-                    return handleHiddenEvent(this, e);
-                });
-
-                // handle BS_EVENT_CLICK_DATA_API events
-                toggle.addEventListener(BS_EVENT_CLICK_DATA_API, function(e) {
-                    return handleClickDataApiEvent(this, e, OPT.hover, OPT.timeout);
-                });
-            });
-
-            //------------------------------------------------------------------
-            // CLOSE MENUS ON OPT.breakpoint CROSSING
-            //------------------------------------------------------------------
-            let previousWidth = getClientWidth();
-            window.addEventListener('resize', function(e) {
-                previousWidth = handleBreakpointCrossing(navbar, breakpoint, previousWidth);
-            });
-            //------------------------------------------------------------------
-
-            //------------------------------------------------------------------
-            // ACTIVATE HOVER DROPDOWN
-            //------------------------------------------------------------------
-            if (OPT.hover) {
-                activateHover(navbar, OPT.breakpoint, OPT.timeout)
-            }
-            //------------------------------------------------------------------
-
-            //------------------------------------------------------------------
-            // CLOSE EXTERNAL DROPDOWNS ON SHOWING NAVBAR DROPDOWNS
-            //------------------------------------------------------------------
-            document.addEventListener(P3_EVENT_SHOWN, function(e) {
-                closeExternalDropdowns(navbar);
-            });
-            //------------------------------------------------------------------
-        });
-    };
-
-    P3BsNavbar.defaults = {
-        breakpoint: 768,
-        hover: false,
-        timeout: 250,
-        closeOthers: false,
-    };
-
-    // Add jQuery plugin if jQuery loaded
-    if (typeof($) === 'function' && $().fn === $.jquery) {
-        $.fn.p3bsnavbar = function(options) {
-            const OPT = $.extend($.fn.p3bsnavbar.defaults, options);
-            P3BsNavbar(this.get());
-        }
-
-        $.fn.p3bsnavbar.default = P3BsNavbar.defaults;
-    }
-
-    return P3BsNavbar;
 //------------------------------------------------------------------------------
 })(jQuery);
