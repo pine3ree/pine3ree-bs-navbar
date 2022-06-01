@@ -473,10 +473,6 @@ const P3BsNavbar = (function($) {
             if (nextItem) {
                 nextItem.focus();
                 closeSiblingDropdowns(nextItem.parentElement);
-                // Auto open submenu on focus?
-                //if (nextItem.matches(BS_SELECTOR_DATA_TOGGLE)) {
-                //    nextItem.click();
-                //}
             }
             return;
         }
