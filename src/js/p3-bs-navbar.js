@@ -1,5 +1,7 @@
 "use strict";
 
+let nonExistent = nonExistent || null;
+
 const P3BsNavbar = (function($) {
 
     const P3_NAME = 'p3bsnavbar';
@@ -94,15 +96,37 @@ const P3BsNavbar = (function($) {
     }
 
     /**
+     * Check if element is an enabled dropdown toggler
+     * 
+     * @param {HTMLElement} toggle
+     * @returns {Boolean}
+     */
+    function isEnabledToggle(toggle) {
+        if (toggle && toggle instanceof HTMLElement) {
+             return (
+                toggle.getAttribute('data-bs-toggle') === "dropdown"
+                && !toggle.disabled
+                && !toggle.classList.contains('disabled')
+            );
+        }
+
+        return false;
+    }
+
+    /**
      * Helper function for BS_EVENT_SHOWN event handlers
      *
-     * @param {HTMLElement} toggle
      * @param {Event} e
      * @param {Number} breakpoint
      * @param {Boolean} closeOthers
      * @returns {undefined}
      */
-    function handleShownEvent(toggle, e, breakpoint, closeOthers) {
+    function handleShownEvent(e, breakpoint, closeOthers) {
+        const toggle = e.target;
+        if (!isEnabledToggle(toggle)) {
+            return;
+        }
+
         const dropdown = toggle.closest(BS_SELECTOR_DROPDOWN);
 
         if (dropdown instanceof HTMLElement) {
@@ -125,11 +149,15 @@ const P3BsNavbar = (function($) {
     /**
      * Helper function for BS_EVENT_HIDDEN event handlers
      *
-     * @param {HTMLElement} toggle
      * @param {Event} e
      * @returns {undefined}
      */
-    function handleHiddenEvent(toggle, e) {
+    function handleHiddenEvent( e) {
+        const toggle = e.target;
+        if (!isEnabledToggle(toggle)) {
+            return;
+        }
+
         const dropdown = toggle.parentElement.closest(BS_SELECTOR_DROPDOWN);
 
         if (dropdown instanceof HTMLElement) {
@@ -150,9 +178,14 @@ const P3BsNavbar = (function($) {
      * @param {Number} timeout
      * @returns {undefined}
      */
-    function handleClickDataApiEvent(toggle, e, hover, timeout) {
+    function handleClickDataApiEvent(e, hover, timeout) {
         // Prevent bubbling and arent menu from closing
         e.stopPropagation();
+
+        const toggle = e.target;
+        if (!isEnabledToggle(toggle)) {
+            return;
+        }
 
         toggle.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
 
@@ -451,7 +484,7 @@ const P3BsNavbar = (function($) {
 
         navbars.forEach(function(navbar) {
             const OPT = Object.assign({}, OPTIONS);
-            const toggles = navbar.querySelectorAll(BS_SELECTOR_DATA_TOGGLE);
+//            const toggles = navbar.querySelectorAll(BS_SELECTOR_DATA_TOGGLE);
 
             // Determine navbar expand breakpoint
             let breakpoint = getNavbarBreakpoint(navbar);
@@ -459,6 +492,7 @@ const P3BsNavbar = (function($) {
                 OPT.breakpoint = breakpoint;
             }
 
+            /*
             toggles.forEach(function(toggle) {
                 // Dispatch custom event on BS_EVENT_SHOW
                 toggle.addEventListener(BS_EVENT_SHOW, function(e) {
@@ -484,6 +518,38 @@ const P3BsNavbar = (function($) {
                 toggle.addEventListener(BS_EVENT_CLICK_DATA_API, function(e) {
                     return handleClickDataApiEvent(this, e, OPT.hover, OPT.timeout);
                 });
+                toggle.addEventListener('click', function(e) {
+                    return handleClickDataApiEvent(this, e, OPT.hover, OPT.timeout);
+                });
+            });
+            */
+
+            // Dispatch custom event on BS_EVENT_SHOW
+            navbar.addEventListener(BS_EVENT_SHOW, function(e) {
+                e.target.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
+            });
+
+            // Dispatch custom event on BS_EVENT_HIDE
+            navbar.addEventListener(BS_EVENT_HIDE, function(e) {
+                e.target.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
+            });
+
+            // handle BS_EVENT_SHOWN events
+            navbar.addEventListener(BS_EVENT_SHOWN, function(e) {
+                return handleShownEvent(e, OPT.breakpoint, OPT.closeOthers);
+            });
+
+            // handle BS_EVENT_HIDDEN events
+            navbar.addEventListener(BS_EVENT_HIDDEN, function(e) {
+                return handleHiddenEvent(e);
+            });
+
+            // handle BS_EVENT_CLICK_DATA_API events
+            navbar.addEventListener(BS_EVENT_CLICK_DATA_API, function(e) {
+                return handleClickDataApiEvent(e, OPT.hover, OPT.timeout);
+            });
+            navbar.addEventListener('click', function(e) {
+                return handleClickDataApiEvent(e, OPT.hover, OPT.timeout);
             });
 
             //------------------------------------------------------------------
@@ -532,4 +598,4 @@ const P3BsNavbar = (function($) {
 
     return P3BsNavbar;
 //------------------------------------------------------------------------------
-})(jQuery);
+}(window.jQuery || null));
