@@ -1,12 +1,11 @@
 "use strict";
-
 const P3BsNavbar = (function($) {
 
     const P3_NAME = 'p3bsnavbar';
 
     const P3_DATA_KEY = 'p3.navbar.dropdown';
     const P3_EVENT_KEY = `.${P3_DATA_KEY}`;
-    const P3_EVENT_OPTS =  { bubbles: true, cancelable: true };
+    const P3_EVENT_OPTS = { bubbles: true, cancelable: true };
     const P3_EVENT_CLICK = `click${P3_EVENT_KEY}`;
     const P3_EVENT_HIDE = `hide${P3_EVENT_KEY}`;
     const P3_EVENT_HIDDEN = `hidden${P3_EVENT_KEY}`;
@@ -18,6 +17,13 @@ const P3BsNavbar = (function($) {
     const BS_DATA_KEY = 'bs.dropdown';
     const BS_EVENT_KEY = `.${BS_DATA_KEY}`;
     const BS_DATA_API_KEY = '.data-api';
+
+    const ENTER_KEY = 'Enter'
+    const ESCAPE_KEY = 'Escape'
+    const TAB_KEY = 'Tab'
+    const ARROW_UP_KEY = 'ArrowUp'
+    const ARROW_DOWN_KEY = 'ArrowDown'
+    const RIGHT_MOUSE_BUTTON = 2 // MouseEvent.button value for the secondary button, usually the right button
 
     const BS_EVENT_HIDE = `hide${BS_EVENT_KEY}`;
     const BS_EVENT_HIDDEN = `hidden${BS_EVENT_KEY}`;
@@ -45,6 +51,7 @@ const P3BsNavbar = (function($) {
     const BS_SELECTOR_MENU_END = `${BS_SELECTOR_MENU}.${BS_CLASS_MENU_END}`;
     const BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
     const BS_SELECTOR_VISIBLE_ITEMS = '.dropdown-menu .dropdown-item:not(.disabled):not(:disabled)';
+    const P3_SELECTOR_VISIBLE_ITEMS = '.dropdown-item:not(.disabled):not(:disabled)';
 
     const isRTL = document.documentElement.dir === 'rtl';
 
@@ -83,16 +90,16 @@ const P3BsNavbar = (function($) {
 
     /**
      * Check if element is an enabled dropdown toggler
-     * 
+     *
      * @param {HTMLElement} toggle
      * @returns {Boolean}
      */
     function isEnabledToggle(toggle) {
         if (toggle && toggle instanceof HTMLElement) {
-             return (
-                toggle.getAttribute('data-bs-toggle') === "dropdown"
-                && !toggle.disabled
-                && !toggle.classList.contains('disabled')
+            return (
+            toggle.getAttribute('data-bs-toggle') === "dropdown"
+            && !toggle.disabled
+            && !toggle.classList.contains('disabled')
             );
         }
 
@@ -138,7 +145,7 @@ const P3BsNavbar = (function($) {
      * @param {Event} e
      * @returns {undefined}
      */
-    function handleHiddenEvent( e) {
+    function handleHiddenEvent(e) {
         const toggle = e.target;
         if (!isEnabledToggle(toggle)) {
             return;
@@ -185,7 +192,7 @@ const P3BsNavbar = (function($) {
 
     /**
      * Close any dropdown not contained in this navbar
-     * 
+     *
      * @param {HTMLElement} navbar
      * @returns {undefined}
      */
@@ -232,7 +239,7 @@ const P3BsNavbar = (function($) {
 
         if (event instanceof Event && stopPropagation === true) {
             event.stopPropagation();
-        }
+    }
     }
 
     /**
@@ -263,12 +270,12 @@ const P3BsNavbar = (function($) {
      */
     function closeOtherNavs(dropdown, event, stopPropagation = false) {
         let otherNavs = getSiblings(
-            dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV),
-            BS_SELECTOR_NAVBAR_NAV
+        dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV),
+        BS_SELECTOR_NAVBAR_NAV
         );
         if (otherNavs instanceof Array && otherNavs.length > 0) {
             closeInnerDropdowns(otherNavs, event, stopPropagation);
-        }
+    }
     }
 
     /**
@@ -297,7 +304,7 @@ const P3BsNavbar = (function($) {
 
         const rootMenuEnd = !!dropdown.closest(`.${BS_CLASS_MENU_END}`);
         const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
-            dropdown.classList.contains(BS_CLASS_DROPEND) && rootMenuEnd
+        dropdown.classList.contains(BS_CLASS_DROPEND) && rootMenuEnd
         );
 
         dropdownMenu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
@@ -377,6 +384,104 @@ const P3BsNavbar = (function($) {
         return currentWidth;
     }
 
+    function getNextElement(list, element, shouldGetNext, cycle) {
+        const listLength = list.length;
+        let index = list.indexOf(element);
+
+        if (index === -1) {
+            return list[0];
+//            return !shouldGetNext && cycle ? list[listLength - 1] : list[0];
+        }
+
+        index += shouldGetNext ? 1 : -1;
+
+        if (cycle) {
+            index = (index + listLength) % listLength;
+//            console.log(index);
+        }
+
+        return list[Math.max(0, Math.min(index, listLength - 1))];
+    }
+
+    /**
+     * Handler function for ENTER | UP | DOWN keypress
+     *
+     * This is used inside a capturing handler
+     *
+     * @param {Event} e
+     * @param {HTMLElement} navbar
+     * @returns {undefined}
+     */
+    function handleKeydown(e, navbar) {
+        const target = e.target;
+        // Let bootstrap dropdown handle top-level (nav-link) dropdown-items
+        if (!target || !target.classList.contains('dropdown-item')) {
+            return;
+        }
+
+        // Let bootstrap handlers deal with ESCAPE and TAB
+        if (e.key === ESCAPE_KEY || e.key === TAB_KEY) {
+            return;
+        }
+
+        // If input/textarea && if key is other than ESCAPE => not a dropdown command
+        if (/input|textarea/i.test(e.target.tagName)) {
+            return;
+        }
+
+        // ENTER | UP | DOWN keypress are handled
+        const isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key)
+        if (!isValidKeyEvent) {
+            return;
+        }
+
+        // DO NOT HANDLE events for targets outside our navbar
+        if (navbar instanceof HTMLElement && !navbar.contains(target)) {
+            return;
+        }
+
+        // Stop downward propagation from here
+        e.stopPropagation();
+
+        if (e.key === ENTER_KEY) {
+            if (target.matches(BS_SELECTOR_DATA_TOGGLE)) {
+                // Only prevent default behaviour on dropdown togglers
+                e.preventDefault();
+                target.click();
+                // Apply focus on 1st submenu item if any
+                let subItem = target.parentElement.querySelector(`:scope ${BS_SELECTOR_VISIBLE_ITEMS}`);
+                if (subItem) {
+                    subItem.focus();
+                }
+            }
+            return;
+        }
+
+        let menu;
+        menu = target.closest(BS_SELECTOR_MENU);
+        if (!menu) {
+            return;
+        }
+
+        const items = [].concat(
+            ...menu.querySelectorAll(`:scope > li > ${P3_SELECTOR_VISIBLE_ITEMS}`)
+        );
+
+        const isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
+        if (isNavKeyEvent) {
+            let nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
+            if (nextItem) {
+                nextItem.focus();
+                closeSiblingDropdowns(nextItem.parentElement);
+                // Auto open submenu on focus?
+                //if (nextItem.matches(BS_SELECTOR_DATA_TOGGLE)) {
+                //    nextItem.click();
+                //}
+            }
+            return;
+        }
+    }
+
     /**
      * SHOW/HIDE ON HOVER
      *
@@ -431,13 +536,13 @@ const P3BsNavbar = (function($) {
                 }
             }
             toggleElement.setAttribute(`data-${P3_DATA_TIMEOUT_ID}`, setTimeout(
-                function() {
-                    if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                        let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                        if (toggle) toggle.hide();
-                    }
-                },
-                timeout
+            function() {
+                if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
+                    let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
+                    if (toggle) toggle.hide();
+                }
+            },
+            timeout
             ));
         }
     }
@@ -521,6 +626,12 @@ const P3BsNavbar = (function($) {
                 return handleClickDataApiEvent(e, OPT.hover, OPT.timeout);
             });
 
+            // handle BS_EVENT_KEYDOWN_DATA_API events
+            window.addEventListener('keydown', function(e) {
+                //console.log('p3-key = ' + e.key);
+                handleKeydown(e, navbar);
+            }, true); // capture events before document where bs listeners are registered
+
             //------------------------------------------------------------------
             // CLOSE MENUS ON OPT.breakpoint CROSSING
             //------------------------------------------------------------------
@@ -556,7 +667,7 @@ const P3BsNavbar = (function($) {
     };
 
     // Add jQuery plugin if jQuery loaded
-    if (typeof($) === 'function' && $().fn === $.jquery) {
+    if (typeof ($) === 'function' && $().fn === $.jquery) {
         $.fn.p3bsnavbar = function(options) {
             const OPT = $.extend($.fn.p3bsnavbar.defaults, options);
             P3BsNavbar(this.get());
