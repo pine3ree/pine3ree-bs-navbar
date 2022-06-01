@@ -1,7 +1,5 @@
 "use strict";
 
-let nonExistent = nonExistent || null;
-
 const P3BsNavbar = (function($) {
 
     const P3_NAME = 'p3bsnavbar';
@@ -50,13 +48,18 @@ const P3BsNavbar = (function($) {
 
     const isRTL = document.documentElement.dir === 'rtl';
 
-
+    /**
+     * Get the html document width
+     *
+     * @returns {Number}
+     */
     function getClientWidth() {
         return Math.max(window.innerWidth, document.documentElement.clientWidth);
     }
 
     /**
      * Get an Array of siblings of an HTMLElement
+     *
      * @param {HTMLElement} element
      * @param {string} selector
      * @returns {Array}
@@ -76,23 +79,6 @@ const P3BsNavbar = (function($) {
         }
 
         return siblings;
-    }
-
-    /**
-     * Determine navbar expand breakpoint form expand-(sm|md|lg|xl) class if present
-     *
-     * @param {HTMLElement} navbar
-     * @returns {integer|null}
-     */
-    function getNavbarBreakpoint(navbar) {
-        for (const nc of navbar.classList) {
-            let rootStyle = window.getComputedStyle(document.documentElement);
-            let breakpoint = parseInt(rootStyle.getPropertyValue(`--p3-bs-${nc}`));
-            if (Number.isInteger(breakpoint)) {
-                return breakpoint;
-            }
-        }
-        return null;
     }
 
     /**
@@ -172,20 +158,19 @@ const P3BsNavbar = (function($) {
     /**
      *  Helper function for BS_EVENT_CLICK_DATA_API event handlers
      *
-     * @param {HTMLElement} toggle
      * @param {Event} e
      * @param {Boolean} hover
      * @param {Number} timeout
      * @returns {undefined}
      */
     function handleClickDataApiEvent(e, hover, timeout) {
-        // Prevent bubbling and arent menu from closing
-        e.stopPropagation();
-
         const toggle = e.target;
         if (!isEnabledToggle(toggle)) {
             return;
         }
+
+        // If it is a toggler prevent bubbling and parent menu from closing
+        e.stopPropagation();
 
         toggle.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
 
@@ -199,7 +184,8 @@ const P3BsNavbar = (function($) {
     }
 
     /**
-     *
+     * Close any dropdown not contained in this navbar
+     * 
      * @param {HTMLElement} navbar
      * @returns {undefined}
      */
@@ -280,8 +266,7 @@ const P3BsNavbar = (function($) {
             dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV),
             BS_SELECTOR_NAVBAR_NAV
         );
-        //console.log(otherNavs);
-        if (otherNavs && otherNavs.length > 0) {
+        if (otherNavs instanceof Array && otherNavs.length > 0) {
             closeInnerDropdowns(otherNavs, event, stopPropagation);
         }
     }
@@ -325,7 +310,7 @@ const P3BsNavbar = (function($) {
             let subwidth = submenu.offsetWidth;
 
             submenu.classList.remove(BS_CLASS_SHOW);
-            submenu.style.visibility = '';
+            submenu.style.visibility = null;
 
             const classList = menuItem.classList;
 
@@ -458,6 +443,23 @@ const P3BsNavbar = (function($) {
     }
 
     /**
+     * Determine navbar expand breakpoint form expand-(sm|md|lg|xl) class if present
+     *
+     * @param {HTMLElement} navbar
+     * @returns {integer|null}
+     */
+    function getNavbarBreakpoint(navbar) {
+        for (const nc of navbar.classList) {
+            let rootStyle = window.getComputedStyle(document.documentElement);
+            let breakpoint = parseInt(rootStyle.getPropertyValue(`--p3-bs-${nc}`));
+            if (Number.isInteger(breakpoint)) {
+                return breakpoint;
+            }
+        }
+        return null;
+    }
+
+    /**
      * P3BsNavbar MAIN FUNCTION
      *
      * @param {string} selector A valid string selector, an HTMLElement, an
@@ -484,45 +486,12 @@ const P3BsNavbar = (function($) {
 
         navbars.forEach(function(navbar) {
             const OPT = Object.assign({}, OPTIONS);
-//            const toggles = navbar.querySelectorAll(BS_SELECTOR_DATA_TOGGLE);
 
             // Determine navbar expand breakpoint
             let breakpoint = getNavbarBreakpoint(navbar);
             if (breakpoint > 0) {
                 OPT.breakpoint = breakpoint;
             }
-
-            /*
-            toggles.forEach(function(toggle) {
-                // Dispatch custom event on BS_EVENT_SHOW
-                toggle.addEventListener(BS_EVENT_SHOW, function(e) {
-                    toggle.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
-                });
-
-                // Dispatch custom event on BS_EVENT_HIDE
-                toggle.addEventListener(BS_EVENT_HIDE, function(e) {
-                    toggle.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
-                });
-
-                // handle BS_EVENT_SHOWN events
-                toggle.addEventListener(BS_EVENT_SHOWN, function(e) {
-                    return handleShownEvent(this, e, OPT.breakpoint, OPT.closeOthers);
-                });
-
-                // handle BS_EVENT_HIDDEN events
-                toggle.addEventListener(BS_EVENT_HIDDEN, function(e) {
-                    return handleHiddenEvent(this, e);
-                });
-
-                // handle BS_EVENT_CLICK_DATA_API events
-                toggle.addEventListener(BS_EVENT_CLICK_DATA_API, function(e) {
-                    return handleClickDataApiEvent(this, e, OPT.hover, OPT.timeout);
-                });
-                toggle.addEventListener('click', function(e) {
-                    return handleClickDataApiEvent(this, e, OPT.hover, OPT.timeout);
-                });
-            });
-            */
 
             // Dispatch custom event on BS_EVENT_SHOW
             navbar.addEventListener(BS_EVENT_SHOW, function(e) {
