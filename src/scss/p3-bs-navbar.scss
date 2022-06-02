@@ -8,7 +8,7 @@
 // CUSTOM VARS
 //==============================================================================
 // scss-docs-start caret-variables
-$caret-width:                 .4375em !default;
+$caret-width:                 .28125em !default;
 $caret-vertical-align:        middle; //$caret-width * .85 !default;
 //$caret-spacing:               $caret-width * .85 !default;
 // scss-docs-end caret-variables---------------------------------------------
@@ -100,7 +100,7 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
 }
 
 
-@mixin navbar-dropdown-menu-transition-common {
+@mixin navbar-dropdown-menu-transition {
     display: block !important;
     max-height: 0;
     overflow: hidden;
@@ -110,36 +110,6 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
 }
 
 .navbar-nav {
-    .dropdown-menu {
-        //background: $navbar-dropdown-menu-bg;
-        //border: 0;
-        //border-radius: 0;
-
-        // transition [---------------------------------------------------------
-        @if $navbar-dropdown-menu-has-transition-both {
-            @include navbar-dropdown-menu-transition-common;
-        }
-        // transition ---------------------------------------------------------]
-
-        .dropdown-item {
-            //white-space: normal;
-            //background: transparent;
-            //color: $navbar-dark-hover-color;
-            //text-transform: uppercase;
-            //font-size: .8125rem;; //$font-size-sm;
-            &:hover, &focus {
-                //color: $navbar-dark-active-color;
-                //background: $navbar-dropdown-menu-bg-hover;
-            }
-            &:active {
-                //color: $navbar-dark-active-color;
-            }
-        }
-    }
-
-    a {
-        //font-size: .8125rem; //$font-size-sm;
-    }
 }
 
 .nav-item-text {
@@ -175,31 +145,31 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
             }
             a {
             }
-            .caret {
-                position: absolute;
-                right: 0;
-                left: auto;
-                top: 0;
-                background: $bg-color-hover;
-                width: 54px;
-                height: $item-line-height;
-                line-height: $item-line-height;
-                text-align: center;
-                vertical-align: middle;
-                &:hover, &focus {
-                    //color: $navbar-dark-active-color;
-                    //background: $bg-color !important;
-                }
-                &:before {
-                    //content: $mdi-plus !important;
-                }
-            }
-            &.show > a > .caret {
-                //background: $bg-color !important;
-                &:before {
-                    //content: $mdi-minus !important;
-                }
-            }
+//            .caret {
+//                position: absolute;
+//                right: 0;
+//                left: auto;
+//                top: 0;
+//                background: $bg-color-hover;
+//                width: 54px;
+//                height: $item-line-height;
+//                line-height: $item-line-height;
+//                text-align: center;
+//                vertical-align: middle;
+//                &:hover, &focus {
+//                    //color: $navbar-dark-active-color;
+//                    //background: $bg-color !important;
+//                }
+//                &:before {
+//                    //content: $mdi-plus !important;
+//                }
+//            }
+//            &.show > a > .caret {
+//                //background: $bg-color !important;
+//                &:before {
+//                    //content: $mdi-minus !important;
+//                }
+//            }
         }
         &.dropdown {
             margin-bottom: 0;
@@ -211,28 +181,29 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
             padding: 0;
             border: 0;
             border-radius: 0;
+            visibility: hidden; // to make TAB keypresses skip it
 
+            > li {
+                display: block;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
             // transition [-----------------------------------------------------
             @if $navbar-dropdown-menu-has-transition-collapsed {
                 @if not $navbar-dropdown-menu-has-transition-both {
-                    @include navbar-dropdown-menu-transition-common;
+                    @include navbar-dropdown-menu-transition;
                 } @else {
                     transition: $navbar-dropdown-menu-transition-show-expanded;
                 }
                 &.show {
+                    visibility: visible;
                     transition: $navbar-dropdown-menu-transition-show-collapsed;
                 }
             }
             // transition -----------------------------------------------------]
-
-            > li {
-                display: block;
-            }
-            > li:last-child {
-                margin-bottom: 0;
-            }
         }
-
+        // caret
         .dropdown-toggle {
             position: relative;
             &:before,
@@ -259,7 +230,6 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
                 }
             }
         }
-
     }
 }
 
@@ -267,11 +237,6 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
     .navbar-nav {
         a {
             transition: $navbar-transition;
-        }
-        .dropdown-menu {
-            .dropdown-menu {
-                margin-top: -1*$dropdown-padding-y;
-            }
         }
         .nav-item {
             &.has-link {
@@ -297,12 +262,15 @@ $navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-
         .dropdown-menu {
             max-width: 1.25*$dropdown-min-width;
 
+            .dropdown-menu {
+                margin-top: -1*$dropdown-padding-y;
+            }
+
             // transition [-----------------------------------------------------
             @if $navbar-dropdown-menu-has-transition-expanded {
                 @if not $navbar-dropdown-menu-has-transition-both {
-                    @include navbar-dropdown-menu-transition-common;
+                    @include navbar-dropdown-menu-transition;
                 }
-                //transition: $navbar-transition;
                 &.show {
                     overflow: visible;
                     transition: $navbar-dropdown-menu-transition-show-expanded;
