@@ -179,6 +179,7 @@ const P3BsNavbar = (function($) {
         // If it is a toggler prevent bubbling and parent menu from closing
         e.stopPropagation();
 
+        // Dispatch custom event
         toggle.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
 
         // Remove any running timer
@@ -287,27 +288,28 @@ const P3BsNavbar = (function($) {
      * @returns {undefined}
      */
     function setChildrenDropDirection(dropdown, clientWidth, breakpoint) {
-        const dropdownMenu = dropdown.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
-        if (!dropdownMenu || dropdownMenu.length === 0) {
+        const menu = dropdown.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
+        if (!(menu instanceof HTMLElement)) {
             return;
         }
 
         if (clientWidth < breakpoint) {
-            dropdownMenu.children(BS_SELECTOR_DROPDOWN).forEach(function(child) {
-                child.classList.remove(BS_CLASS_DROPEND).remove(BS_CLASS_DROPSTART);
+            menu.querySelectorAll(BS_SELECTOR_DROPDOWN).forEach(function(child) {
+                child.classList.remove(BS_CLASS_DROPEND);
+                child.classList.remove(BS_CLASS_DROPSTART);
             });
             return;
         }
 
-        let left = dropdownMenu.getBoundingClientRect().left;
-        let right = left + dropdownMenu.offsetWidth;
+        let left = menu.getBoundingClientRect().left;
+        let right = left + menu.offsetWidth;
 
         const rootMenuEnd = !!dropdown.closest(`.${BS_CLASS_MENU_END}`);
         const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
-        dropdown.classList.contains(BS_CLASS_DROPEND) && rootMenuEnd
+            dropdown.classList.contains(BS_CLASS_DROPEND) && rootMenuEnd
         );
 
-        dropdownMenu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
+        menu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
 
             const submenu = menuItem.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
 
@@ -384,20 +386,27 @@ const P3BsNavbar = (function($) {
         return currentWidth;
     }
 
+    /**
+     * Move to next/previous element in a list or cycle through it
+     *
+     * @param {Array} list
+     * @param {HTMLElement} element
+     * @param {Boolean} shouldGetNext
+     * @param {Boolean} cycle
+     * @returns {p3.bs.navbarP3BsNavbar.getNextElement.list}
+     */
     function getNextElement(list, element, shouldGetNext, cycle) {
         const listLength = list.length;
         let index = list.indexOf(element);
 
         if (index === -1) {
             return list[0];
-//            return !shouldGetNext && cycle ? list[listLength - 1] : list[0];
         }
 
         index += shouldGetNext ? 1 : -1;
 
         if (cycle) {
             index = (index + listLength) % listLength;
-//            console.log(index);
         }
 
         return list[Math.max(0, Math.min(index, listLength - 1))];
@@ -413,25 +422,21 @@ const P3BsNavbar = (function($) {
      * @returns {undefined}
      */
     function handleKeydown(e, navbar) {
-        const target = e.target;
-        // Let bootstrap dropdown handle top-level (nav-link) dropdown-items
-        if (!target || !target.classList.contains('dropdown-item')) {
-            return;
-        }
-
         // Let bootstrap handlers deal with ESCAPE and TAB
-        if (e.key === ESCAPE_KEY || e.key === TAB_KEY) {
-            return;
-        }
-
-        // If input/textarea && if key is other than ESCAPE => not a dropdown command
-        if (/input|textarea/i.test(e.target.tagName)) {
+        if (!e.key || e.key === ESCAPE_KEY || e.key === TAB_KEY) {
             return;
         }
 
         // ENTER | UP | DOWN keypress are handled
         const isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key)
         if (!isValidKeyEvent) {
+            return;
+        }
+
+        const target = e.target;
+        // Let bootstrap dropdown handle top-level (nav-link) dropdown-items and
+        // other elements such as form inputs
+        if (!target || !target.classList.contains('dropdown-item')) {
             return;
         }
 
