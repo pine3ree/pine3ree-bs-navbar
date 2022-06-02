@@ -44,10 +44,12 @@ const P3BsNavbar = (function($) {
     const BS_SELECTOR_DATA_TOGGLE_SHOWN = `${BS_SELECTOR_DATA_TOGGLE}.${BS_CLASS_SHOW}`;
     const BS_SELECTOR_DROPDOWN = '.dropdown';
     const BS_SELECTOR_DROPDOWN_SHOWN = `${BS_SELECTOR_DROPDOWN}.${BS_CLASS_SHOW}`;
-    const BS_SELECTOR_MENU = '.dropdown-menu';
+    const BS_CLASS_MENU = 'dropdown-menu';
+    const BS_SELECTOR_MENU = `.${BS_CLASS_MENU}`;
     const BS_SELECTOR_MENU_SHOWN = `${BS_SELECTOR_MENU}.${BS_CLASS_SHOW}`;
-    const BS_SELECTOR_NAVBAR = '.navbar';
-    const BS_CLASS_MENU_END = 'dropdown-menu-end';
+    const BS_CLASS_NAVBAR = 'navbar';
+    const BS_SELECTOR_NAVBAR = `.${BS_CLASS_NAVBAR}`;
+    const BS_CLASS_MENU_END = `${BS_CLASS_MENU}-end`;
     const BS_SELECTOR_MENU_END = `${BS_SELECTOR_MENU}.${BS_CLASS_MENU_END}`;
     const BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
     const BS_SELECTOR_VISIBLE_ITEMS = '.dropdown-menu .dropdown-item:not(.disabled):not(:disabled)';
@@ -198,10 +200,15 @@ const P3BsNavbar = (function($) {
      * @returns {undefined}
      */
     function closeExternalDropdowns(navbar) {
+        if (!navbar || !(navbar instanceof HTMLElement)) {
+            return;
+        }
         document.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function(toggleElement) {
             if (!navbar.contains(toggleElement)) {
                 let toggle = bootstrap.Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle) toggle.hide();
+                if (toggle) {
+                    toggle.hide();
+                }
             }
         });
     }
