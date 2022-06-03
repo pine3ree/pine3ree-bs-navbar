@@ -78,26 +78,19 @@ $navbar-bg: $black; //#2c3840; //darken($primary, 0 * $theme-color-interval); //
 $navbar-bg-hover: $gray-900; //lighten($navbar-bg, $theme-color-interval/2);//$md-indigo-600;
 $navbar-bg-active: $gray-800; //$md-indigo-600;
 $navbar-transition: all .2s linear;
-$navbar-dropdown-menu-has-transition-collapsed: true;
-$navbar-dropdown-menu-has-transition-expanded: false;
+$navbar-dropdown-menu-has-transition: true;
 $navbar-dropdown-menu-transition-max-height-factor: 10;
 $navbar-dropdown-menu-transition-max-height: $navbar-dropdown-menu-transition-max-height-factor * 1024px;
 $navbar-dropdown-menu-transition-duration: 0.2s;
-$navbar-dropdown-menu-transition-duration-expanded: $navbar-dropdown-menu-transition-duration;
-$navbar-dropdown-menu-transition-duration-collapsed: 2*$navbar-dropdown-menu-transition-duration-expanded;
-$navbar-dropdown-menu-transition-show-expanded: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration-expanded ease-in-out;
-$navbar-dropdown-menu-transition-show-collapsed: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration-collapsed ease-in-out;
-$navbar-dropdown-menu-transition-hide: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration-expanded linear;
+$navbar-dropdown-menu-transition-show: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration ease-in-out;
+//$navbar-dropdown-menu-transition-hide: max-height $navbar-dropdown-menu-transition-duration linear;
 
 $navbar-dropdown-menu-bg: $navbar-bg; //$md-indigo-800; //$gray-900;
 $navbar-dropdown-menu-bg-hover: $navbar-bg-hover; //darken($md-indigo-900, 0%); //$md-indigo-800; //$black;
 $navbar-dropdown-menu-bg-active: $navbar-bg-active; //$md-indigo-700; //$gray-900;
 
-$navbar-dropdown-menu-has-transition-both: $navbar-dropdown-menu-has-transition-expanded and $navbar-dropdown-menu-has-transition-collapsed;
-
 $navbar-outline-color: rgba($primary, 0.5);
 //------------------------------------------------------------------------------
-
 
 //------------------------------------------------------------------------------
 // MIXINS
@@ -116,13 +109,13 @@ $navbar-outline-color: rgba($primary, 0.5);
     $bg-color: rgba(#fff, 0.066);
     $bg-color-hover: rgba(#fff, 0.022);
     
-    $item-line-height: 40px;
+    $item-line-height: 48px;
     .navbar-nav {
         li {
             position: relative;
             background: $bg-color !important;
             border-radius: 0;
-            margin-bottom: 1px;
+            margin-bottom: 0;
             > .nav-link,
             > .dropdown-item {
                 border-radius: 0;
@@ -142,33 +135,27 @@ $navbar-outline-color: rgba($primary, 0.5);
                 }
             }
         }
-        &.dropdown {
-            margin-bottom: 0;
-        }
         .dropdown-menu {
             background: transparent !important;
             margin: 0;
-            //margin-top: -1px;
             padding: 0;
             border: 0;
             border-radius: 0;
             visibility: hidden; // TAB keypresses skip hidden elements
+            &.show {
+                visibility: visible;
+            }
+            // transition
+            @if $navbar-dropdown-menu-has-transition {
+                @include navbar-dropdown-menu-transition;
+                &.show {
+                    transition: $navbar-dropdown-menu-transition-show;
+                }
+            }
             > li {
                 display: block;
                 &:last-child {
                     margin-bottom: 0;
-                }
-            }
-            // transition
-            @if $navbar-dropdown-menu-has-transition-collapsed {
-                @if not $navbar-dropdown-menu-has-transition-both {
-                    @include navbar-dropdown-menu-transition;
-                } @else {
-                    transition: $navbar-dropdown-menu-transition-show-expanded;
-                }
-                &.show {
-                    visibility: visible;
-                    transition: $navbar-dropdown-menu-transition-show-collapsed;
                 }
             }
         }
@@ -218,18 +205,6 @@ $navbar-outline-color: rgba($primary, 0.5);
             .dropdown-menu {
                 margin-top: -1*$dropdown-padding-y;
             }
-
-            // transition [-----------------------------------------------------
-            @if $navbar-dropdown-menu-has-transition-expanded {
-                @if not $navbar-dropdown-menu-has-transition-both {
-                    @include navbar-dropdown-menu-transition;
-                }
-                &.show {
-                    overflow: visible;
-                    transition: $navbar-dropdown-menu-transition-show-expanded;
-                }
-            }
-            // transition -----------------------------------------------------]
         }
 
         .dropend > .dropdown-menu[data-bs-popper] {
