@@ -1,5 +1,300 @@
 @charset "UTF-8";
 
-$rtl: false;
+@use "sass:math";
 
-@import "p3-bs-navbar-common";
+@import "node_modules/bootstrap/scss/functions";
+
+//==============================================================================
+// CUSTOM VARS before bootstrap defaults
+//==============================================================================
+@import "p3-md-colors";
+//------------------------------------------------------------------------------
+
+// scss-docs-start caret-variables
+//$caret-width:                 .3125em !default;
+$caret-width:                 .25em;
+$caret-vertical-align:        middle; //$caret-width * .85 !default;
+//$caret-spacing:               $caret-width * .85 !default;
+// scss-docs-end caret-variables
+//------------------------------------------------------------------------------
+/*@import "p3-bs-variables";*/
+//==============================================================================
+
+@import "node_modules/bootstrap/scss/variables";
+
+@import "node_modules/bootstrap/scss/maps";
+@import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/utilities";
+
+// Layout & components
+@import "node_modules/bootstrap/scss/root";
+@import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/type";
+@import "node_modules/bootstrap/scss/images";
+@import "node_modules/bootstrap/scss/containers";
+@import "node_modules/bootstrap/scss/grid";
+@import "node_modules/bootstrap/scss/tables";
+@import "node_modules/bootstrap/scss/forms";
+@import "node_modules/bootstrap/scss/buttons";
+@import "node_modules/bootstrap/scss/transitions";
+@import "node_modules/bootstrap/scss/dropdown";
+@import "node_modules/bootstrap/scss/button-group";
+@import "node_modules/bootstrap/scss/nav";
+@import "node_modules/bootstrap/scss/navbar";
+@import "node_modules/bootstrap/scss/card";
+@import "node_modules/bootstrap/scss/accordion";
+@import "node_modules/bootstrap/scss/breadcrumb";
+@import "node_modules/bootstrap/scss/pagination";
+@import "node_modules/bootstrap/scss/badge";
+@import "node_modules/bootstrap/scss/alert";
+@import "node_modules/bootstrap/scss/progress";
+@import "node_modules/bootstrap/scss/list-group";
+@import "node_modules/bootstrap/scss/close";
+@import "node_modules/bootstrap/scss/toasts";
+@import "node_modules/bootstrap/scss/modal";
+@import "node_modules/bootstrap/scss/tooltip";
+@import "node_modules/bootstrap/scss/popover";
+@import "node_modules/bootstrap/scss/carousel";
+@import "node_modules/bootstrap/scss/spinners";
+@import "node_modules/bootstrap/scss/offcanvas";
+@import "node_modules/bootstrap/scss/placeholders";
+
+// Helpers
+@import "node_modules/bootstrap/scss/helpers";
+
+// Utilities
+@import "node_modules/bootstrap/scss/utilities/api";
+// scss-docs-end import-stack
+
+// Add navbar-expand breakpoint css vars so we can extrapolate the value from JS
+:root {
+    @each $name, $value in $grid-breakpoints {
+        @if $name != 'xs' {
+            --p3-bs-navbar-expand-#{$name}: #{$value};
+        }
+    }
+}
+
+// Use the same breakpoint value used in the HTML code (es. `md` for `navbar-expand-md`)
+$navbar-breakpoint: md;
+$navbar-breakpoint-px: map-get($grid-breakpoints, $navbar-breakpoint);
+
+$navbar-bg: $black; //#2c3840; //darken($primary, 0 * $theme-color-interval); //$md-indigo-800;
+$navbar-bg-hover: $gray-900; //lighten($navbar-bg, $theme-color-interval/2);//$md-indigo-600;
+$navbar-bg-active: $gray-800; //$md-indigo-600;
+$navbar-transition: all .2s linear;
+$navbar-dropdown-menu-has-transition: false;
+$navbar-dropdown-menu-transition-max-height-factor: 10;
+$navbar-dropdown-menu-transition-max-height: $navbar-dropdown-menu-transition-max-height-factor * 1024px;
+$navbar-dropdown-menu-transition-duration: 0.2s;
+$navbar-dropdown-menu-transition-show: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration ease-in-out;
+//$navbar-dropdown-menu-transition-hide: max-height $navbar-dropdown-menu-transition-duration linear;
+
+//$navbar-dropdown-menu-bg: $navbar-bg; //$md-indigo-800; //$gray-900;
+//$navbar-dropdown-menu-bg-hover: $navbar-bg-hover; //darken($md-indigo-900, 0%); //$md-indigo-800; //$black;
+//$navbar-dropdown-menu-bg-active: $navbar-bg-active; //$md-indigo-700; //$gray-900;
+
+$navbar-outline-color: rgba($primary, 0.5);
+$navbar-outline-width: 3px;
+$navbar-outline: $navbar-outline-width solid $navbar-outline-color !important;
+
+$nb-collapsed-li-bg-color: rgba($white, 0.033);
+$nb-collapsed-li-bg-color-hover: rgba($white, 0.02);
+
+$nb-item-line-height: 1.5em;
+
+$nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size;
+$nb-border-width: $border-width;
+$nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem);
+
+// horizontal border-triangle
+$nb-v-caret-width: 2*$caret-width;
+$nb-v-caret-height: $caret-width;
+// vertical border-triangle
+$nb-h-caret-width: $caret-width;
+$nb-h-caret-height: 2*$caret-width;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// MIXINS
+//------------------------------------------------------------------------------
+@mixin navbar-dropdown-menu-transition {
+    display: block !important;
+    max-height: 0;
+    overflow: hidden;
+    &.show {
+        max-height: $navbar-dropdown-menu-transition-max-height;
+    }
+}
+//------------------------------------------------------------------------------
+
+.navbar-nav {
+    .nav-link,
+    .dropdown-item {
+        &:focus-visible {
+            outline: $navbar-outline;
+        }
+    }
+    .dropdown-toggle {
+        &:focus-visible {
+            outline: $navbar-outline;
+        }
+        @if $enable-caret {
+            position: relative;
+            &:after,
+            &:before {
+                margin: 0 !important;
+                position: absolute;
+                top: calc(50% - $nb-v-caret-height/4); // use 1/4 bottom is invisible
+                text-align: center;
+            }
+        }
+    }
+}
+
+// navbar collapsed
+@media (max-width: $navbar-breakpoint-px - 1px) {
+    .navbar-nav {
+        li {
+            position: relative;
+            background: $nb-collapsed-li-bg-color !important;
+            border-radius: 0;
+            margin-bottom: 0px;
+        }
+        .nav-link,
+        .dropdown-item {
+            line-height: $nb-item-line-height !important;
+            //padding: 0 $dropdown-item-padding-x !important;
+            padding: 0.75*$dropdown-item-padding-x $dropdown-item-padding-x;
+            padding-right: $nb-toggler-width;
+            margin: 0;
+            border-radius: 0;
+            white-space: normal;
+            background: transparent !important;
+            color: $light;
+            &:hover,
+            &:focus {
+                color: $navbar-dark-active-color;
+                //background: $nb-collapsed-li-bg-color-hover !important;
+            }
+            &:hover {
+                background: $nb-collapsed-li-bg-color-hover !important;
+            }
+        }
+        .dropdown-menu {
+            background: transparent !important;
+            margin: 0 !important; // important for leftover parent drop(start|end)
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            visibility: hidden; // TAB keypresses skip hidden elements
+            &.show {
+                visibility: visible;
+            }
+            // transition
+            @if $navbar-dropdown-menu-has-transition {
+                @include navbar-dropdown-menu-transition;
+                &.show {
+                    transition: $navbar-dropdown-menu-transition-show;
+                }
+            }
+            > li {
+                display: block;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        // caret
+        @if $enable-caret {
+            .dropdown-toggle {
+                &:before,
+                &:after {
+                    top: calc(50% - $nb-v-caret-height/2); // use 3/4
+                }
+                &:before {
+                    display: none!important;
+                }
+                &:after {
+                    display: block!important; // add this for accidental parent drop()start|end) leftover
+                    @include caret-down; // add this for accidental parent drop()start|end) leftover
+                    left: auto;
+                    right: calc($nb-toggler-width/2 - $nb-v-caret-width/2);
+                    // custom content
+                    //border: 0 !important; // disable the original caret (triangle with border)
+                    //content: "﹀"; //"»"; // "⮞";
+                    //transform: rotateZ(270deg);
+    //                font-size: bold;
+    //                background-color: rgba(0,0,0,0.2);
+    //                border-radius: 50%;
+                }
+                &.show {
+                    &:before,
+                    &:after {
+                        //content: "︿";//"×"; // "⮞";
+                        transform: rotateZ(-180deg);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// navbar expanded
+@media (min-width: $navbar-breakpoint-px) {
+    .navbar-nav {
+        a {
+            transition: $navbar-transition;
+        }
+        .dropdown-menu {
+            max-width: 1.25*$dropdown-min-width;
+            // nested menus
+            .dropdown-menu {
+                margin-top: -1*$dropdown-padding-y;
+            }
+        }
+
+        .dropend > .dropdown-menu {
+            left: 100%;
+            right: auto;
+            margin-left: 0;
+        }
+        .dropstart > .dropdown-menu {
+            left: auto;
+            right: 100%;
+            margin-right: 0;
+        }
+
+        @if $enable-caret {
+            .navbar-expand-#{$navbar-breakpoint} & .nav-link {
+                $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-v-caret-width);
+                padding-right: $dropdown-toggle-padding-end;
+                &:after {
+                    right: $navbar-nav-link-padding-x;
+                    left: auto;
+                }
+            }
+            .dropdown-item {
+                &:after,
+                &:before {
+                    top: calc(50% - $nb-h-caret-height/2);
+                }
+            }
+            .dropdown-item:after,
+            .dropdown-item:before {
+                $nb-h-caret-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-h-caret-width});
+                left: auto;
+                right: $nb-h-caret-distance;
+            }
+            // we need to inspect parent drop(start|end)
+            .dropend > .dropdown-item::after,
+            .dropstart > .dropdown-item::before {
+                display: inline-block !important;
+            }
+            .dropend > .dropdown-item::before,
+            .dropstart > .dropdown-item::after {
+                display: none !important;
+            }
+        }
+    }
+}
