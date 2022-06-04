@@ -168,11 +168,7 @@ $nb-h-caret-height: 2*$caret-width;
             line-height: $nb-item-line-height !important;
             //padding: 0 $dropdown-item-padding-x !important;
             padding: 0.75*$dropdown-item-padding-x $dropdown-item-padding-x;
-            @if not $rtl {
-                padding-right: $nb-toggler-width;
-            } @else {
-                padding-left: $nb-toggler-width;
-            }
+            padding-right: $nb-toggler-width;
             margin: 0;
             border-radius: 0;
             white-space: normal;
@@ -224,13 +220,8 @@ $nb-h-caret-height: 2*$caret-width;
                 &:after {
                     display: block!important; // add this for accidental parent drop()start|end) leftover
                     @include caret-down; // add this for accidental parent drop()start|end) leftover
-                    @if not $rtl {
-                        left: auto;
-                        right: calc($nb-toggler-width/2 - $nb-v-caret-width/2);
-                    } @else {
-                        left: calc($nb-toggler-width/2 - $nb-v-caret-width/2);
-                        right: auto;
-                    }
+                    left: auto;
+                    right: calc($nb-toggler-width/2 - $nb-v-caret-width/2);
                     // custom content
                     //border: 0 !important; // disable the original caret (triangle with border)
                     //content: "﹀"; //"»"; // "⮞";
@@ -266,43 +257,23 @@ $nb-h-caret-height: 2*$caret-width;
         }
 
         .dropend > .dropdown-menu {
-            @if not $rtl {
-                left: 100%;
-                right: auto;
-                margin-left: 0;
-            } @else {
-                left: auto;
-                right: 100%;
-                margin-right: 0;
-            }
+            left: 100%;
+            right: auto;
+            margin-left: 0;
         }
         .dropstart > .dropdown-menu {
-            @if not $rtl {
-                left: auto;
-                right: 100%;
-                margin-right: 0;
-            } @else {
-                left: 100%;
-                right: auto;
-                margin-left: 0;
-            }
+            left: auto;
+            right: 100%;
+            margin-right: 0;
         }
 
         @if $enable-caret {
             .navbar-expand-#{$navbar-breakpoint} & .nav-link {
                 $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-v-caret-width);
-                @if not $rtl {
-                    padding-right: $dropdown-toggle-padding-end;
-                    &:after {
-                        right: $navbar-nav-link-padding-x;
-                        left: auto;
-                    }
-                } @else {
-                    padding-left: $dropdown-toggle-padding-end;
-                    &:after {
-                        left: $navbar-nav-link-padding-x;
-                        right: auto;
-                    }
+                padding-right: $dropdown-toggle-padding-end;
+                &:after {
+                    right: $navbar-nav-link-padding-x;
+                    left: auto;
                 }
             }
             .dropdown-item {
@@ -314,13 +285,8 @@ $nb-h-caret-height: 2*$caret-width;
             .dropdown-item:after,
             .dropdown-item:before {
                 $nb-h-caret-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-h-caret-width});
-                @if not $rtl {
-                    left: auto;
-                    right: $nb-h-caret-distance;
-                } @else {
-                    left: $nb-h-caret-distance;
-                    right: auto;
-                }
+                left: auto;
+                right: $nb-h-caret-distance;
             }
             // we need to inspect parent drop(start|end)
             .dropend > .dropdown-item::after,
