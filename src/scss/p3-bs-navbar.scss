@@ -76,27 +76,27 @@
 }
 
 // Use the same breakpoint value used in the HTML code (es. `md` for `navbar-expand-md`)
-$navbar-breakpoint: md;
-$navbar-breakpoint-px: map-get($grid-breakpoints, $navbar-breakpoint);
+$nb-breakpoint: md;
+$nb-breakpoint-px: map-get($grid-breakpoints, $nb-breakpoint);
 
-$navbar-bg: $black; //#2c3840; //darken($primary, 0 * $theme-color-interval); //$md-indigo-800;
-$navbar-bg-hover: $gray-900; //lighten($navbar-bg, $theme-color-interval/2);//$md-indigo-600;
-$navbar-bg-active: $gray-800; //$md-indigo-600;
-$navbar-transition: all .2s linear;
-$navbar-dropdown-menu-has-transition: false;
-$navbar-dropdown-menu-transition-max-height-factor: 10;
-$navbar-dropdown-menu-transition-max-height: $navbar-dropdown-menu-transition-max-height-factor * 1024px;
-$navbar-dropdown-menu-transition-duration: 0.2s;
-$navbar-dropdown-menu-transition-show: max-height $navbar-dropdown-menu-transition-max-height-factor*$navbar-dropdown-menu-transition-duration ease-in-out;
-//$navbar-dropdown-menu-transition-hide: max-height $navbar-dropdown-menu-transition-duration linear;
+//$nb-bg: $black; //#2c3840; //darken($primary, 0 * $theme-color-interval); //$md-indigo-800;
+//$nb-bg-hover: $gray-900; //lighten($nb-bg, $theme-color-interval/2);//$md-indigo-600;
+//$nb-bg-active: $gray-800; //$md-indigo-600;
+$nb-transition: all .2s linear;
+$nb-dropdown-menu-has-transition: true;
+$nb-dropdown-menu-transition-max-height-factor: 10;
+$nb-dropdown-menu-transition-max-height: $nb-dropdown-menu-transition-max-height-factor * 1024px;
+$nb-dropdown-menu-transition-duration: 0.2s;
+$nb-dropdown-menu-transition-show: max-height $nb-dropdown-menu-transition-max-height-factor*$nb-dropdown-menu-transition-duration ease-in-out;
+//$nb-dropdown-menu-transition-hide: max-height $nb-dropdown-menu-transition-duration linear;
 
-//$navbar-dropdown-menu-bg: $navbar-bg; //$md-indigo-800; //$gray-900;
-//$navbar-dropdown-menu-bg-hover: $navbar-bg-hover; //darken($md-indigo-900, 0%); //$md-indigo-800; //$black;
-//$navbar-dropdown-menu-bg-active: $navbar-bg-active; //$md-indigo-700; //$gray-900;
+//$nb-dropdown-menu-bg: $nb-bg; //$md-indigo-800; //$gray-900;
+//$nb-dropdown-menu-bg-hover: $nb-bg-hover; //darken($md-indigo-900, 0%); //$md-indigo-800; //$black;
+//$nb-dropdown-menu-bg-active: $nb-bg-active; //$md-indigo-700; //$gray-900;
 
-$navbar-outline-color: rgba($primary, 0.5);
-$navbar-outline-width: 3px;
-$navbar-outline: $navbar-outline-width solid $navbar-outline-color !important;
+$nb-outline-color: rgba($primary, 0.5);
+$nb-outline-width: 3px;
+$nb-outline: $nb-outline-width solid $nb-outline-color !important;
 
 $nb-collapsed-li-bg-color: rgba($white, 0.033);
 $nb-collapsed-li-bg-color-hover: rgba($white, 0.02);
@@ -110,17 +110,19 @@ $nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.d
 //------------------------------------------------------------------------------
 // CARET
 //------------------------------------------------------------------------------
-$nb-caret-native: false;
+$nb-caret-native: true;
 
 // caret character
-$nb-caret-default: "+";
-$nb-caret-up: "⮝";
-$nb-caret-down: "⮟";//
-$nb-caret-left: "⮜";
-$nb-caret-right: "⮞";
+$nb-caret-open: "+";
+$nb-caret-close: "-";
+$nb-caret-left: "\01F860"; //"?";//"«";//"⮜";
+$nb-caret-up: "\01F861";
+$nb-caret-right: "\01F862";//"»";//"⮞";
+$nb-caret-down: "\01F863";//"⮟";//"⮟";//
 
 // caret default size
-$nb-caret-size: 1rem;
+$nb-caret-font-size: 1rem;
+$nb-caret-size: $nb-caret-font-size;
 $nb-caret-v-width: $nb-caret-size;
 $nb-caret-v-height: $nb-caret-size;
 $nb-caret-h-width: $nb-caret-size;
@@ -134,21 +136,26 @@ $nb-caret-h-height: $nb-caret-size;
     $nb-caret-h-width: $nb-caret-v-height;
     $nb-caret-h-height: $nb-caret-v-width;
 }
+
+$nb-caret-h-distance: 0.25rem;
 //==============================================================================
 
-//------------------------------------------------------------------------------
+//==============================================================================
 // MIXINS
-//------------------------------------------------------------------------------
+//==============================================================================
 @mixin navbar-dropdown-menu-transition {
     display: block !important;
     max-height: 0;
     overflow: hidden;
     &.show {
-        max-height: $navbar-dropdown-menu-transition-max-height;
+        max-height: $nb-dropdown-menu-transition-max-height;
     }
 }
-//------------------------------------------------------------------------------
+//==============================================================================
 
+//==============================================================================
+// STYLES: COMMON
+//==============================================================================
 .navbar-nav {
     .nav-link,
     .dropdown-item {
@@ -156,7 +163,7 @@ $nb-caret-h-height: $nb-caret-size;
             outline: 0;
         }
         &:focus-visible {
-            outline: $navbar-outline;
+            outline: $nb-outline;
         }
         &:focus-within {
             outline: 0;
@@ -165,37 +172,50 @@ $nb-caret-h-height: $nb-caret-size;
     .dropdown-toggle {
         @if $enable-caret {
             position: relative;
-            // diable before caret in navbar top-links
+            &:after,
+            &:before {
+                //display: inline-block !important;
+                text-align: center;
+                margin: 0 !important;
+                position: absolute;
+                @if $nb-caret-native {
+                    //
+                } @else {
+                    // custom content
+                    border: 0 !important; // disable the original caret (triangle with border)
+                    content: $nb-caret-open;
+                    &.show {
+                        content: $nb-caret-close;
+                    }
+                    transition: transform 0.2s linear;
+                    //font-weight: bold;
+                    font-size: $nb-caret-font-size;
+                    width: $nb-caret-font-size;
+                }
+            }
+            &.show {
+                &:after,
+                &:before {
+                    @if not $nb-caret-native {
+                        content: $nb-caret-close;
+                    }
+                }
+            }
+            // disable before caret in navbar top-links
             &.nav-link:before {
                 @if $enable-caret {
                     display: none !important;
                 }
             }
-            &:after,
-            &:before {
-                display: inline-block !important;
-                text-align: center;
-                margin: 0 !important;
-                position: absolute;
-                @if $nb-caret-native {
-                    top: calc(50% - $nb-caret-v-height/4); // use 1/4 bottom is invisible
-                } @else {
-                    // custom content
-                    border: 0 !important; // disable the original caret (triangle with border)
-                    content: $nb-caret-default;
-                    //transform: rotateZ(270deg);
-                    transition: transform 0.2s linear;
-                    font-weight: bold;                    
-                    width: $nb-caret-v-width;
-                    height: $nb-caret-v-height;
-                }
-            }
         }
     }
 }
+//==============================================================================
 
-// navbar collapsed
-@media (max-width: $navbar-breakpoint-px - 1px) {
+//==============================================================================
+// STYLES: COLLAPSED NAVBAR
+//==============================================================================
+@media (max-width: $nb-breakpoint-px - 1px) {
     .navbar-nav {
         li {
             position: relative;
@@ -203,6 +223,7 @@ $nb-caret-h-height: $nb-caret-size;
             border-radius: 0;
             margin-bottom: 0px;
         }
+        // ALL TOP AND SUBITEMS (TOGGLE OR NOT)
         .nav-link,
         .dropdown-item {
             line-height: $nb-item-line-height !important;
@@ -223,6 +244,7 @@ $nb-caret-h-height: $nb-caret-size;
                 background: $nb-collapsed-li-bg-color-hover !important;
             }
         }
+        // ALL DD MENUS
         .dropdown-menu {
             background: transparent !important;
             margin: 0 !important; // important for leftover parent drop(start|end)
@@ -234,10 +256,10 @@ $nb-caret-h-height: $nb-caret-size;
                 visibility: visible;
             }
             // transition
-            @if $navbar-dropdown-menu-has-transition {
+            @if $nb-dropdown-menu-has-transition {
                 @include navbar-dropdown-menu-transition;
                 &.show {
-                    transition: $navbar-dropdown-menu-transition-show;
+                    transition: $nb-dropdown-menu-transition-show;
                 }
             }
             > li {
@@ -249,11 +271,8 @@ $nb-caret-h-height: $nb-caret-size;
         }
         // caret
         @if $enable-caret {
+            // ALL TOP AND SUB TOGGLE ITEMS
             .dropdown-toggle {
-                //&:before,
-                //&:after {
-                //    top: calc(50% - $nb-caret-v-height/2); // use 3/4
-                //}
                 &:before {
                     display: none!important;
                 }
@@ -266,7 +285,7 @@ $nb-caret-h-height: $nb-caret-size;
                     } @else {
                         // custom content
                         border: 0 !important; // disable the original caret (triangle with border)
-                        content: $nb-caret-down; //"﹀"; //"»"; // "⮞";
+                        content: $nb-caret-down or $nb-caret-open; //"﹀"; //"»"; // "⮞";
                         //transform: rotateZ(270deg);
                         transition: transform 0.2s linear;
                         font-weight: bold;
@@ -275,24 +294,26 @@ $nb-caret-h-height: $nb-caret-size;
                 &.show {
                     &:before,
                     &:after {
+                        transition: transform $nb-dropdown-menu-transition-duration linear;
                         @if $nb-caret-native {
+                            transform: rotateZ(180deg);
+                            //@include caret-up;
                         } @else {
-
+                            content: $nb-caret-up or $nb-caret-down or $nb-caret-close; // "⮞";
+                            transform: rotateZ(180deg);
                         }
-                        content: "×"; // "⮞";
-                        //transform: rotateZ(45deg);
-                        //height: 1.5em;
-                        //line-height: 1.5em;
-                        /*transition: transform 0.3s linear;*/
                     }
                 }
             }
         }
     }
 }
+//==============================================================================
 
-// navbar expanded
-@media (min-width: $navbar-breakpoint-px) {
+//==============================================================================
+// STYLES: EXPANDED NAVBAR
+//==============================================================================
+@media (min-width: $nb-breakpoint-px) {
     .navbar-nav {
         .dropdown-menu {
             max-width: 1.25*$dropdown-min-width;
@@ -314,32 +335,55 @@ $nb-caret-h-height: $nb-caret-size;
         }
 
         @if $enable-caret {
-            // ROOT LINKS ()nav-link)
-            .navbar-expand-#{$navbar-breakpoint} & .nav-link {
-            // .nav-link {
-                $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
-                padding-right: $dropdown-toggle-padding-end;
-                &:after {
-                    right: $navbar-nav-link-padding-x;
-                    left: auto;
-                }
-            }
-            .dropdown-item {
-                @if $nb-caret-native {
-                    &:after,
+            .dropdown-toggle {
+                // ROOT LINKS (nav-link)
+                .navbar-expand-#{$nb-breakpoint} &.nav-link {
+                    $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
+                    padding-right: $dropdown-toggle-padding-end;
                     &:before {
-                        top: calc(50% - $nb-caret-h-height/2);
+                        display: none;
+                    }
+                    &:after {
+                        left: auto;
+                        right: $navbar-nav-link-padding-x;
+                        @if $nb-caret-native {
+                            top: calc(50% - $nb-caret-v-height/2);
+                        } @else {
+                            content: $nb-caret-down or $nb-caret-open;
+                        }
+                    }
+                    &.show {
+                        &:after {
+                            @if $nb-caret-native {
+                                transform: rotate(180deg);
+                            } @else {
+                                content: $nb-caret-up or $nb-caret-close;
+                            }
+                        }
                     }
                 }
-            }
-            .dropdown-item:after,
-            .dropdown-item:before {
-                $nb-caret-h-distance: 0.5rem;
-                @if $nb-caret-native {
-                    $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
+                // SUBMENU LINKS
+                &.dropdown-item {
+                    @if not $nb-caret-native {
+                        &:before {
+                            content: $nb-caret-left or $nb-caret-open;
+                        }
+                        &:after {
+                            content: $nb-caret-right or $nb-caret-open;
+                        }
+                    }
+                    &:after,
+                    &:before {
+                        @if $nb-caret-native {
+                            $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
+                            top: calc(50% - $nb-caret-h-height/2);
+                        } else {
+                            //top: ;
+                        }
+                        left: auto;
+                        right: $nb-caret-h-distance;
+                    }
                 }
-                left: auto;
-                right: $nb-caret-h-distance;
             }
             // we need to inspect parent drop(start|end)
             .dropend > .dropdown-item::after,
@@ -353,3 +397,4 @@ $nb-caret-h-height: $nb-caret-size;
         }
     }
 }
+//==============================================================================
