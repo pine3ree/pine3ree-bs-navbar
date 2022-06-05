@@ -107,13 +107,34 @@ $nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size;
 $nb-border-width: $border-width;
 $nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem);
 
-// horizontal border-triangle
-$nb-v-caret-width: 2*$caret-width;
-$nb-v-caret-height: $caret-width;
-// vertical border-triangle
-$nb-h-caret-width: $caret-width;
-$nb-h-caret-height: 2*$caret-width;
 //------------------------------------------------------------------------------
+// CARET
+//------------------------------------------------------------------------------
+$nb-caret-native: false;
+
+// caret character
+$nb-caret-default: "+";
+$nb-caret-up: "⮝";
+$nb-caret-down: "⮟";//
+$nb-caret-left: "⮜";
+$nb-caret-right: "⮞";
+
+// caret default size
+$nb-caret-size: 1rem;
+$nb-caret-v-width: $nb-caret-size;
+$nb-caret-v-height: $nb-caret-size;
+$nb-caret-h-width: $nb-caret-size;
+$nb-caret-h-height: $nb-caret-size;
+
+@if $nb-caret-native {
+    // horizontal border-triangle
+    $nb-caret-v-width: 2*$caret-width;
+    $nb-caret-v-height: $caret-width;
+    // vertical border-triangle
+    $nb-caret-h-width: $nb-caret-v-height;
+    $nb-caret-h-height: $nb-caret-v-width;
+}
+//==============================================================================
 
 //------------------------------------------------------------------------------
 // MIXINS
@@ -144,12 +165,30 @@ $nb-h-caret-height: 2*$caret-width;
     .dropdown-toggle {
         @if $enable-caret {
             position: relative;
+            // diable before caret in navbar top-links
+            &.nav-link:before {
+                @if $enable-caret {
+                    display: none !important;
+                }
+            }
             &:after,
             &:before {
+                display: inline-block !important;
+                text-align: center;
                 margin: 0 !important;
                 position: absolute;
-                top: calc(50% - $nb-v-caret-height/4); // use 1/4 bottom is invisible
-                text-align: center;
+                @if $nb-caret-native {
+                    top: calc(50% - $nb-caret-v-height/4); // use 1/4 bottom is invisible
+                } @else {
+                    // custom content
+                    border: 0 !important; // disable the original caret (triangle with border)
+                    content: $nb-caret-default;
+                    //transform: rotateZ(270deg);
+                    transition: transform 0.2s linear;
+                    font-weight: bold;                    
+                    width: $nb-caret-v-width;
+                    height: $nb-caret-v-height;
+                }
             }
         }
     }
@@ -211,31 +250,40 @@ $nb-h-caret-height: 2*$caret-width;
         // caret
         @if $enable-caret {
             .dropdown-toggle {
-                &:before,
-                &:after {
-                    top: calc(50% - $nb-v-caret-height/2); // use 3/4
-                }
+                //&:before,
+                //&:after {
+                //    top: calc(50% - $nb-caret-v-height/2); // use 3/4
+                //}
                 &:before {
                     display: none!important;
                 }
                 &:after {
-                    display: block!important; // add this for accidental parent drop()start|end) leftover
-                    @include caret-down; // add this for accidental parent drop()start|end) leftover
                     left: auto;
-                    right: calc($nb-toggler-width/2 - $nb-v-caret-width/2);
-                    // custom content
-                    //border: 0 !important; // disable the original caret (triangle with border)
-                    //content: "﹀"; //"»"; // "⮞";
-                    //transform: rotateZ(270deg);
-    //                font-size: bold;
-    //                background-color: rgba(0,0,0,0.2);
-    //                border-radius: 50%;
+                    right: calc($nb-toggler-width/2 - $nb-caret-v-width/2);
+                    @if $nb-caret-native {
+                        top: calc(50% - $nb-caret-v-height/2);
+                        @include caret-down; // add this for accidental parent drop()start|end) leftover
+                    } @else {
+                        // custom content
+                        border: 0 !important; // disable the original caret (triangle with border)
+                        content: $nb-caret-down; //"﹀"; //"»"; // "⮞";
+                        //transform: rotateZ(270deg);
+                        transition: transform 0.2s linear;
+                        font-weight: bold;
+                    }
                 }
                 &.show {
                     &:before,
                     &:after {
-                        //content: "︿";//"×"; // "⮞";
-                        transform: rotateZ(-180deg);
+                        @if $nb-caret-native {
+                        } @else {
+
+                        }
+                        content: "×"; // "⮞";
+                        //transform: rotateZ(45deg);
+                        //height: 1.5em;
+                        //line-height: 1.5em;
+                        /*transition: transform 0.3s linear;*/
                     }
                 }
             }
@@ -252,22 +300,24 @@ $nb-h-caret-height: 2*$caret-width;
             .dropdown-menu {
                 margin-top: -1*$dropdown-padding-y;
             }
-        }
-
-        .dropend > .dropdown-menu {
-            left: 100%;
-            right: auto;
-            margin-left: 0;
-        }
-        .dropstart > .dropdown-menu {
-            left: auto;
-            right: 100%;
-            margin-right: 0;
+            // dset rop direction based on dropstart|dropend set via js
+            .dropend > & {
+                left: 100%;
+                right: auto;
+                margin-left: 0;
+            }
+            .dropstart > & {
+                left: auto;
+                right: 100%;
+                margin-right: 0;
+            }
         }
 
         @if $enable-caret {
-            .navbar-expand-#{$navbar-breakpoint} & .nav-link {
-                $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-v-caret-width);
+            // ROOT LINKS ()nav-link)
+            navbar-expand-#{$navbar-breakpoint} & .nav-link {
+            // .nav-link {
+                $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
                 padding-right: $dropdown-toggle-padding-end;
                 &:after {
                     right: $navbar-nav-link-padding-x;
@@ -275,16 +325,21 @@ $nb-h-caret-height: 2*$caret-width;
                 }
             }
             .dropdown-item {
-                &:after,
-                &:before {
-                    top: calc(50% - $nb-h-caret-height/2);
+                @if $nb-caret-native {
+                    &:after,
+                    &:before {
+                        top: calc(50% - $nb-caret-h-height/2);
+                    }
                 }
             }
             .dropdown-item:after,
             .dropdown-item:before {
-                $nb-h-caret-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-h-caret-width});
+                $nb-caret-h-distance: 0.25rem;
+                @if $nb-caret-native {
+                    $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
+                }
                 left: auto;
-                right: $nb-h-caret-distance;
+                right: $nb-caret-h-distance;
             }
             // we need to inspect parent drop(start|end)
             .dropend > .dropdown-item::after,
