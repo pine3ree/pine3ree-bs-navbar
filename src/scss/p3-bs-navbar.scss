@@ -300,22 +300,22 @@ $nb-caret-h-height: $nb-caret-size;
             .dropdown-menu {
                 margin-top: -1*$dropdown-padding-y;
             }
-            // dset rop direction based on dropstart|dropend set via js
-            .dropend > & {
-                left: 100%;
-                right: auto;
-                margin-left: 0;
-            }
-            .dropstart > & {
-                left: auto;
-                right: 100%;
-                margin-right: 0;
-            }
+        }
+        // set dropdown-menu direction based on dropstart|dropend set via js
+        .dropend > .dropdown-menu[data-bs-popper] {
+            left: 100%;
+            right: auto;
+            margin-left: 0;
+        }
+        .dropstart > .dropdown-menu[data-bs-popper] {
+            left: auto;
+            right: 100%;
+            margin-right: 0;
         }
 
         @if $enable-caret {
             // ROOT LINKS ()nav-link)
-            navbar-expand-#{$navbar-breakpoint} & .nav-link {
+            .navbar-expand-#{$navbar-breakpoint} & .nav-link {
             // .nav-link {
                 $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
                 padding-right: $dropdown-toggle-padding-end;
@@ -334,7 +334,7 @@ $nb-caret-h-height: $nb-caret-size;
             }
             .dropdown-item:after,
             .dropdown-item:before {
-                $nb-caret-h-distance: 0.25rem;
+                $nb-caret-h-distance: 0.5rem;
                 @if $nb-caret-native {
                     $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
                 }
