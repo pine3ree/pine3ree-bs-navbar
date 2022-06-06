@@ -725,34 +725,6 @@ const P3BsNavbar = (function($) {
         });
     };
 
-//    document.addEventListener(BS_EVENT_CLICK_DATA_API, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(BS_EVENT_SHOW, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(BS_EVENT_SHOWN, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(BS_EVENT_HIDE, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(BS_EVENT_HIDDEN, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(P3_EVENT_SHOW, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(P3_EVENT_SHOWN, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(P3_EVENT_HIDE, function(e) {
-//       console.log("document => " + e.type);
-//    });
-//    document.addEventListener(P3_EVENT_HIDDEN, function(e) {
-//       console.log("document => " + e.type);
-//    });
-
     P3BsNavbar.defaults = {
         breakpoint: 768,
         hover: false,
