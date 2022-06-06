@@ -16,6 +16,8 @@ const P3BsNavbar = (function($) {
     const P3_EVENT_HIDDEN = `hidden${P3_EVENT_KEY}`;
     const P3_EVENT_SHOW = `show${P3_EVENT_KEY}`;
     const P3_EVENT_SHOWN = `shown${P3_EVENT_KEY}`;
+    const P3_EVENT_KEYDOWN = `keydown${P3_EVENT_KEY}`;
+    const P3_EVENT_KEYUP = `keyup${P3_EVENT_KEY}`;
     const P3_DATA_TIMEOUT_ID = `timeoutID.${P3_DATA_KEY}`;
 
     const BS_NAME = 'dropdown';
@@ -49,6 +51,7 @@ const P3BsNavbar = (function($) {
     const BS_SELECTOR_DATA_TOGGLE_SHOWN = `${BS_SELECTOR_DATA_TOGGLE}.${BS_CLASS_SHOW}`;
     const BS_SELECTOR_DROPDOWN = '.dropdown';
     const BS_SELECTOR_DROPDOWN_SHOWN = `${BS_SELECTOR_DROPDOWN}.${BS_CLASS_SHOW}`;
+    const BS_CLASS_DROPDOWN_ITEM = 'dropdown-item';
     const BS_CLASS_MENU = 'dropdown-menu';
     const BS_SELECTOR_MENU = `.${BS_CLASS_MENU}`;
     const BS_SELECTOR_MENU_SHOWN = `${BS_SELECTOR_MENU}.${BS_CLASS_SHOW}`;
@@ -57,8 +60,8 @@ const P3BsNavbar = (function($) {
     const BS_CLASS_MENU_END = `${BS_CLASS_MENU}-end`;
     const BS_SELECTOR_MENU_END = `${BS_SELECTOR_MENU}.${BS_CLASS_MENU_END}`;
     const BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
-    const BS_SELECTOR_VISIBLE_ITEMS = '.dropdown-menu .dropdown-item:not(.disabled):not(:disabled)';
-    const P3_SELECTOR_VISIBLE_ITEMS = '.dropdown-item:not(.disabled):not(:disabled)';
+    const BS_SELECTOR_VISIBLE_ITEMS = `.dropdown-menu .${BS_CLASS_DROPDOWN_ITEM}:not(.disabled):not(:disabled)`;
+    const P3_SELECTOR_VISIBLE_ITEMS = `.${BS_CLASS_DROPDOWN_ITEM}:not(.disabled):not(:disabled)`;
     
     const menuEndRegex = new RegExp(`${BS_CLASS_MENU}(?:-[a-z]{2,3})?-end`);
 
@@ -163,10 +166,10 @@ const P3BsNavbar = (function($) {
      *
      * @param {Event} e
      * @param {Boolean} stopPropagation
-     * @param {Boolean} dispatchCustom Dispatch a custom event?
+     * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
      * @returns {undefined}
      */
-    function handleHiddenEvent(e, stopPropagation = false, dispatchCustom = false) {
+    function handleHiddenEvent(e, stopPropagation = false, dispatchCustomEvent = false) {
         const target = e.relatedTarget || e.target;
         if (!isEnabledToggle(target)) {
             return;
@@ -184,7 +187,7 @@ const P3BsNavbar = (function($) {
         }
 
         // Dispatch custom event?
-        if (dispatchCustom) {
+        if (dispatchCustomEvent) {
             target.dispatchEvent(new Event(P3_EVENT_HIDDEN, P3_EVENT_OPTS));
         }
     }
@@ -195,10 +198,10 @@ const P3BsNavbar = (function($) {
      * @param {Event} e
      * @param {Boolean} hover
      * @param {Number} timeout
-     * @param {Boolean} dispatchCustom Dispatch a custom event?
+     * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
      * @returns {undefined}
      */
-    function handleClickDataApiEvent(e, hover, timeout, dispatchCustom = false) {
+    function handleClickDataApiEvent(e, hover, timeout, dispatchCustomEvent = false) {
         const target = e.relatedTarget || e.target;
         if (!isEnabledToggle(target)) {
             return;
@@ -217,8 +220,8 @@ const P3BsNavbar = (function($) {
         }
 
         // Dispatch custom event?
-        if (dispatchCustom) {
-            target.dispatchEvent(new Event(P3_EVENT_CLICK, P3_EVENT_OPTS));
+        if (dispatchCustomEvent) {
+            target.dispatchEvent(new MouseEvent(P3_EVENT_CLICK, e));
         }
     }
 
@@ -459,9 +462,10 @@ const P3BsNavbar = (function($) {
      *
      * @param {Event} e
      * @param {HTMLElement} navbar
+     * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
      * @returns {undefined}
      */
-    function handleKeydown(e, navbar) {
+    function handleKeydown(e, navbar, dispatchCustomEvent) {
         // Let bootstrap handlers deal with ESCAPE and TAB
         if (!e.key || e.key === ESCAPE_KEY || e.key === TAB_KEY) {
             return;
@@ -473,12 +477,10 @@ const P3BsNavbar = (function($) {
             return;
         }
 
-        console.log('p3-key = ' + e.key);
-
         const target = e.target;
         // Let bootstrap dropdown handle top-level (nav-link) dropdown-items and
         // other elements such as form inputs
-        if (!target || !target.classList.contains('dropdown-item')) {
+        if (!target || !target.classList.contains(BS_CLASS_DROPDOWN_ITEM)) {
             return;
         }
 
@@ -487,7 +489,7 @@ const P3BsNavbar = (function($) {
             return;
         }
 
-        // Stop downward propagation from here
+        // STOP DOWNWARD propagation from here
         e.stopPropagation();
 
         if (e.key === ENTER_KEY) {
@@ -501,27 +503,28 @@ const P3BsNavbar = (function($) {
                     subItem.focus();
                 }
             }
-            return;
-        }
+        } else {
+            let menu;
+            menu = target.closest(BS_SELECTOR_MENU);
+            if (menu instanceof HTMLElement) {
+                const items = [].concat(
+                    ...menu.querySelectorAll(`:scope > li > ${P3_SELECTOR_VISIBLE_ITEMS}`)
+                );
 
-        let menu;
-        menu = target.closest(BS_SELECTOR_MENU);
-        if (!menu) {
-            return;
-        }
-
-        const items = [].concat(
-            ...menu.querySelectorAll(`:scope > li > ${P3_SELECTOR_VISIBLE_ITEMS}`)
-        );
-
-        const isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
-        if (isNavKeyEvent) {
-            let nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
-            if (nextItem) {
-                nextItem.focus();
-                closeSiblingDropdowns(nextItem.parentElement);
+                const isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
+                if (isNavKeyEvent) {
+                    let nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
+                    if (nextItem) {
+                        nextItem.focus();
+                        closeSiblingDropdowns(nextItem.parentElement);
+                    }
+                }
             }
-            return;
+        }
+
+        // Dispatch custom event?
+        if (dispatchCustomEvent) {
+            target.dispatchEvent(new KeyboardEvent(P3_EVENT_KEYDOWN, e));
         }
     }
 
@@ -665,37 +668,39 @@ const P3BsNavbar = (function($) {
                 OPT.breakpoint = breakpoint;
             }
 
-            // Dispatch custom event on BS_EVENT_SHOW
-            navbar.addEventListener(BS_EVENT_SHOW, function(e) {
-                const target = e.relatedTarget || e.target;
-                target.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
-            });
+            if (OPT.customEvents) {
+                // Dispatch custom event on BS_EVENT_SHOW
+                navbar.addEventListener(BS_EVENT_SHOW, function(e) {
+                    const target = e.relatedTarget || e.target;
+                    target.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
+                });
 
-            // Dispatch custom event on BS_EVENT_HIDE
-            navbar.addEventListener(BS_EVENT_HIDE, function(e) {
-                const target = e.relatedTarget || e.target;
-                target.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
-            });
+                // Dispatch custom event on BS_EVENT_HIDE
+                navbar.addEventListener(BS_EVENT_HIDE, function(e) {
+                    const target = e.relatedTarget || e.target;
+                    target.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
+                });
+            }
 
             // handle BS_EVENT_SHOWN events
             navbar.addEventListener(BS_EVENT_SHOWN, function(e) {
-                handleShownEvent(e, OPT.breakpoint, OPT.closeOthers);
+                handleShownEvent(e, OPT.breakpoint, OPT.closeOthers, OPT.stopPropagation);
             });
 
             // handle BS_EVENT_HIDDEN events
             navbar.addEventListener(BS_EVENT_HIDDEN, function(e) {
-                handleHiddenEvent(e);
+                handleHiddenEvent(e, OPT.stopPropagation, OPT.customEvents);
             });
 
             // handle CLICK events (BS_EVENT_CLICK_DATA_API not used)
             navbar.addEventListener('click', function(e) {
-                handleClickDataApiEvent(e, OPT.hover, OPT.timeout);
+                handleClickDataApiEvent(e, OPT.hover, OPT.timeout, OPT.customEvents);
             });
 
             // handle KEYDOWN events (BS_EVENT_KEYDOWN_DATA_API not used)
             document.addEventListener('keydown', function(e) {
-                handleKeydown(e, navbar);
-            }, true); // capture events before document where bs listeners are registered
+                handleKeydown(e, navbar, OPT.customEvents);
+            }, true); // CAPTURE events before document where bs listeners are registered
 
             //------------------------------------------------------------------
             // CLOSE MENUS ON OPT.breakpoint CROSSING
@@ -719,7 +724,9 @@ const P3BsNavbar = (function($) {
             //------------------------------------------------------------------
             navbar.addEventListener(P3_EVENT_SHOWN, function(e) {
                 closeExternalDropdowns(navbar);
-                e.stopPropagation(); // no need to propagate outside the navbar
+                if (OPT.stopPropagation) {
+                    e.stopPropagation(); // no need to propagate outside the navbar
+                }
             });
             //------------------------------------------------------------------
         });
@@ -730,6 +737,8 @@ const P3BsNavbar = (function($) {
         hover: false,
         timeout: 250,
         closeOthers: false,
+        stopPropagation: false,
+        customEvents: false,
     };
 
     // Add jQuery plugin if jQuery loaded
