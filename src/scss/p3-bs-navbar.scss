@@ -137,7 +137,7 @@ $nb-caret-collapse-1: $nb-caret-end;
 $nb-caret-collapse-2: $nb-caret-end;
 $nb-caret-collapse-rotation: 90deg;
 // caret size
-$nb-caret-font-size: 1rem;
+$nb-caret-font-size: .75rem;
 $nb-caret-size: $nb-caret-font-size;
 $nb-caret-v-width: $nb-caret-size;
 $nb-caret-v-height: $nb-caret-size;
@@ -227,6 +227,15 @@ $nb-caret-h-distance: 0.25rem;
         right: calc($container-width/2 - $v-width/2);
     }
 }
+
+@mixin nb-abs-v-align($rotation: 0) {
+    @if $rotation != 0 {
+        transform: translateY(-50%) rotateZ(#{$rotation});
+    } @else {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
 //==============================================================================
 
 //==============================================================================
@@ -275,8 +284,6 @@ $nb-caret-h-distance: 0.25rem;
                     //font-weight: bold;
                     font-size: $nb-caret-font-size;
                     width: $nb-caret-font-size;
-                    /*height: 3*$nb-caret-font-size/2;*/
-                    /*transform: scale(75%);*/
                 }
             }
             &.show {
@@ -378,13 +385,15 @@ $nb-caret-h-distance: 0.25rem;
                             &:after {
                                 left: auto;
                                 @if $nb-caret-native {
-                                    @include nb-caret-native-right($nb-caret-native-collapse-1-dir);
-                                    @include nb-caret-native-top($nb-caret-native-collapse-1-dir);
-                                    //top: calc(50% - $nb-caret-h-height/2);
                                     @include nb-caret-native($nb-caret-native-collapse-1-dir);
+                                    @include nb-caret-native-right($nb-caret-native-collapse-1-dir);
+                                    @include nb-abs-v-align();
+                                    //@include nb-caret-native-top($nb-caret-native-collapse-1-dir);
+                                    //top: calc(50% - $nb-caret-h-height/2);
                                 } @else {
                                     // custom content
                                     content: $nb-caret-collapse-1;
+                                    @include nb-abs-v-align();
                                     right: calc($nb-toggler-width/2 - $nb-caret-v-width/2);
                                 }
                             }
@@ -394,7 +403,8 @@ $nb-caret-h-distance: 0.25rem;
                                         @if $nb-caret-native-collapse-2-dir != $nb-caret-native-collapse-1-dir {
                                             @include nb-caret-native($nb-caret-native-collapse-2-dir);
                                         } @else if $nb-caret-native-collapse-rotation {
-                                            transform: rotateZ($nb-caret-native-collapse-rotation);
+                                            //transform: rotateZ($nb-caret-native-collapse-rotation);
+                                            @include nb-abs-v-align($nb-caret-native-collapse-rotation);
                                             @if $nb-caret-native-animate {
                                                 transition: transform $nb-transition-duration linear;
                                             }
@@ -403,7 +413,8 @@ $nb-caret-h-distance: 0.25rem;
                                         @if ($nb-caret-collapse-2 != $nb-caret-collapse-1) {
                                             content: $nb-caret-collapse-2; // "⮞";
                                         } @else if $nb-caret-collapse-rotation {
-                                            transform: rotateZ(#{$nb-caret-collapse-rotation});
+                                            //transform: rotateZ(#{$nb-caret-collapse-rotation});
+                                            @include nb-abs-v-align($nb-caret-collapse-rotation);
                                             @if $nb-caret-animate {
                                                 transition: transform $nb-transition-duration linear;
                                             }
@@ -461,10 +472,11 @@ $nb-caret-h-distance: 0.25rem;
                                 &:after {
                                     left: auto;
                                     right: $navbar-nav-link-padding-x;
+                                    @include nb-abs-v-align();
                                     @if $nb-caret-native {
                                         @include nb-caret-native($nb-caret-native-1-dir);
                                         //top: calc(50% - $nb-caret-v-height/2);
-                                        @include nb-caret-native-top($nb-caret-native-1-dir);
+                                        //@include nb-caret-native-top($nb-caret-native-1-dir);
                                     } @else {
                                         content: $nb-caret-1;
                                     }
@@ -475,7 +487,8 @@ $nb-caret-h-distance: 0.25rem;
                                             @if $nb-caret-native-2-dir != $nb-caret-native-1-dir {
                                                 @include nb-caret-native($nb-caret-native-2-dir);
                                             } @else if $nb-caret-native-rotation {
-                                                transform: rotateZ(#{$nb-caret-native-rotation});
+                                                //transform: rotateZ(#{$nb-caret-native-rotation});
+                                                @include nb-abs-v-align($nb-caret-native-rotation);
                                                 @if $nb-caret-native-animate {
                                                     transition: transform $nb-transition-duration linear;
                                                 }
@@ -484,7 +497,8 @@ $nb-caret-h-distance: 0.25rem;
                                             @if $nb-caret-2 != $nb-caret-1 {
                                                 content: $nb-caret-2;
                                             } @else if $nb-caret-rotation {
-                                                transform: rotateZ(#{$nb-caret-rotation});
+                                                //transform: rotateZ(#{$nb-caret-rotation});
+                                                @include nb-abs-v-align($nb-caret-rotation);
                                                 @if $nb-caret-animate {
                                                     transition: transform $nb-transition-duration linear;
                                                 }
@@ -505,9 +519,10 @@ $nb-caret-h-distance: 0.25rem;
                                 }
                                 &:after,
                                 &:before {
+                                    @include nb-abs-v-align();
                                     @if $nb-caret-native {
                                         $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
-                                        top: calc(50% - $nb-caret-h-height/2);
+                                        //top: calc(50% - $nb-caret-h-height/2);
                                     } else {
                                         //top: ;
                                     }
