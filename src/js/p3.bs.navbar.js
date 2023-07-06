@@ -642,9 +642,10 @@ const P3BsNavbar = (function($) {
      * @param {Object} options
      * @returns {P3BsNavbar}
      */
-    let P3BsNavbar = function(selector, options) {
+    const P3BsNavbar = function(selector, options) {
 
         const OPTIONS = Object.assign({}, P3BsNavbar.defaults, options);
+
         let navbars = [];
 
         if (typeof(selector) === 'string') {
@@ -744,11 +745,11 @@ const P3BsNavbar = (function($) {
     // Add jQuery plugin if jQuery loaded
     if (typeof($) === 'function' && $().fn === $.jquery) {
         $.fn.p3bsnavbar = function(options) {
-            const OPT = $.extend($.fn.p3bsnavbar.defaults, options);
-            P3BsNavbar(this.get(), options);
+            const opts = $.extend($.fn.p3bsnavbar.defaults, options);
+            P3BsNavbar(this.get(), opts);
         }
 
-        $.fn.p3bsnavbar.default = P3BsNavbar.defaults;
+        $.fn.p3bsnavbar.defaults = P3BsNavbar.defaults;
     }
 
     return P3BsNavbar;
