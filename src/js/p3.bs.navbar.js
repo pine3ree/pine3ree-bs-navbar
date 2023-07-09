@@ -67,7 +67,6 @@ const P3BsNavbar = (function($) {
 
     const isRTL = document.documentElement.dir === 'rtl';
     const isTouchDevice = 'ontouchstart' in window;
-    //console.log(isTouchDevice);
 
     const Dropdown = bootstrap.Dropdown;
 
