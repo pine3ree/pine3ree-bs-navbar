@@ -660,6 +660,7 @@ const P3BsNavbar = (function($) {
         }
 
         navbars.forEach(function(navbar) {
+            // Make a copy to preserve the original OPTIONS object
             const OPT = Object.assign({}, OPTIONS);
 
             // Determine navbar expand breakpoint
