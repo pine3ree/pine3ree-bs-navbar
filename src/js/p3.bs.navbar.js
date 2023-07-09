@@ -410,7 +410,7 @@ const P3BsNavbar = (function($) {
      *
      * @param {HTMLElement} navbar
      * @param {Number} breakpoint
-     * @param {Number|undefined} initialWidth
+     * @param {Number|undefined} previousWidth
      * @returns {undefined}
      */
     function handleBreakpointCrossing(navbar, breakpoint, previousWidth) {
