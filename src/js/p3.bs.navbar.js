@@ -742,16 +742,17 @@ const P3BsNavbar = (function($) {
         customEvents: false,
     };
 
-    // Add jQuery plugin if jQuery loaded
+    // Add jQuery plugin if jQuery is loaded
     if (typeof($) === 'function' && $().fn === $.jquery) {
         $.fn.p3bsnavbar = function(options) {
             const opts = $.extend($.fn.p3bsnavbar.defaults, options);
             P3BsNavbar(this.get(), opts);
-        }
+        };
 
         $.fn.p3bsnavbar.defaults = P3BsNavbar.defaults;
     }
 
+    // Return th main function
     return P3BsNavbar;
-//------------------------------------------------------------------------------
+
 }(window.jQuery || null));
