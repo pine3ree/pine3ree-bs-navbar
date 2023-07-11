@@ -2,37 +2,35 @@ const gulp = require('gulp');
 
 const path = require('path');
 
+// const nodesass = require('node-sass');
 const dartsass = require('sass');
-const nodesass = require('node-sass');
 
-// define gulp-plugins container
+// Define gulp-plugins container object
 const gp = {
+    autoprefixer: require('gulp-autoprefixer'),
     babel: require('gulp-babel'),
+    concat: require('gulp-concat'),
+    // cssnano : require('gulp-cssnano'), // Replaced by cleancss
+    cleancss: require('gulp-clean-css'),
+    filter: require('gulp-filter'),
+    if: require('gulp-if'),
+    rtlcss: require('gulp-rtlcss'),
     rename: require('gulp-rename'),
     sass: require('gulp-sass')(dartsass),
-    //cssnano : require('gulp-cssnano'), use cleancss now
-    cleancss: require('gulp-clean-css'),
-    if: require('gulp-if'),
-    stripCssComments : require('gulp-strip-css-comments'),
-    uncss: require('gulp-uncss'),
-    rtlcss: require('gulp-rtlcss'),
-    concat: require('gulp-concat'),
-    stripJsComments: require('gulp-strip-comments'),
-    //uglify: require('gulp-uglify'), // use terser now
-    terser: require('gulp-terser'),
     sourcemaps: require('gulp-sourcemaps'),
-    autoprefixer: require('gulp-autoprefixer'),
-    //watcher : require('glob-watcher'),
-    watch: require('gulp-watch'),
+    stripCssComments : require('gulp-strip-css-comments'),
+    stripJsComments: require('gulp-strip-comments'),
+    terser: require('gulp-terser'),
+    //watch: require('gulp-watch'),
+    // uglify: require('gulp-uglify'), // Replaced by terser
+    // uncss: require('gulp-uncss'),
     '_': null
 };
-
-//gp.sass.compiler = require('dart-sass');
 
 const CUR_DIR = `${__dirname}/`
 
 const SRC  = `${CUR_DIR}src/`;
-const DIST =`${CUR_DIR}dist/`; //'/';
+const DIST =`${CUR_DIR}dist/`;;
 
 const SRC_SCSS = `${SRC}scss/`;
 const SRC_JS = `${SRC}js/`;
@@ -41,7 +39,7 @@ const DIST_JS = `${DIST}js/`;
 const DIST_CSS = `${DIST}css/`;
 
 const NODE_SRC = `${SRC}node_modules/`;
-const NODE_SRC_GLOBAL = `/usr/lib/node_modules/`;
+//const NODE_SRC_GLOBAL = `/usr/lib/node_modules/`;
 const BOWER_SRC = `${SRC}bower_components/`;
 
 const BS_SCSS = `${BOWER_SRC}bootstrap/scss/`;
@@ -52,7 +50,7 @@ const JS_PATHS = [
 ];
 
 const SASS_INCLUDE_PATHS = [
-    `${NODE_SRC_GLOBAL}compass-mixins/lib/`,
+    //`${NODE_SRC_GLOBAL}compass-mixins/lib/`,
     SRC_SCSS,
     NODE_SRC,
     BOWER_SRC,
@@ -62,15 +60,6 @@ const SASS_PRECISION = 15 // not supported in dart-sass
 const NANO_OPTIONS = {
     safe: true,
     autoprefixer: true,
-//    reduceIdents: {
-//        keyframes: false
-//    },
-//    discardUnused: {
-//        keyframes: false
-//    },
-//    discardComments: {
-//        removeAll: true
-//    },
 };
 
 const AUTOPREFIXER_OPTIONS = {
@@ -89,26 +78,13 @@ const AUTOPREFIXER_OPTIONS = {
     ]
 };
 
-const UNCSS_OPTIONS = {
-    "html": [
-        // DIST + "*.html",
-        // DIST + "blog/**/*.html"
-    ],
-    "ignore": [
-        // ".foundation-mq",
-        // "/.*menu.*/",
-        // "/.*submenu.*/",
-        // "/.*parent.*/",
-        // "/.*orbit.*/",
-        // "/.*sticky.*/",
-        // "/.*js\-.*/",
-        // "/.*is\-.*/",
-        // "/.*has\-.*/",
-        // "/.*\-in.*/",
-        // "/.*\-out.*/",
-        "xxxxxxxxxx"
-    ]
-};
+//// Better use uncss on a project basis
+//const UNCSS_OPTIONS = {
+//    html: [
+//    ],
+//    ignore: [
+//    ]
+//};
 
 const TERSER_OPTION = {
     compress: {
@@ -121,111 +97,123 @@ const TERSER_OPTION = {
     ecma: 5,
 };
 
+const SOURCEMAPS = true;
+const SOURCEMAPS_INIT_OPTIONS = {
+    loadMaps: false,
+};
+const SOURCEMAPS_WRITE_OPTIONS = {
+    includeContent: true,
+    addComment: true,
+//    sourceRoot: '.'
+};
+
 //==============================================================================
 // SASS
 //==============================================================================
 function compile_sass(
     sourceFile,
-    destDir = DIST_CSS,
-    includePaths = SASS_INCLUDE_PATHS,
-    uncss = false,
-    uncssOptions = null,
-    rtl = false
+    destDir,
+    includePaths,
+    sourcemaps = null,
+    rtl = null
 ) {
     destDir = destDir || DIST_CSS;
     includePaths = includePaths || SASS_INCLUDE_PATHS;
-    uncss = uncss !== null ? Boolean(uncss) : false;
-    uncssOptions = uncssOptions || UNCSS_OPTIONS;
+    sourcemaps = sourcemaps !== null ? Boolean(sourcemaps) : SOURCEMAPS;
     rtl = rtl !== null ? Boolean(rtl) : false;
 
     return gulp.src(SRC_SCSS + sourceFile)
-//        .pipe(gp.sourcemaps.init())
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.init(SOURCEMAPS_INIT_OPTIONS)))
         .pipe(gp.sass({
             includePaths: includePaths,
             outputStyle: 'expanded',
             indentWidth: 4,
-            lineComments: false,
-            //precision: SASS_PRECISION // removed in dart-sass
+            //precision: SASS_PRECISION, // Removed in dart-sass
+            lineComments: false
         }).on('error', gp.sass.logError))
         .pipe(gp.stripCssComments())
         .pipe(gp.autoprefixer(AUTOPREFIXER_OPTIONS))
-        .pipe(gp.if(uncss === true, gp.uncss(uncssOptions)))
+        //.pipe(gp.if(uncss === true, gp.uncss(UNCSS_OPTIONS)))
         .pipe(gp.if(rtl === true, gp.rtlcss()))
         .pipe(gp.if(rtl === true, gp.rename({suffix: '.rtl'})))
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(DIST_CSS))
+        .pipe(gp.filter("*.css"))
         .pipe(gp.cleancss())
         .pipe(gp.rename({suffix: '.min'}))
-//        .pipe(gp.sourcemaps.write('.',  {
-//            includeContent: true,
-//            addComment: true,
-//            sourceRoot: '.'
-//        }))
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(DIST_CSS));
 }
 
 function convert_to_rtl(
     sourceFile,
-    destDir = DIST_CSS
+    destDir,
+    sourcemaps = null,
 ) {
     destDir = destDir || DIST_CSS;
+    sourcemaps = sourcemaps !== null ? Boolean(sourcemaps) : SOURCEMAPS;
 
     return gulp.src(DIST_CSS + sourceFile)
-//        .pipe(gp.sourcemaps.init())
-        .pipe(gp.stripCssComments())
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.init(SOURCEMAPS_INIT_OPTIONS)))
         .pipe(gp.rtlcss())
         .pipe(gp.rename({suffix: '.rtl'}))
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(DIST_CSS))
+        .pipe(gp.filter("*.css"))
         .pipe(gp.cleancss())
         .pipe(gp.rename({suffix: '.min'}))
-//        .pipe(gp.sourcemaps.write('.',  {
-//            includeContent: true,
-//            addComment: true,
-//            sourceRoot: '.'
-//        }))
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(DIST_CSS));
 }
 
-
+// SASS tasks
 gulp.task('sass:ltr', function() {
-    return compile_sass('p3-bs-navbar.scss');
+    return compile_sass('pine3ree-bs-navbar.scss');
 });
-//gulp.task('sass:rtl', function() {
-//    return compile_sass('p3-bs-navbar.scss', null, null, false, null, true);
-//});
 gulp.task('sass:rtl', function() {
-    return convert_to_rtl('p3-bs-navbar.css');
+    return compile_sass('pine3ree-bs-navbar.scss', null, null, null, true);
+    //return convert_to_rtl('pine3ree-bs-navbar.css');
 });
-
-gulp.task('sass', gulp.series('sass:ltr','sass:rtl'));
-
+gulp.task('sass', gulp.series('sass:ltr', 'sass:rtl'));
 gulp.task('watch:sass', function() {
     gulp.watch(SRC_SCSS + '*.scss', gulp.task('sass'));
 });
 
-gulp.task('js', function() {
-  return gulp.src(SRC_JS + '*.js')
-    .pipe(gp.stripJsComments())
-    .pipe(gp.babel({
-        presets: [
-            "@babel/preset-env",
-        ]
-    }))
-    .pipe(gp.sourcemaps.init())
-    .pipe(gulp.dest(DIST_JS))
-    //.pipe(gp.uglify()) // use teaser for es6
-    .pipe(gp.terser())
-    .pipe(gp.rename({suffix: '.min'}))
-    .pipe(gp.sourcemaps.write('./'))
-    .pipe(gulp.dest(DIST_JS))
-});
+function compile_js(
+    sourceDir,
+    destDir,
+    sourcemaps = null
+) {
+    sourceDir = sourceDir || SRC_JS;
+    destDir   = destDir   || DIST_JS;
+    sourcemaps = sourcemaps !== null ? !!sourcemaps : SOURCEMAPS;
 
+    return gulp.src(SRC_JS + '*.js')
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.init(SOURCEMAPS_INIT_OPTIONS)))
+        .pipe(gp.babel({
+            presets: [
+                "@babel/preset-env",
+            ]
+        }))
+        .pipe(gp.stripJsComments())
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
+        .pipe(gulp.dest(destDir))
+        .pipe(gp.filter("*.js"))
+        //.pipe(gp.uglify()) // Now using terser for es6
+        .pipe(gp.terser())
+        .pipe(gp.rename({suffix: '.min'}))
+        .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
+        .pipe(gulp.dest(destDir))
+}
+
+// JS tasks
+gulp.task('js', function() {
+    return compile_js(SRC_JS, DIST_JS);
+});
 gulp.task('watch:js', function() {
     gulp.watch(SRC_JS + '*.js', gulp.task('js'));
 });
 
-
+// GLOBAL tasks
+gulp.task('default', gulp.series('sass', 'js'));
 gulp.task('watch', gulp.parallel('watch:sass', 'watch:js'));
-
-gulp.task('default', function () {
-    gulp.task('watch');
-});
