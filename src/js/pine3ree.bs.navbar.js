@@ -65,7 +65,8 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     const BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
     const BS_SELECTOR_VISIBLE_ITEMS = `.dropdown-menu .${BS_CLASS_DROPDOWN_ITEM}:not(.disabled):not(:disabled)`;
     const P3_SELECTOR_VISIBLE_ITEMS = `.${BS_CLASS_DROPDOWN_ITEM}:not(.disabled):not(:disabled)`;
-    
+
+    // dropdown-menu-(sm|md|lg)-end
     const menuEndRegex = new RegExp(`${BS_CLASS_MENU}(?:-[a-z]{2,3})?-end`);
 
     const isRTL = document.documentElement.dir === 'rtl';
@@ -367,13 +368,15 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         let parentMenu;
         const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
             !dropdown.classList.contains(BS_CLASS_DROPEND) 
-            && (parentMenu = dropdown.closest(BS_SELECTOR_MENU))
+            && (parentMenu = dropdown.closest(BS_SELECTOR_MENU)) !== null
             && (menuEndRegex.test(parentMenu.className))
         );
 
         menu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
 
             const submenu = menuItem.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
+
+            isDropStart = isDropStart || menuEndRegex.test(submenu.className);
 
             submenu.style.visibility = 'hidden';
             submenu.classList.add(BS_CLASS_SHOW);
