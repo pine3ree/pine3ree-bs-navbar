@@ -2,26 +2,12 @@
 
 "use strict";
 
+// Check bootstrap library
 if (!window.bootstrap || !window.bootstrap.Dropdown) {
     throw new Error('bootstrap.Dropdown library was not found');
 }
 
-// Define the 'pine3ree' namespace if not alreadys set
-if (window.pine3ree === undefined
-    || window.pine3ree === null
-    || typeof window.pine3ree !== 'object'
-) {
-    window.pine3ree = {};
-}
-
-if (window.pine3ree.bs === undefined
-    || window.pine3ree.bs === null
-    || typeof window.pine3ree.bs !== 'object'
-) {
-    window.pine3ree.bs = {};
-}
-
-(function($) {
+(function(bootstrap, $) {
 
     const P3_NAME = 'p3bsnavbar';
 
@@ -42,12 +28,12 @@ if (window.pine3ree.bs === undefined
     const BS_EVENT_KEY = `.${BS_DATA_KEY}`;
     const BS_DATA_API_KEY = '.data-api';
 
-    const ENTER_KEY = 'Enter'
-    const ESCAPE_KEY = 'Escape'
-    const TAB_KEY = 'Tab'
-    const ARROW_UP_KEY = 'ArrowUp'
-    const ARROW_DOWN_KEY = 'ArrowDown'
-    const RIGHT_MOUSE_BUTTON = 2 // MouseEvent.button value for the secondary button, usually the right button
+    const ENTER_KEY = 'Enter';
+    const ESCAPE_KEY = 'Escape';
+    const TAB_KEY = 'Tab';
+    const ARROW_UP_KEY = 'ArrowUp';
+    const ARROW_DOWN_KEY = 'ArrowDown';
+    const RIGHT_MOUSE_BUTTON = 2; // MouseEvent.button value for the secondary button, usually the right button
 
     const BS_EVENT_HIDE = `hide${BS_EVENT_KEY}`;
     const BS_EVENT_HIDDEN = `hidden${BS_EVENT_KEY}`;
@@ -85,7 +71,8 @@ if (window.pine3ree.bs === undefined
     const isRTL = document.documentElement.dir === 'rtl';
     const isTouchDevice = 'ontouchstart' in window;
 
-    const Dropdown = bootstrap.Dropdown;
+    const BsDropdown = bootstrap.Dropdown;
+
 
     /**
      * Get the html document width
@@ -263,8 +250,8 @@ if (window.pine3ree.bs === undefined
 
         document.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function(toggleElement) {
             if (!navbar.contains(toggleElement)) {
-                const toggle = Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle instanceof Dropdown) {
+                const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                if (toggle instanceof BsDropdown) {
                     toggle.hide();
                 }
             }
@@ -296,8 +283,8 @@ if (window.pine3ree.bs === undefined
         if (containers.length > 0) {
             containers.forEach(function(container) {
                 container.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function(toggleElement) {
-                    const toggle = Dropdown.getOrCreateInstance(toggleElement);
-                    if (toggle instanceof Dropdown) {
+                    const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                    if (toggle instanceof BsDropdown) {
                         toggle.hide();
                     }
                 });
@@ -322,8 +309,8 @@ if (window.pine3ree.bs === undefined
         getSiblings(dropdown, BS_SELECTOR_DROPDOWN).forEach(function(sibling) {
             const toggleElement = sibling.querySelector(BS_SELECTOR_DATA_TOGGLE_SHOWN);
             if (toggleElement) {
-                const toggle = Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle instanceof Dropdown) {
+                const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                if (toggle instanceof BsDropdown) {
                     toggle.hide();
                 }
             }
@@ -611,8 +598,8 @@ if (window.pine3ree.bs === undefined
                 }
             }
             if (!toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                const toggle = Dropdown.getOrCreateInstance(toggleElement);
-                if (toggle instanceof Dropdown) {
+                const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                if (toggle instanceof BsDropdown) {
                     toggle.show();
                 }
             }
@@ -648,8 +635,8 @@ if (window.pine3ree.bs === undefined
             toggleElement.setAttribute(`data-${P3_DATA_TIMEOUT_ID}`, setTimeout(
             function() {
                 if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                    const toggle = Dropdown.getOrCreateInstance(toggleElement);
-                    if (toggle instanceof Dropdown) {
+                    const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                    if (toggle instanceof BsDropdown) {
                         toggle.hide();
                     }
                 }
@@ -776,10 +763,14 @@ if (window.pine3ree.bs === undefined
         customEvents: false,
     };
 
-    // Assign the main function to repo owner's namespace
-    window.pine3ree.bs.navbar = p3bsNavbar;
+    // Define the vendor namespace and library namespace and if not already set
+    window.pine3ree = window.pine3ree || {};
+    window.pine3ree.bs = window.pine3ree.bs || {};
 
-    // Assign the main function to the window object with same name used for the jQuery plugin
+    // Assign the main function to the right namespace
+    window.pine3ree.bs.navbar = p3bsNavbar;
+    // Assign the main function to the window object using the same name for the
+    // jQuery plugin
     window.p3bsNavbar = p3bsNavbar;
 
     // Add jQuery plugin if jQuery is loaded
@@ -792,4 +783,4 @@ if (window.pine3ree.bs === undefined
         $.fn.p3bsNavbar.defaults = p3bsNavbar.defaults;
     }
 
-})(window.jQuery || null);
+})(window.bootstrap, window.jQuery);
