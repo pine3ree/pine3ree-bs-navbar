@@ -4,18 +4,21 @@
   "description": "pine3ree multilevel navbar for bootstrap",
   "main": "''",
   "dependencies": {
-    "bootstrap": "^5.3"
+    "bootstrap": "5.3.*"
   },
   "devDependencies": {
     "@babel/core": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "autoprefixer": "^10.4.14",
     "browserlist": "^1.0.1",
+    "eslint": "^8.44.0",
+    "eslint-config-google": "^0.14.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
+    "gulp-filter": "^7.0.0",
     "gulp-if": "^3.0.0",
     "gulp-postcss": "^9.0.1",
     "gulp-rename": "^2.0.0",
@@ -44,7 +47,13 @@
     "postcss-cli": "^9.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "gulp default",
+    "css-compile": "gulp sass",
+    "js-compile": "gulp js",
+    "watch": "gulp watch",
+    "watch-sass": "gulp watch:sass",
+    "watch-js": "gulp watch:js",
+    "test": "echo \"Error: no tests yet(i)\" && exit 1"
   },
   "author": "pine3ree",
   "license": "BSD 3-clause Clear license"
