@@ -366,18 +366,15 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         let right = left + menu.offsetWidth;
 
         let parentMenu;
-        const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
+        let isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
             !dropdown.classList.contains(BS_CLASS_DROPEND) 
-            && (parentMenu = dropdown.closest(BS_SELECTOR_MENU)) !== null
-            && (menuEndRegex.test(parentMenu.className))
+            && (menuEndRegex.test(menu.className))
         );
 
         menu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
 
             const submenu = menuItem.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
-
-            isDropStart = isDropStart || menuEndRegex.test(submenu.className);
-
+            
             submenu.style.visibility = 'hidden';
             submenu.classList.add(BS_CLASS_SHOW);
 
