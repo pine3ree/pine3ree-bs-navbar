@@ -2,182 +2,13 @@
 
 @use "sass:math";
 
-// scss-docs-start import-stack
 @import "node_modules/bootstrap/scss/functions";
+
 //==============================================================================
 // CUSTOM VARS before bootstrap defaults
 //==============================================================================
-@import "p3-md-colors";
-//------------------------------------------------------------------------------
-// scss-docs-start caret-variables
-$nb-caret-width: .3125em !default;
-$caret-width: $nb-caret-width;
-// scss-docs-end caret-variables
-//------------------------------------------------------------------------------
-//==============================================================================
-
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/variables-dark";
-
-@import "node_modules/bootstrap/scss/maps";
-@import "node_modules/bootstrap/scss/mixins";
-@import "node_modules/bootstrap/scss/utilities";
-
-$nb-breakpoints: map-remove($grid-breakpoints, xl, xxl);
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// TRANSITIONS
-//------------------------------------------------------------------------------
-$nb-transition: all .2s linear;
-$nb-dropdown-menu-has-transition: true;
-$nb-transition-duration: 0.2s;
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-$nb-outline-color: rgba($primary, 0.5);
-$nb-outline-width: 3px;
-$nb-outline: $nb-outline-width solid $nb-outline-color !important;
-
-$nb-collapsed-li-bg-color: rgba($white, 0.033);
-$nb-collapsed-li-bg-color-hover: rgba($white, 0.02);
-
-$nb-collapsed-li-bg-dark-color: rgba($black, 0.033);
-$nb-collapsed-li-bg-dark-color-hover: rgba($black, 0.02);
-
-$nb-item-line-height: 1.5em;
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-$nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size;
-$nb-border-width: $border-width;
-$nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem);
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// CARET
-//------------------------------------------------------------------------------
-$nb-caret-native: false;
-
-$nb-caret-animate: true;
-$nb-caret-native-animate: true;
-
-// default caret character
-$nb-caret-default-1: "+";
-$nb-caret-default-2: "-";
-
-// arrow caret character
-$nb-caret-start: "\2B9C";//"\01F860"; //"?";//"«";//"⮜";
-$nb-caret-up: "\2B9D";//"\01F861";
-$nb-caret-end: "\27A4";//"\01F862";//"»";//"⮞";
-$nb-caret-down: "\2B9F";//"\01F863";
-
-// char carets
-$nb-caret-1: $nb-caret-down;
-$nb-caret-2: $nb-caret-down;
-$nb-caret-rotation: -180deg;
-// char carets for collapsed navbar
-$nb-caret-collapse-1: $nb-caret-end;
-$nb-caret-collapse-2: $nb-caret-end;
-$nb-caret-collapse-rotation: 90deg;
-// caret size
-$nb-caret-font-size: .75rem;
-$nb-caret-size: $nb-caret-font-size;
-$nb-caret-v-width: $nb-caret-size;
-$nb-caret-v-height: $nb-caret-size;
-$nb-caret-h-width: $nb-caret-size;
-$nb-caret-h-height: $nb-caret-size;
-
-// native carets
-$nb-caret-native-1-dir: down;
-$nb-caret-native-2-dir: down;
-$nb-caret-native-rotation: -180deg;
-// native carets for collapsed navbar
-$nb-caret-native-collapse-1-dir: end;
-$nb-caret-native-collapse-2-dir: end;
-$nb-caret-native-collapse-rotation: 90deg;
-// native caret size
-$nb-caret-native-size: 2*$nb-caret-width;
-@if $nb-caret-native {
-    // horizontal border-triangle
-    $nb-caret-v-width: $nb-caret-native-size;
-    $nb-caret-v-height: $nb-caret-width;
-    // vertical border-triangle
-    $nb-caret-h-width: $nb-caret-v-height;
-    $nb-caret-h-height: $nb-caret-v-width;
-}
-
-$nb-caret-h-distance: 0.25rem;
-//==============================================================================
-
-//==============================================================================
-// MIXINS
-//==============================================================================
-@mixin navbar-dropdown-menu-transition {
-    display: block !important;
-    max-height: 0;
-    overflow: hidden;
-    &.show {
-        max-height: $nb-dropdown-menu-transition-max-height;
-    }
-}
-
-@mixin nb-caret-native($direction: down) {
-    @if $direction == up {
-        @include caret-up;
-    } @else if $direction == end {
-        @include caret-end;
-    } @else if $direction == start {
-        @include caret-start;
-    } @else {
-        @include caret-down;
-    }
-    vertical-align: middle;
-}
-
-// set native caret top position based on caret direction
-@mixin nb-caret-native-top(
-    $direction: up,
-    $h-height: $nb-caret-h-height,
-    $v-height: $nb-caret-v-height
-) {
-    @if $direction == up {
-        top: calc(50% - $v-height/2);
-    } @else if $direction == end {
-        top: calc(50% - $h-height/2);
-    } @else if $direction == start {
-        top: calc(50% - $h-height/2);
-    } @else {
-        top: calc(50% - $v-height/2);
-    }
-}
-
-// set native caret end position based on caret direction
-@mixin nb-caret-native-right(
-    $direction,
-    $container-width: $nb-toggler-width,
-    $h-width: $nb-caret-h-width,
-    $v-width: $nb-caret-v-width
-) {
-    @if $direction == up {
-        right: calc($container-width/2 - $v-width/2);
-    } @else if $direction == end {
-        right: calc($container-width/2 - $h-width/2);
-    } @else if $direction == start {
-        right: calc($container-width/2 - $h-width/2);
-    } @else {
-        right: calc($container-width/2 - $v-width/2);
-    }
-}
-
-@mixin nb-abs-v-align($rotation: 0) {
-    @if $rotation != 0 {
-        transform: translateY(-50%) rotateZ(#{$rotation});
-    } @else {
-        top: 50%;
-        transform: translateY(-50%);
-    }
-}
+@import "_variables";
+@import "_mixins";
 //==============================================================================
 
 //==============================================================================
@@ -193,54 +24,19 @@ $nb-caret-h-distance: 0.25rem;
 //==============================================================================
 
 //==============================================================================
-// STYLES: COMMON
+// COMMON styles
 //==============================================================================
 .navbar-nav {
-    .nav-link,
-    .dropdown-item {
-        &:focus {
-            outline: 0;
-        }
-        &:focus-visible {
-            outline: $nb-outline;
-        }
-        &:focus-within {
-            outline: 0;
-        }
-    }
     .dropdown-toggle {
         @if $enable-caret {
             position: relative;
             &:after,
             &:before {
-                //display: inline-block !important;
                 text-align: center;
                 margin: 0 !important;
                 position: absolute;
-                @if $nb-caret-native {
-                    //
-                } @else {
-                    // custom content
-                    border: 0 !important; // disable the original caret (triangle with border)
-                    content: $nb-caret-1;
-                    //font-weight: bold;
-                    font-size: $nb-caret-font-size;
-                    width: $nb-caret-font-size;
-                }
             }
-            &.show {
-                &:after,
-                &:before {
-                    @if $nb-caret-native {
-                        //
-                    } @else {
-                        @if $nb-caret-default-2 == $nb-caret-default-1 {
-                            content: $nb-caret-default-2;
-                        }
-                    }
-                }
-            }
-            // disable before caret in navbar top-links
+            // Disable before caret in navbar top-links
             &.nav-link {
                 &:before {
                     @if $enable-caret {
@@ -254,156 +50,148 @@ $nb-caret-h-distance: 0.25rem;
 //==============================================================================
 
 //==============================================================================
-// STYLES: COLLAPSED NAVBAR
+// COLLAPSED NAVBAR styles
 //==============================================================================
-.navbar-expand {
-    @each $breakpoint in map-keys($nb-breakpoints) {
-        $next: breakpoint-next($breakpoint, $nb-breakpoints);
-        $infix: breakpoint-infix($next, $nb-breakpoints);
+@each $breakpoint in map-keys($nb-breakpoints) {
+    $next: breakpoint-next($breakpoint, $nb-breakpoints);
+    $infix: breakpoint-infix($next, $nb-breakpoints);
 
-        // stylelint-disable-next-line scss/selector-no-union-class-name
-        &#{$infix} {
-            @include media-breakpoint-down($next) {
-                .navbar-nav {
-                    li {
-                        position: relative;
-                        border-radius: 0;
-                        margin-bottom: 0;
+    @include media-breakpoint-down($next) {
+        .navbar-expand#{$infix} {
+            .navbar-nav {
+                li {
+                    position: relative;
+                    border-radius: 0;
+                    margin-bottom: 0;
+                }
+                // ALL TOP AND SUBITEMS (TOGGLE OR NOT)
+                .nav-link,
+                .dropdown-item {
+                    line-height: $nb-item-line-height !important;
+                    padding: 0.75*$dropdown-item-padding-x $dropdown-item-padding-x;
+                    padding-right: $nb-toggler-width;
+                    margin: 0;
+                    border-radius: 0;
+                    white-space: normal;
+                    &:hover,
+                    &:focus {
+                        background: transparent;
                     }
-                    // ALL TOP AND SUBITEMS (TOGGLE OR NOT)
-                    .nav-link,
-                    .dropdown-item {
-                        line-height: $nb-item-line-height !important;
-                        //padding: 0 $dropdown-item-padding-x !important;
-                        padding: 0.75*$dropdown-item-padding-x $dropdown-item-padding-x;
-                        padding-right: $nb-toggler-width;
-                        margin: 0;
-                        border-radius: 0;
-                        white-space: normal;
-                        background: transparent !important;
-                        color: $light;
-                        &:hover,
-                        &:focus {
-                            color: $navbar-dark-active-color;
-                        }
-                        &:hover {
-                            background: $nb-collapsed-li-bg-color-hover !important;
+                }
+                // ALL DD MENUS
+                .dropdown-menu {
+                    //background: transparent;
+                    margin: 0 !important; // important for leftover parent drop(start|end)
+                    padding: 0;
+                    border: 0;
+                    border-radius: 0;
+                    visibility: hidden; // TAB keypresses skip hidden elements
+                    &.show {
+                        visibility: visible;
+                    }
+                    // transition
+                    @if $nb-dropdown-menu-has-transition {
+                        @include navbar-dropdown-menu-transition;
+                    }
+                    > li {
+                        display: block;
+                        &:last-child {
+                            margin-bottom: 0;
                         }
                     }
-                    // ALL DD MENUS
                     .dropdown-menu {
-                        background: transparent !important;
-                        margin: 0 !important; // important for leftover parent drop(start|end)
-                        padding: 0;
-                        border: 0;
-                        border-radius: 0;
-                        visibility: hidden; // TAB keypresses skip hidden elements
-                        &.show {
-                            visibility: visible;
-                        }
-                        // transition
-                        @if $nb-dropdown-menu-has-transition {
-                            @include navbar-dropdown-menu-transition;
-                            &.show {
-                                transition: $nb-dropdown-menu-transition-show;
-                            }
-                        }
-                        > li {
-                            background: $nb-collapsed-li-bg-color !important;
-                            display: block;
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
-                        }
+                        //margin-left: 1rem !important;
                     }
+                }
 
-                    // caret
-                    @if $enable-caret {
-                        // ALL TOP AND SUB TOGGLE ITEMS
-                        .dropdown-toggle {
-                            &:before {
-                                display: none!important;
-                            }
+                // caret
+                @if $enable-caret {
+                    // ALL TOP AND SUB TOGGLE ITEMS
+                    .dropdown-toggle {
+                        &:before {
+                            display: none!important;
+                        }
+                        &:after {
+                            left: auto;
+                            @include nb-caret($nb-caret-collapse-dir);
+                            @include nb-caret-end($nb-caret-collapse-dir);
+                            @include nb-caret-top($nb-caret-collapse-dir);
+                        }
+                        &.show {
                             &:after {
-                                left: auto;
-                                @if $nb-caret-native {
-                                    @include nb-caret-native($nb-caret-native-collapse-1-dir);
-                                    @include nb-caret-native-right($nb-caret-native-collapse-1-dir);
-                                    //top: calc(50% - $nb-caret-h-height/2);
-                                    @include nb-caret-native-top($nb-caret-native-collapse-1-dir);
-                                    //@include nb-abs-v-align();
-                                } @else {
-                                    // custom content
-                                    content: $nb-caret-collapse-1;
-                                    right: calc($nb-toggler-width/2 - $nb-caret-v-width/2);
-                                    @include nb-abs-v-align();
-                                }
-                            }
-                            &.show {
-                                &:after {
-                                    @if $nb-caret-native {
-                                        @if $nb-caret-native-collapse-2-dir != $nb-caret-native-collapse-1-dir {
-                                            @include nb-caret-native($nb-caret-native-collapse-2-dir);
-                                        } @else if $nb-caret-native-collapse-rotation {
-                                            transform: rotateZ($nb-caret-native-collapse-rotation);
-                                            //@include nb-abs-v-align($nb-caret-native-collapse-rotation);
-                                            @if $nb-caret-native-animate {
-                                                transition: transform $nb-transition-duration linear;
-                                            }
-                                        }
-                                    } @else {
-                                        @if ($nb-caret-collapse-2 != $nb-caret-collapse-1) {
-                                            content: $nb-caret-collapse-2; // "⮞";
-                                        } @else if $nb-caret-collapse-rotation {
-                                            //transform: rotateZ(#{$nb-caret-collapse-rotation});
-                                            @include nb-abs-v-align($nb-caret-collapse-rotation);
-                                            @if $nb-caret-animate {
-                                                transition: transform $nb-transition-duration linear;
-                                            }
-                                        }
+                                @if $nb-caret-collapse-rotation {
+                                    transform: rotateZ($nb-caret-collapse-rotation);
+                                    @if $nb-caret-animate {
+                                        transition: transform $nb-transition-duration linear;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                [data-bs-theme="dark"] {
-                    .navbar-nav {
-                        .nav-link,
+            }
+
+            &[data-bs-theme="dark"],
+            &.navbar-dark {
+                .navbar-nav {
+                    .nav-link,
+                    .dropdown-item {
+                        color: $gray-300;
+                        background: transparent;
+                        &:hover {
+                            color: $gray-200;
+                        }
+                        &:focus {
+                            color: $gray-100;
+                        }
+                        &:focus-visible {
+                            outline: 0;
+                        }
+                    }
+                    .dropdown-menu {
+                        background: transparent;
                         .dropdown-item {
-                            color: $light;
-                            &:hover,
-                            &:focus {
-                                color: $navbar-dark-active-color;
-                            }
-                            &:hover {
-                                background: $nb-collapsed-li-bg-color-hover !important;
+                            &:focus-visible {
+                                //background: $dropdown-link-active-bg;
+                                background: $nb-navbar-dark-collapsed-li-bg-color;
                             }
                         }
+                        li,
                         .dropdown-menu {
-                            > li {
-                                background: $nb-collapsed-li-bg-color !important;
-                            }
+                            background: transparent;
                         }
                     }
                 }
-                [data-bs-theme="light"] {
-                    .navbar-nav {
-                        .nav-link,
+            }
+            
+            &[data-bs-theme="light"],
+            &.navbar-light {
+                .navbar-nav {
+                    .nav-link,
+                    .dropdown-item {
+                        color: $gray-700;
+                        background: transparent;
+                        &:hover {
+                            color: $gray-800;
+                        }
+                        &:focus {
+                            color: $gray-900;
+                        }
+                        &:focus-visible {
+                            outline: 0;
+                        }
+                    }
+                    .dropdown-menu {
+                        background: transparent;
                         .dropdown-item {
-                            color: $dark;
-                            &:hover,
-                            &:focus {
-                                color: $black;
-                            }
-                            &:hover {
-                                background: $nb-collapsed-li-bg-dark-color-hover !important;
+                            &:focus-visible {
+                                //background: $dropdown-link-active-bg;
+                                background: $nb-navbar-light-collapsed-li-bg-color;
                             }
                         }
+                        li,
                         .dropdown-menu {
-                            > li {
-                                background: $nb-collapsed-li-bg-dark-color !important;
-                            }
+                            background: transparent;
                         }
                     }
                 }
@@ -414,121 +202,82 @@ $nb-caret-h-distance: 0.25rem;
 //==============================================================================
 
 //==============================================================================
-// STYLES: EXPANDED NAVBAR
+// EXPANDED NAVBAR styles
 //==============================================================================
-.navbar-expand {
-    @each $breakpoint in map-keys($nb-breakpoints) {
-        $next: breakpoint-next($breakpoint, $nb-breakpoints);
-        $infix: breakpoint-infix($next, $nb-breakpoints);
+@each $breakpoint in map-keys($nb-breakpoints) {
+    $next: breakpoint-next($breakpoint, $nb-breakpoints);
+    $infix: breakpoint-infix($next, $nb-breakpoints);
 
-        // stylelint-disable-next-line scss/selector-no-union-class-name
-        &#{$infix} {
-            @include media-breakpoint-up($next) {
-                .navbar-nav {
+    @include media-breakpoint-up($next) {
+        .navbar-expand#{$infix} {
+            .navbar-nav {
+                .dropdown-menu {
+                    max-width: 1.25*$dropdown-min-width;
+                    // nested dd-menus
                     .dropdown-menu {
-                        max-width: 1.25*$dropdown-min-width;
-                        // nested menus
-                        .dropdown-menu {
-                            margin-top: -1*$dropdown-padding-y;
-                        }
+                        margin-top: -1*$dropdown-padding-y;
                     }
-                    // set dropdown-menu direction based on dropstart|dropend set via js
-                    .dropend > .dropdown-menu[data-bs-popper] {
-                        left: 100%;
-                        right: auto;
-                        margin-left: 0;
-                    }
-                    .dropstart > .dropdown-menu[data-bs-popper] {
-                        left: auto;
-                        right: 100%;
-                        margin-right: 0;
-                    }
+                }
+                // Set dropdown-menu direction based on dropstart|dropend class set via js
+                .dropend > .dropdown-menu[data-bs-popper] {
+                    left: 100%;
+                    right: auto;
+                    margin-left: 0;
+                }
+                .dropstart > .dropdown-menu[data-bs-popper] {
+                    left: auto;
+                    right: 100%;
+                    margin-right: 0;
+                }
 
-                    @if $enable-caret {
-                        .dropdown-toggle {
-                            // ROOT LINKS (nav-link)
-                            //.navbar-expand-#{$nb-breakpoint} &.nav-link {
-                            &.nav-link {
-                                $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
-                                padding-right: $dropdown-toggle-padding-end;
+                @if $enable-caret {
+                    .dropdown-toggle {
+                        // ROOT LINKS (nav-link)
+                        //.navbar-expand-#{$nb-breakpoint} &.nav-link {
+                        &.nav-link {
+                            $dropdown-toggle-padding-end: calc(1.75*$navbar-nav-link-padding-x + $nb-caret-v-width);
+                            padding-right: $dropdown-toggle-padding-end;
+                            &:after {
+                                left: auto;
+                                right: $navbar-nav-link-padding-x;                                    
+                                @include nb-caret-top($nb-caret-dir);
+                            }
+                            &.show {
                                 &:after {
-                                    left: auto;
-                                    right: $navbar-nav-link-padding-x;                                    
-                                    @if $nb-caret-native {
-                                        @include nb-caret-native($nb-caret-native-1-dir);
-                                        //top: calc(50% - $nb-caret-v-height/2);
-                                        @include nb-caret-native-top($nb-caret-native-1-dir);
-                                    } @else {
-                                        content: $nb-caret-1;
-                                        @include nb-abs-v-align();
-                                    }
-                                }
-                                &.show {
-                                    &:after {
-                                        @if $nb-caret-native {
-                                            @if $nb-caret-native-2-dir != $nb-caret-native-1-dir {
-                                                @include nb-caret-native($nb-caret-native-2-dir);
-                                            } @else if $nb-caret-native-rotation {
-                                                transform: rotateZ(#{$nb-caret-native-rotation});
-                                                //@include nb-abs-v-align($nb-caret-native-rotation);
-                                                @if $nb-caret-native-animate {
-                                                    transition: transform $nb-transition-duration linear;
-                                                }
-                                            }
-                                        } @else {
-                                            @if $nb-caret-2 != $nb-caret-1 {
-                                                content: $nb-caret-2;
-                                            } @else if $nb-caret-rotation {
-                                                //transform: rotateZ(#{$nb-caret-rotation});
-                                                @include nb-abs-v-align($nb-caret-rotation);
-                                                @if $nb-caret-animate {
-                                                    transition: transform $nb-transition-duration linear;
-                                                }
-                                            }
+                                    @if $nb-caret-rotation {
+                                        transform: rotateZ(#{$nb-caret-rotation});
+                                        @if $nb-caret-animate {
+                                            transition: transform $nb-transition-duration linear;
                                         }
                                     }
                                 }
                             }
-                            // SUBMENU LINKS
-                            &.dropdown-item {
-                                @if $nb-caret-native {
-                                    &:before {
-                                        @include caret-start;
-                                    }
-                                    &:after {
-                                        @include caret-end;
-                                    }
-                                } @else {
-                                    &:before {
-                                        content: $nb-caret-start or $nb-caret-1;
-                                    }
-                                    &:after {
-                                        content: $nb-caret-end or $nb-caret-1;
-                                    }
-                                }
-                                &:after,
-                                &:before {
-                                    @if $nb-caret-native {
-                                        $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
-                                        top: calc(50% - $nb-caret-h-height/2);
-                                    } else {
-                                        //top: ;
-                                        @include nb-abs-v-align();
-                                    }
-                                    left: auto;
-                                    right: $nb-caret-h-distance;
-                                }
+                        }
+                        // SUBMENU LINKS
+                        &.dropdown-item {
+                            &:before {
+                                @include caret-start;
+                            }
+                            &:after {
+                                @include caret-end;
+                            }
+                            &:after,
+                            &:before {
+                                $nb-caret-h-distance: calc(#{math.div($dropdown-item-padding-x, 2)} - #{$nb-caret-h-width});
+                                top: calc(50% - $nb-caret-h-height/2);
+                                left: auto;
+                                right: $nb-caret-h-distance;
                             }
                         }
-                        // we need to inspect parent drop(start|end)
-                        .dropend > .dropdown-item::after,
-                        .dropstart > .dropdown-item::before {
-                            display: inline-block !important;
-                        }
-                        .dropend > .dropdown-item::before,
-                        .dropstart > .dropdown-item::after {
-                            display: none !important;
-                        }
+                    }
+                    // Inspect parent drop(start|end) to decide which caret is shown
+                    .dropend > .dropdown-item::after,
+                    .dropstart > .dropdown-item::before {
+                        display: inline-block !important;
+                    }
+                    .dropend > .dropdown-item::before,
+                    .dropstart > .dropdown-item::after {
+                        display: none !important;
                     }
                 }
             }
