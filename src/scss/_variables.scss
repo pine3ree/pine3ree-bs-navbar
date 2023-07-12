@@ -1,0 +1,81 @@
+@charset "UTF-8";
+
+@use "sass:math";
+
+@import "node_modules/bootstrap/scss/functions";
+
+//==============================================================================
+// CUSTOM VARS before bootstrap defaults
+//==============================================================================
+// scss-docs-start caret-variables
+//$nb-caret-width: $caret-width;
+$nb-caret-width: .3125em !default;
+$caret-width: $nb-caret-width;
+// scss-docs-end caret-variables
+//==============================================================================
+
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/variables-dark";
+
+@import "node_modules/bootstrap/scss/maps";
+@import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/utilities";
+
+//------------------------------------------------------------------------------
+// BREAKPOINTS (Usually only a couple are needed, here we keep 3: sm, md, lg)
+//------------------------------------------------------------------------------
+$nb-breakpoints: map-remove($grid-breakpoints, xl, xxl);
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// TRANSITIONS
+//------------------------------------------------------------------------------
+$nb-transition: all .2s linear;
+$nb-dropdown-menu-has-transition: true;
+$nb-transition-duration: .2s;
+$nb-dropdown-menu-transition-duration: .75s;
+$nb-dropdown-menu-max-height: 1024px;
+$nb-dropdown-menu-transition-show: max-height $nb-dropdown-menu-transition-duration linear;
+$nb-dropdown-menu-transition-hide: max-height, visibility .33 * $nb-dropdown-menu-transition-duration linear;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+
+$nb-navbar-dark-collapsed-li-bg-color:  rgba($white, 0.025);
+$nb-navbar-light-collapsed-li-bg-color: rgba($black, 0.0125);
+
+$nb-item-line-height: 1.5em;
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+$nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size;
+$nb-border-width: $border-width;
+$nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem);
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// CARET
+//------------------------------------------------------------------------------
+
+$nb-caret-animate: true;
+
+// caret size
+$nb-caret-size: .75rem;
+$nb-caret-size: 2*$nb-caret-width;
+// horizontal border-triangle
+$nb-caret-v-width: $nb-caret-size;
+$nb-caret-v-height: $nb-caret-width;
+// vertical border-triangle
+$nb-caret-h-width: $nb-caret-v-height;
+$nb-caret-h-height: $nb-caret-v-width;
+
+$nb-caret-h-distance: 0.25rem;
+
+// Caret direction and rotation
+$nb-caret-dir: down;
+$nb-caret-rotation: -180deg;
+// Caret direction and rotation for collapsed navbar
+$nb-caret-collapse-dir: end;
+$nb-caret-collapse-rotation: 90deg;
+//==============================================================================
+

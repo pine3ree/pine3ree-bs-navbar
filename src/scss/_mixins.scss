@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+@import "_variables";
+
+//==============================================================================
+// MIXINS
+//==============================================================================
+@mixin navbar-dropdown-menu-transition {
+    display: block !important;
+    max-height: 0;
+    overflow: auto;
+    // MUST KEEP IT NOT VISIBLE TO DISABLE TAB NAVIGATION INSIDE CLOSED MENUS
+    //visibility: visible;
+    //transition: $nb-dropdown-menu-transition-hide;
+    &.show {
+        max-height: $nb-dropdown-menu-max-height;
+        transition: $nb-dropdown-menu-transition-show;
+    }
+}
+
+@mixin nb-caret($direction: down) {
+    @if $direction == up {
+        @include caret-up;
+    } @else if $direction == end {
+        @include caret-end;
+    } @else if $direction == start {
+        @include caret-start;
+    } @else {
+        @include caret-down;
+    }
+    vertical-align: middle;
+}
+
+// Set native caret top position based on caret direction
+@mixin nb-caret-top(
+    $direction: up,
+    $h-height: $nb-caret-h-height,
+    $v-height: $nb-caret-v-height
+) {
+    @if $direction == end {
+        top: calc(50% - $h-height/2);
+    } @else if $direction == start {
+        top: calc(50% - $h-height/2);
+    } @else {
+        top: calc(50% - $v-height/2);
+    }
+}
+
+// Set native caret end position based on caret direction
+// Center the caret vertically with the navbar-toggler
+@mixin nb-caret-end(
+    $direction,
+    $container-width: $nb-toggler-width,
+    $h-width: $nb-caret-h-width,
+    $v-width: $nb-caret-v-width
+) {
+    @if $direction == up {
+        right: calc($container-width/2 - $v-width/2);
+    } @else if $direction == end {
+        right: calc($container-width/2 - $h-width/2);
+    } @else if $direction == start {
+        right: calc($container-width/2 - $h-width/2);
+    } @else {
+        right: calc($container-width/2 - $v-width/2);
+    }
+}
+
+@mixin nb-abs-v-align($rotation: 0) {
+    @if $rotation != 0 {
+        transform: translateY(-50%) rotateZ(#{$rotation});
+    } @else {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}

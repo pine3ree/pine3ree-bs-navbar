@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+@use "sass:math";
+
+@import "node_modules/bootstrap/scss/functions";
+
+//==============================================================================
+// IMPORT variables and mixins
+//==============================================================================
+@import "_variables";
+@import "_mixins";
+//==============================================================================
+
+//==============================================================================
+// LOCAL VARS
+//==============================================================================
+$nb-navbar-dark-dropdown-item-focus-bg-color:  rgba($white, 0.025);
+$nb-navbar-light-dropdown-item-focus-bg-color: rgba($black, 0.0125);
+//==============================================================================
+
+//==============================================================================
+// COLLAPSED NAVBAR styles
+//==============================================================================
+@each $breakpoint in map-keys($nb-breakpoints) {
+    $next: breakpoint-next($breakpoint, $nb-breakpoints);
+    $infix: breakpoint-infix($next, $nb-breakpoints);
+
+    @include media-breakpoint-down($next) {
+        .navbar-expand#{$infix} {
+
+            &[data-bs-theme="dark"],
+            &.navbar-dark {
+                .navbar-nav {
+                    .nav-link,
+                    .dropdown-item {
+                        color: $gray-300;
+                        background: transparent;
+                        &:hover {
+                            color: $gray-200;
+                        }
+                        &:focus {
+                            color: $gray-100;
+                        }
+                        &:focus-visible {
+                            outline: 0;
+                        }
+                    }
+                    .dropdown-menu {
+                        background: transparent;
+                        .dropdown-item {
+                            &:focus-visible {
+                                //background: $dropdown-link-active-bg;
+                                background: $nb-navbar-dark-dropdown-item-focus-bg-color;
+                            }
+                        }
+                        li,
+                        .dropdown-menu {
+                            background: transparent;
+                        }
+                    }
+                }
+            }
+            
+            &[data-bs-theme="light"],
+            &.navbar-light {
+                .navbar-nav {
+                    .nav-link,
+                    .dropdown-item {
+                        color: $gray-700;
+                        background: transparent;
+                        &:hover {
+                            color: $gray-800;
+                        }
+                        &:focus {
+                            color: $gray-900;
+                        }
+                        &:focus-visible {
+                            outline: 0;
+                        }
+                    }
+                    .dropdown-menu {
+                        background: transparent;
+                        .dropdown-item {
+                            &:focus-visible {
+                                //background: $dropdown-link-active-bg;
+                                background: $nb-navbar-light-dropdown-item-focus-bg-color;
+                            }
+                        }
+                        li,
+                        .dropdown-menu {
+                            background: transparent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+//==============================================================================
