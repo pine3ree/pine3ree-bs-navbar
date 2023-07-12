@@ -12,8 +12,10 @@
 //==============================================================================
 
 //==============================================================================
-// CUSTOM VARS
+// LOCAL VARS
 //==============================================================================
+$nb-navbar-dark-collapsed-blend-bg-color:  rgba($white, 0.030);
+$nb-navbar-light-collapsed-blend-bg-color: rgba($black, 0.015);
 //==============================================================================
 
 //==============================================================================
@@ -32,7 +34,6 @@
                     .nav-link,
                     .dropdown-item {
                         color: $gray-300;
-                        background: transparent;
                         &:hover {
                             color: $gray-200;
                         }
@@ -42,18 +43,21 @@
                         &:focus-visible {
                             outline: 0;
                         }
+                        background: transparent;
+                        &.dropdown-toggle.show {
+                            background: $nb-navbar-dark-collapsed-blend-bg-color !important;
+                        }
                     }
                     .dropdown-menu {
-                        background: transparent;
+                        background: $nb-navbar-dark-collapsed-blend-bg-color !important;
+                        li {
+                            background: transparent;
+                        }
                         .dropdown-item {
                             &:focus-visible {
                                 //background: $dropdown-link-active-bg;
-                                background: $nb-navbar-dark-collapsed-li-bg-color;
+                                background: $nb-navbar-dark-collapsed-blend-bg-color;
                             }
-                        }
-                        li,
-                        .dropdown-menu {
-                            background: transparent;
                         }
                     }
                 }
@@ -65,7 +69,6 @@
                     .nav-link,
                     .dropdown-item {
                         color: $gray-700;
-                        background: transparent;
                         &:hover {
                             color: $gray-800;
                         }
@@ -75,18 +78,21 @@
                         &:focus-visible {
                             outline: 0;
                         }
+                        background: transparent;
+                        &.dropdown-toggle.show {
+                            background: $nb-navbar-light-collapsed-blend-bg-color !important;
+                        }
                     }
                     .dropdown-menu {
-                        background: transparent;
+                        background: $nb-navbar-light-collapsed-blend-bg-color !important;
+                        li {
+                            background: transparent;
+                        }
                         .dropdown-item {
                             &:focus-visible {
                                 //background: $dropdown-link-active-bg;
-                                background: $nb-navbar-light-collapsed-li-bg-color;
+                                background: $nb-navbar-light-collapsed-blend-bg-color;
                             }
-                        }
-                        li,
-                        .dropdown-menu {
-                            background: transparent;
                         }
                     }
                 }
