@@ -1,6 +1,7 @@
+/* jslint browser:true */
 /* global document, window */
 
-"use strict";
+'use strict';
 
 // Check bootstrap library
 if (!window.bootstrap || !window.bootstrap.Dropdown) {
@@ -9,7 +10,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
 (function(bootstrap, $) {
 
-    const P3_NAME = 'p3bsnavbar';
+    const P3_NAME = 'p3bsNavbar';
 
     const P3_DATA_KEY = 'p3.navbar.dropdown';
     const P3_EVENT_KEY = `.${P3_DATA_KEY}`;
@@ -78,7 +79,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     /**
      * Get the html document width
      *
-     * @returns {Number}
+     * @return {Number}
      */
     function getClientWidth() {
         return Math.max(window.innerWidth, document.documentElement.clientWidth);
@@ -89,14 +90,14 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      *
      * @param {HTMLElement} element
      * @param {string} selector
-     * @returns {Array}
+     * @return {Array}
      */
     function getSiblings(element, selector = '*') {
-        
-        let siblings = [];
+
+        const siblings = [];
 
         if (element instanceof HTMLElement) {
-            let parent = element.parentElement;
+            const parent = element.parentElement;
             if (parent instanceof HTMLElement) {
                 parent.querySelectorAll(`:scope > ${selector}`).forEach(function(child) {
                     if (child !== element && child instanceof HTMLElement) {
@@ -113,13 +114,13 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * Check if element is an enabled dropdown toggler
      *
      * @param {HTMLElement} toggle
-     * @returns {Boolean}
+     * @return {Boolean}
      */
     function isEnabledToggle(toggle) {
 
         if (toggle && toggle instanceof HTMLElement) {
             return (
-                toggle.getAttribute('data-bs-toggle') === "dropdown"
+                toggle.getAttribute('data-bs-toggle') === 'dropdown'
                 && !toggle.disabled
                 && !toggle.classList.contains('disabled')
             );
@@ -135,7 +136,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {Number} breakpoint
      * @param {Boolean} closeOthers
      * @param {Boolean} stopPropagation
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleShownEvent(e, breakpoint, closeOthers, stopPropagation = false) {
 
@@ -153,7 +154,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         const dropdown = target.closest(BS_SELECTOR_DROPDOWN);
 
         if (dropdown instanceof HTMLElement) {
-            let clientWidth = getClientWidth();
+            const clientWidth = getClientWidth();
 
             dropdown.classList.add(BS_CLASS_SHOW);
 
@@ -175,7 +176,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {Event} e
      * @param {Boolean} stopPropagation
      * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleHiddenEvent(e, stopPropagation = false, dispatchCustomEvent = false) {
 
@@ -209,7 +210,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {Boolean} hover
      * @param {Number} timeout
      * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleClickDataApiEvent(e, hover, timeout, dispatchCustomEvent = false) {
 
@@ -219,13 +220,13 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
             return;
         }
 
-        // If it is a toggler we MUST stop bubbling to prevent parent menu from 
+        // If it is a toggler we MUST stop bubbling to prevent parent menu from
         // being close by bootstrap handler
         e.stopPropagation();
 
         // Remove any running timer
         if (hover && timeout > 0) {
-            let timeoutID = target.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
+            const timeoutID = target.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
             if (timeoutID > 0) {
                 clearTimeout(timeoutID);
             }
@@ -241,7 +242,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * Close any dropdown not contained in this navbar
      *
      * @param {HTMLElement} navbar
-     * @returns {undefined}
+     * @return {undefined}
      */
     function closeExternalDropdowns(navbar) {
 
@@ -265,11 +266,11 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement|Array|NodeList} container
      * @param {Event} event
      * @param {boolean} [stopPropagation=true]
-     * @returns {undefined}
+     * @return {undefined}
      */
     function closeInnerDropdowns(container, event, stopPropagation = false) {
 
-        let containers = [];
+        const containers = [];
 
         if (container instanceof Array || container instanceof NodeList) {
             container.forEach(function(c) {
@@ -294,7 +295,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
         if (event instanceof Event && stopPropagation === true) {
             event.stopPropagation();
-    }
+        }
     }
 
     /**
@@ -303,7 +304,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} dropdown
      * @param {Event} event
      * @param {Boolean} stopPropagation
-     * @returns {undefined}
+     * @return {undefined}
      */
     function closeSiblingDropdowns(dropdown, event, stopPropagation = false) {
 
@@ -324,11 +325,11 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} dropdown
      * @param {Event} event
      * @param {Boolean} stopPropagation
-     * @returns {undefined}
+     * @return {undefined}
      */
     function closeOtherNavs(dropdown, event, stopPropagation = false) {
 
-        let otherNavs = document.querySelectorAll(`${BS_SELECTOR_NAVBAR} ${BS_SELECTOR_NAVBAR_NAV}`);
+        const otherNavs = document.querySelectorAll(`${BS_SELECTOR_NAVBAR} ${BS_SELECTOR_NAVBAR_NAV}`);
         const currentNav = dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV);
 
         otherNavs.forEach(function(otherNav) {
@@ -344,7 +345,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} dropdown
      * @param {Number} clientWidth
      * @param {Number} breakpoint
-     * @returns {undefined}
+     * @return {undefined}
      */
     function setChildrenDropDirection(dropdown, clientWidth, breakpoint) {
 
@@ -362,23 +363,27 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
             return;
         }
 
-        let left = menu.getBoundingClientRect().left;
-        let right = left + menu.offsetWidth;
+        const left = menu.getBoundingClientRect().left;
+        const right = left + menu.offsetWidth;
 
         let parentMenu;
-        let isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
-            !dropdown.classList.contains(BS_CLASS_DROPEND) 
+        const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
+            !dropdown.classList.contains(BS_CLASS_DROPEND)
             && (menuEndRegex.test(menu.className))
         );
 
         menu.querySelectorAll(`:scope > ${BS_SELECTOR_DROPDOWN}`).forEach(function(menuItem) {
 
             const submenu = menuItem.querySelector(`:scope > ${BS_SELECTOR_MENU}`);
-            
+
+            if (!submenu) {
+                return;
+            }
+
             submenu.style.visibility = 'hidden';
             submenu.classList.add(BS_CLASS_SHOW);
 
-            let subwidth = submenu.offsetWidth;
+            const subwidth = submenu.offsetWidth;
 
             submenu.classList.remove(BS_CLASS_SHOW);
             submenu.style.visibility = null;
@@ -431,11 +436,11 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} navbar
      * @param {Number} breakpoint
      * @param {Number|undefined} previousWidth
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleBreakpointCrossing(navbar, breakpoint, previousWidth) {
 
-        let currentWidth = getClientWidth();
+        const currentWidth = getClientWidth();
 
         if (previousWidth < breakpoint && currentWidth >= breakpoint) {
             closeInnerDropdowns(navbar);
@@ -457,7 +462,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} element
      * @param {Boolean} shouldGetNext
      * @param {Boolean} cycle
-     * @returns {HTMLElement}
+     * @return {HTMLElement}
      */
     function getNextElement(list, element, shouldGetNext, cycle) {
 
@@ -485,7 +490,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {Event} e
      * @param {HTMLElement} navbar
      * @param {Boolean} dispatchCustomEvent Dispatch a custom event?
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleKeydown(e, navbar, dispatchCustomEvent) {
 
@@ -495,7 +500,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         }
 
         // ENTER | UP | DOWN keypress are handled
-        const isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key)
+        const isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key);
         if (!isValidKeyEvent) {
             return;
         }
@@ -527,8 +532,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
                 }
             }
         } else {
-            let menu;
-            menu = target.closest(BS_SELECTOR_MENU);
+            const menu = target.closest(BS_SELECTOR_MENU);
             if (menu instanceof HTMLElement) {
                 const items = [].concat(
                     ...menu.querySelectorAll(`:scope > li > ${P3_SELECTOR_VISIBLE_ITEMS}`)
@@ -536,7 +540,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
                 const isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
                 if (isNavKeyEvent) {
-                    let nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
+                    const nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
                     if (nextItem) {
                         nextItem.focus();
                         closeSiblingDropdowns(nextItem.parentElement);
@@ -557,7 +561,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} navbar
      * @param {Number} breakpoint
      * @param {Number} timeout
-     * @returns {undefined}
+     * @return {undefined}
      */
     function activateHover(navbar, breakpoint, timeout) {
 
@@ -565,10 +569,10 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
         dropdowns.forEach(function(menuItem) {
             menuItem.addEventListener('mouseenter', function(e) {
-                handleMouseEnter(this, breakpoint, timeout);
+                handleMouseEnter(menuItem, breakpoint, timeout);
             });
             menuItem.addEventListener('mouseleave', function(e) {
-                handleMouseLeave(this, breakpoint, timeout);
+                handleMouseLeave(menuItem, breakpoint, timeout);
             });
         });
     }
@@ -579,7 +583,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} menuItem
      * @param {Number} breakpoint
      * @param {Number} timeout
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleMouseEnter(menuItem, breakpoint, timeout) {
 
@@ -592,7 +596,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         if (toggleElement instanceof HTMLElement) {
             if (timeout > 0) {
                 // Clear the previously registered timeout, if any
-                let timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
+                const timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
                 if (timeoutID > 0) {
                     clearTimeout(timeoutID);
                 }
@@ -612,7 +616,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {HTMLElement} menuItem
      * @param {Number} breakpoint
      * @param {Number} timeout
-     * @returns {undefined}
+     * @return {undefined}
      */
     function handleMouseLeave(menuItem, breakpoint, timeout) {
 
@@ -625,7 +629,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         if (toggleElement instanceof HTMLElement) {
             // Clear the previously registered timeout, if any
             if (toggleElement.classList.contains(BS_CLASS_SHOW) && timeout > 0) {
-                let timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
+                const timeoutID = toggleElement.getAttribute(`data-${P3_DATA_TIMEOUT_ID}`);
                 if (timeoutID > 0) {
                     clearTimeout(timeoutID);
                 }
@@ -633,15 +637,15 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
             // Add a timeout for delaying hide events so that the mouse leaving
             // the control will not immediatly close the submenu
             toggleElement.setAttribute(`data-${P3_DATA_TIMEOUT_ID}`, setTimeout(
-            function() {
-                if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
-                    const toggle = BsDropdown.getOrCreateInstance(toggleElement);
-                    if (toggle instanceof BsDropdown) {
-                        toggle.hide();
+                function() {
+                    if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
+                        const toggle = BsDropdown.getOrCreateInstance(toggleElement);
+                        if (toggle instanceof BsDropdown) {
+                            toggle.hide();
+                        }
                     }
-                }
-            },
-            timeout
+                },
+                timeout
             ));
         }
     }
@@ -650,12 +654,12 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * Determine navbar expand breakpoint form expand-(sm|md|lg|xl) class if present
      *
      * @param {HTMLElement} navbar
-     * @returns {integer|null}
+     * @return {integer|null}
      */
     function getExpandBreakpoint(navbar) {
         for (const nc of navbar.classList) {
-            let rootStyle = window.getComputedStyle(document.documentElement);
-            let breakpoint = parseInt(rootStyle.getPropertyValue(`--p3-bs-${nc}`));
+            const rootStyle = window.getComputedStyle(document.documentElement);
+            const breakpoint = parseInt(rootStyle.getPropertyValue(`--p3-bs-${nc}`));
             if (Number.isInteger(breakpoint)) {
                 return breakpoint;
             }
@@ -669,7 +673,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
      * @param {string} selector A valid string selector, an HTMLElement, an
      *      Array of elements or a NodeList
      * @param {Object} options
-     * @returns {null}
+     * @return {undefined}
      */
     const p3bsNavbar = function(selector, options) {
 
@@ -694,7 +698,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
             const OPT = Object.assign({}, OPTIONS);
 
             // Determine navbar expand breakpoint
-            let breakpoint = getExpandBreakpoint(navbar);
+            const breakpoint = getExpandBreakpoint(navbar);
             if (breakpoint > 0) {
                 OPT.breakpoint = breakpoint;
             }
@@ -741,7 +745,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
             // Activate hover dropdown
             if (OPT.hover && !isTouchDevice) {
-                activateHover(navbar, OPT.breakpoint, OPT.timeout)
+                activateHover(navbar, OPT.breakpoint, OPT.timeout);
             }
 
             // Close external dropdowns on showing navbar dropdowns
@@ -782,5 +786,4 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
         $.fn.p3bsNavbar.defaults = p3bsNavbar.defaults;
     }
-
 })(window.bootstrap, window.jQuery);
