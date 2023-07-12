@@ -27,71 +27,72 @@ $nb-navbar-light-collapsed-blend-bg-color: rgba($black, 0.015);
 
     @include media-breakpoint-down($next) {
         .navbar-expand#{$infix} {
-
-            &[data-bs-theme="dark"],
-            &.navbar-dark {
-                .navbar-nav {
-                    .nav-link,
-                    .dropdown-item {
-                        color: $gray-300;
-                        &:hover {
-                            color: $gray-200;
-                        }
-                        &:focus {
-                            color: $gray-100;
-                        }
-                        &:focus-visible {
-                            outline: 0;
-                        }
-                        background: transparent;
-                        &.dropdown-toggle.show {
-                            background: $nb-navbar-dark-collapsed-blend-bg-color !important;
-                        }
-                    }
-                    .dropdown-menu {
-                        background: $nb-navbar-dark-collapsed-blend-bg-color !important;
-                        li {
-                            background: transparent;
-                        }
+            &.p3-bs-navbar-blend {
+                &[data-bs-theme="dark"],
+                &.navbar-dark {
+                    .navbar-nav {
+                        .nav-link,
                         .dropdown-item {
+                            color: $gray-300;
+                            &:hover {
+                                color: $gray-200;
+                            }
+                            &:focus {
+                                color: $gray-100;
+                            }
                             &:focus-visible {
-                                //background: $dropdown-link-active-bg;
-                                background: $nb-navbar-dark-collapsed-blend-bg-color;
+                                outline: 0;
+                            }
+                            background: transparent;
+                            &.dropdown-toggle.show {
+                                background: $nb-navbar-dark-collapsed-blend-bg-color !important;
+                            }
+                        }
+                        .dropdown-menu {
+                            background: $nb-navbar-dark-collapsed-blend-bg-color !important;
+                            li {
+                                background: transparent;
+                            }
+                            .dropdown-item {
+                                &:focus-visible {
+                                    //background: $dropdown-link-active-bg;
+                                    background: $nb-navbar-dark-collapsed-blend-bg-color;
+                                }
                             }
                         }
                     }
                 }
-            }
-            
-            &[data-bs-theme="light"],
-            &.navbar-light {
-                .navbar-nav {
-                    .nav-link,
-                    .dropdown-item {
-                        color: $gray-700;
-                        &:hover {
-                            color: $gray-800;
-                        }
-                        &:focus {
-                            color: $gray-900;
-                        }
-                        &:focus-visible {
-                            outline: 0;
-                        }
-                        background: transparent;
-                        &.dropdown-toggle.show {
-                            background: $nb-navbar-light-collapsed-blend-bg-color !important;
-                        }
-                    }
-                    .dropdown-menu {
-                        background: $nb-navbar-light-collapsed-blend-bg-color !important;
-                        li {
-                            background: transparent;
-                        }
+
+                &[data-bs-theme="light"],
+                &.navbar-light {
+                    .navbar-nav {
+                        .nav-link,
                         .dropdown-item {
+                            color: $gray-700;
+                            &:hover {
+                                color: $gray-800;
+                            }
+                            &:focus {
+                                color: $gray-900;
+                            }
                             &:focus-visible {
-                                //background: $dropdown-link-active-bg;
-                                background: $nb-navbar-light-collapsed-blend-bg-color;
+                                outline: 0;
+                            }
+                            background: transparent;
+                            &.dropdown-toggle.show {
+                                background: $nb-navbar-light-collapsed-blend-bg-color !important;
+                            }
+                        }
+                        .dropdown-menu {
+                            background: $nb-navbar-light-collapsed-blend-bg-color !important;
+                            li {
+                                background: transparent;
+                            }
+                            .dropdown-item {
+                                &:focus-visible {
+                                    //background: $dropdown-link-active-bg;
+                                    background: $nb-navbar-light-collapsed-blend-bg-color;
+                                }
                             }
                         }
                     }
