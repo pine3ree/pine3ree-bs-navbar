@@ -1,3 +1,10 @@
+/*!
+ * @package pine3ree-bs-navbar A multilevel-menu navbar for bootstrap 5.3.x (https://github.com/pine3ree/pine3ree-bs-navbar/)
+ * @author pine3ree https://github.com/pine3ree
+ * @copyright Copyright 2023-today pine3ree
+ * @license Licensed under BSD-3 Clear License (https://github.com/pine3ree/pine3ree-bs-navbar/blob/master/LICENSE)
+ */
+
 /* jslint browser:true */
 /* global document, window */
 

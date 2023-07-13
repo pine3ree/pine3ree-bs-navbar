@@ -107,6 +107,18 @@ const SOURCEMAPS_WRITE_OPTIONS = {
 //    sourceRoot: '.'
 };
 
+const BABEL_OPTIONS = {
+    presets: [
+        "@babel/preset-env",
+    ]
+};
+
+const TERSER_OPTIONS = {
+    format: {
+        comments: "some"
+    }
+};
+
 //==============================================================================
 // SASS
 //==============================================================================
@@ -211,17 +223,15 @@ function compile_js(
 
     return gulp.src(SRC_JS + '*.js')
         .pipe(gp.if(sourcemaps === true, gp.sourcemaps.init(SOURCEMAPS_INIT_OPTIONS)))
-        .pipe(gp.babel({
-            presets: [
-                "@babel/preset-env",
-            ]
+        .pipe(gp.babel(BABEL_OPTIONS))
+        .pipe(gp.stripJsComments({
+            safe: true
         }))
-        .pipe(gp.stripJsComments())
         .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(destDir))
         .pipe(gp.filter("*.js"))
         //.pipe(gp.uglify()) // Now using terser for es6
-        .pipe(gp.terser())
+        .pipe(gp.terser(TERSER_OPTIONS))
         .pipe(gp.rename({suffix: '.min'}))
         .pipe(gp.if(sourcemaps === true, gp.sourcemaps.write('.', SOURCEMAPS_WRITE_OPTIONS)))
         .pipe(gulp.dest(destDir))
