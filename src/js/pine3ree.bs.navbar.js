@@ -366,7 +366,6 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         const left = menu.getBoundingClientRect().left;
         const right = left + menu.offsetWidth;
 
-        let parentMenu;
         const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || (
             !dropdown.classList.contains(BS_CLASS_DROPEND)
             && (menuEndRegex.test(menu.className))
