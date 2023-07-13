@@ -229,7 +229,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         }
 
         // If it is a toggler we MUST stop bubbling to prevent parent menu from
-        // being close by bootstrap handler
+        // being closed by the bootstrap handler
         e.stopPropagation();
 
         // Remove any running timer
@@ -759,7 +759,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
             navbar.addEventListener(P3_EVENT_SHOWN, function(e) {
                 closeExternalDropdowns(navbar);
                 if (OPT.stopPropagation) {
-                    e.stopPropagation(); // no need to propagate outside the navbar
+                    e.stopPropagation(); // No need to propagate outside the navbar
                 }
             });
         });
