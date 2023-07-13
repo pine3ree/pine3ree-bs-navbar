@@ -240,7 +240,7 @@ $_rtl = $rtl ? ".rtl" : "";
 <?php foreach(array_reverse($breakpoints) as $bp): ?>
 <?php $n += 1 ?>
 <?php $combination_id = sprintf('%02d', $n) ?>
-<?php $combination_id = trim("{$variant}-{$color}-{$theme}-{$nav_theme}", '- ') ?>
+<?php //$combination_id = trim("{$variant}-{$color}-{$theme}-{$nav_theme}", '- ') . "-{$combination_id}" ?>
             <div class="mt-4 mb-5">
                 <div class="container-sm">
                     <div class="d-block my-2 text-center text-body-tertiary font-monospace small">
