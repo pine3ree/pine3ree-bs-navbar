@@ -32,6 +32,41 @@ function level(int $n) {
 //    return $n;
 }
 
+
+define("DROPDOWN", <<< EODD
+{indent}<li class="{class_li}dropdown{dropdown_dir}">
+{indent}    <a href="#"
+{indent}        class="{class_a} dropdown-toggle"
+{indent}        data-bs-toggle="dropdown"
+{indent}        aria-expanded="false"
+{indent}        >
+{indent}        {title}
+{indent}    </a>
+{indent}    {submenu}
+{indent}</li>
+EODD
+);
+
+define("MENU", <<< EOM
+{indent}<ul class="dropdown-menu{dropdown_menu_dir}">
+{indent}    <li><a class="dropdown-item" href="#">Action</a></li>
+{indent}    <li><a class="dropdown-item" href="#">Another action</a></li>
+{indent}    {dropdown}
+{indent}</ul>
+EOM
+);
+
+function list_item(string $indent, string $type, string $title, string $href = '#') {
+    if ($type === 'nav') {
+        $li_attrs = " class=\"nav-item\"";
+        $a_class  = "nav-link";
+    } else {
+        $li_attrs = "";
+        $a_class  = "dropdown-item";
+    }
+    return  "{$indent}<li{$li_attrs}><a class=\"{$a_class}\" href=\"{$href}\">{$title}</a></li>";
+}
+
 function renderDropdownMenu(
     int $depth = 9,
     int $spaces = 0,
@@ -55,57 +90,56 @@ function renderDropdownMenu(
         return '';
     }
 
-    $no_extra_links = $bp === 'sm';
-    $dropdown_title = $level === 0 ? 'Dropdown' : "Dropdown " . level($level);
+    $extra_links = $bp !== 'sm';
+    $dropdown_toggle_title = $level === 0 ? 'Dropdown' : "Dropdown " . level($level);
 
-    $indentation = str_repeat(' ', $spaces);
+    $indent = str_repeat(' ', $spaces);
 
     if ($level === 0) {
-        $html .= $indentation . '<li class="nav-item dropdown">' . "\n";
-//        $html .= $indentation . '    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">' . $dropdown_title . '</a>' . "\n";
-        $html .= $indentation . '    <a href="#"' . "\n";
-        $html .= $indentation . '        class="nav-link dropdown-toggle"' . "\n";
-        $html .= $indentation . '        data-bs-toggle="dropdown"' . "\n";
-        $html .= $indentation . '        aria-expanded="false"' . "\n";
-        $html .= $indentation . '        >' . "\n";
-        $html .= $indentation . "        {$dropdown_title}" . "\n";
-        $html .= $indentation . '    </a>' . "\n";
-        $html .=                                 renderDropdownMenu($depth, $spaces + 4, $dropdir, $bp, $level + 1);
-        $html .= $indentation . '</li>' . "\n";
-        if ($dropdir === 'start' && empty($no_extra_links)) {
-        $html .= $indentation . '<li class="nav-item"><a class="nav-link" href="#">Link</a></li>' . "\n";
-        $html .= $indentation . '<li class="nav-item"><a class="nav-link" href="#">Another link</a></li>' . "\n";
+        $dropdown = DROPDOWN;
+        $dropdown = str_replace('{indent}', $indent, $dropdown);
+        $dropdown = str_replace('{class_li}', 'nav-item ', $dropdown);
+        $dropdown = str_replace('{dropdown_dir}', '', $dropdown);
+        $dropdown = str_replace('{class_a}', 'nav-link', $dropdown);
+        $dropdown = str_replace('{title}', $dropdown_toggle_title, $dropdown);
+        $dropdown = str_replace('{submenu}', renderDropdownMenu($depth, $spaces + 4, $dropdir, $bp, $level + 1), $dropdown);
+
+        $html .= $dropdown;
+
+        if ($dropdir === 'start' && $extra_links) {
+            $html .= "\n" . list_item($indent, 'nav', 'Link');
+            $html .= "\n" . list_item($indent, 'nav', 'Another link');
         }
 
         return $html;
     }
 
-    $html .= $indentation . "<ul class=\"dropdown-menu{$dropdown_menu_dir}\">" . "\n";
-    $html .= $indentation . '    <li><a class="dropdown-item" href="#">Action</a></li>' . "\n";
-    $html .= $indentation . '    <li><a class="dropdown-item" href="#">Another action</a></li>' . "\n";
-    $html .= $indentation . "    <li class=\"dropdown{$dropdown_dir}\">" . "\n";
+    $spaces_dd = $spaces + 4;
+    $indent_dd = str_repeat(' ', $spaces_dd);
+
     if ($level < $depth) {
-    $html .= $indentation . '        <a href="#"' . "\n";
-    $html .= $indentation . '            class="dropdown-item dropdown-toggle" fs-6' . "\n";
-    $html .= $indentation . '            data-bs-toggle="dropdown"' . "\n";
-    $html .= $indentation . '            aria-expanded="false"' . "\n";
-    $html .= $indentation . '            >' . "\n";
-    $html .= $indentation . "            {$dropdown_title}" . "\n";
-    $html .= $indentation . '        </a>' . "\n";
+        $dropdown = DROPDOWN;
+        $dropdown = str_replace('{indent}', $indent_dd, $dropdown);
+        $dropdown = str_replace('{class_li}', '', $dropdown);
+        $dropdown = str_replace('{dropdown_dir}', $dropdown_dir, $dropdown);
+        $dropdown = str_replace('{class_a}', 'dropdown-item', $dropdown);
+        $dropdown = str_replace('{title}', $dropdown_toggle_title, $dropdown);
+        $dropdown = str_replace('{submenu}', renderDropdownMenu($depth, $spaces_dd + 4, '', $bp, $level + 1), $dropdown);
     } else {
-    $html .= $indentation . '        <a class="dropdown-item" href="#">Stop here</a>' . "\n";
+        $dropdown = $indent_dd . '    <li><a class="dropdown-item" href="#">Stop here</a></li>';
     }
-    $html .=                                     renderDropdownMenu($depth, $spaces + 8, '', $bp, $level + 1);
-    $html .= $indentation . '    </li>' . "\n";
-    $html .= $indentation . '</ul>' . "\n";
+    $dropdown = ltrim($dropdown);
+
+    $menu = MENU;
+    $menu = str_replace('{indent}', $indent, $menu);
+    $menu = str_replace('{dropdown_menu_dir}', $dropdown_menu_dir, $menu);
+    $menu = str_replace('{dropdown_dir}', $dropdown_dir, $menu);
+    $menu = str_replace('{dropdown}', $dropdown, $menu);
+
+    $html .= ltrim($menu);
 
     return $html;
 }
-
-//header('content-type: text/plain');
-//echo renderDropdownMenu(3, 0, 'start');
-//exit;
-
 
 $n = 0;
 
@@ -239,6 +273,7 @@ $_rtl = $rtl ? ".rtl" : "";
                     <div class="container-sm">
                         <a class="navbar-brand fs-5" href="#">
                             <span class="fst-italic font-monospace">p3</span> <?="navbar-expand-{$bp}"?>
+
                         </a>
                         <button
                             class="navbar-toggler"
@@ -258,10 +293,12 @@ $_rtl = $rtl ? ".rtl" : "";
                             data-bs-theme="<?=$nav_theme?>"
                             >
                             <ul class="navbar-nav me-auto mb-0">
-<?= renderDropdownMenu(9, 10 * 4 - 8, 'start', $bp) ?>
+<?= renderDropdownMenu(9, 8 * 4, 'start', $bp) ?>
+
                             </ul>
                             <ul class="navbar-nav ms-auto mb-0">
-<?= renderDropdownMenu(9, 10 * 4 - 8, 'end', $bp) ?>
+<?= renderDropdownMenu(9, 8 * 4, 'end', $bp) ?>
+
                             </ul>
                         </div>
                     </div>
