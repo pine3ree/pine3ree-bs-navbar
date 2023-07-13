@@ -176,7 +176,10 @@ gulp.task('sass:inherit:ltr', function() {
 gulp.task('sass:blend:ltr', function() {
     return compile_sass('pine3ree-bs-navbar.blend.scss');
 });
-gulp.task('sass:ltr', gulp.series('sass:common:ltr', 'sass:inherit:ltr', 'sass:blend:ltr'));
+gulp.task('sass:flat:ltr', function() {
+    return compile_sass('pine3ree-bs-navbar.flat.scss');
+});
+gulp.task('sass:ltr', gulp.series('sass:common:ltr', 'sass:inherit:ltr', 'sass:blend:ltr', 'sass:flat:ltr'));
 
 gulp.task('sass:common:rtl', function() {
     return compile_sass('pine3ree-bs-navbar.scss', null, null, null, true);
@@ -187,7 +190,10 @@ gulp.task('sass:inherit:rtl', function() {
 gulp.task('sass:blend:rtl', function() {
     return compile_sass('pine3ree-bs-navbar.blend.scss', null, null, null, true);
 });
-gulp.task('sass:rtl', gulp.series('sass:common:rtl', 'sass:inherit:rtl', 'sass:blend:rtl'));
+gulp.task('sass:flat:rtl', function() {
+    return compile_sass('pine3ree-bs-navbar.flat.scss', null, null, null, true);
+});
+gulp.task('sass:rtl', gulp.series('sass:common:rtl', 'sass:inherit:rtl', 'sass:blend:rtl', 'sass:flat:rtl'));
 
 gulp.task('sass', gulp.series('sass:ltr', 'sass:rtl'));
 gulp.task('watch:sass', function() {
