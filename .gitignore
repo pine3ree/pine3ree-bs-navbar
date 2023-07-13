@@ -1,0 +1,6 @@
+!.browserslistrc*
+!.eslintrc.json
+
+/html/*.php
+
+/nbproject/
