@@ -4,8 +4,9 @@ A multilevel-menu navbar for bootstrap 5.3
 
 ## Intro
 
-This library leverage the bootstrap `Drodpown` component capabilities in order to
-add nested menus in the bootstrap navbar element.
+This library leverages the bootstrap `Drodpown` component capabilities in order to
+provide nested menus in bootstrap navbar elements. When in collapsed mode, nested
+menus will behave like a set of nested accordion elements.
 
 The inner level dropdown direction is set using the following rules:
 
