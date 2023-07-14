@@ -1,145 +1,29 @@
 <?php
 
+require __DIR__ . "/_common.php";
+
+//------------------------------------------------------------------------------
 $rtl = $rtl ?? false;
 
-$breakpoints = ['sm', 'md', 'lg'];
+$breakpoints = $breakpoints ?? ['sm', 'md', 'lg'];
 
-$colors = [
+$colors = $colors ?? [
     'dark'    => 'dark',
     'light'   => 'light',
     'primary' => 'dark',
 ];
 
-$nav_themes = ['light', 'dark'];
+$nav_themes = $nav_themes ?? ['light', 'dark'];
 
-$variants = [
+$variants = $variants ?? [
     'flat'      => "Custom theme with flat-squared dropdown menus",
     'default'   => "Using the default bootstrap dropdown styles and using combinations of '.navbar' and '.navbar-collapse' dark/light theme",
     'inherit'   => "Same as the default variant but with collapsed navigation menus using the navbar bg-color",
     'blend'     => "Same as the default variant but with collapsed navigation menus using blending bg-color values lighter or darker at different depths",
 ];
+
+$depth = $depth ?? 9;
 //------------------------------------------------------------------------------
-
-function level(int $n) {
-    return $n;
-//
-//    if ($n < 1)   return '';
-//    if ($n < 4)   return str_repeat('i', $n);
-//    if ($n === 4) return 'iv';
-//    if ($n < 9)   return 'v' . str_repeat('i', $n - 5);
-//    if ($n == 9)  return 'ix';
-//
-//    return $n;
-}
-
-
-define("DROPDOWN", <<< EODD
-{indent}<li class="{class_li}dropdown{dropdown_dir}">
-{indent}    <a href="#"
-{indent}        class="{class_a} dropdown-toggle"
-{indent}        data-bs-toggle="dropdown"
-{indent}        aria-expanded="false"
-{indent}        >
-{indent}        {title}
-{indent}    </a>
-{indent}    {submenu}
-{indent}</li>
-EODD
-);
-
-define("MENU", <<< EOM
-{indent}<ul class="dropdown-menu{dropdown_menu_dir}">
-{indent}    <li><a class="dropdown-item" href="#">Action</a></li>
-{indent}    <li><a class="dropdown-item" href="#">Another action</a></li>
-{indent}    {dropdown}
-{indent}</ul>
-EOM
-);
-
-function list_item(string $indent, string $type, string $title, string $href = '#') {
-    if ($type === 'nav') {
-        $li_attrs = " class=\"nav-item\"";
-        $a_class  = "nav-link";
-    } else {
-        $li_attrs = "";
-        $a_class  = "dropdown-item";
-    }
-    return  "{$indent}<li{$li_attrs}><a class=\"{$a_class}\" href=\"{$href}\">{$title}</a></li>";
-}
-
-function renderDropdownMenu(
-    int $depth = 9,
-    int $spaces = 0,
-    string $dropdir = '',
-    string $bp = null,
-    int $level = null
-) {
-
-    $html = '';
-
-    $dropdown_dir = '';
-    $dropdown_menu_dir = '';
-    if ($dropdir !== '') {
-        $dropdown_menu_dir = " dropdown-menu-{$dropdir}";
-        $dropdown_dir = $dropdir === 'start' ? " dropend" : " dropstart";
-    }
-
-    $level = max(0, (int)$level);
-
-    if ($level > $depth) {
-        return '';
-    }
-
-    $extra_links = $bp !== 'sm';
-    $dropdown_toggle_title = $level === 0 ? 'Dropdown' : "Dropdown " . level($level);
-
-    $indent = str_repeat(' ', $spaces);
-
-    if ($level === 0) {
-        $dropdown = DROPDOWN;
-        $dropdown = str_replace('{indent}', $indent, $dropdown);
-        $dropdown = str_replace('{class_li}', 'nav-item ', $dropdown);
-        $dropdown = str_replace('{dropdown_dir}', '', $dropdown);
-        $dropdown = str_replace('{class_a}', 'nav-link', $dropdown);
-        $dropdown = str_replace('{title}', $dropdown_toggle_title, $dropdown);
-        $dropdown = str_replace('{submenu}', renderDropdownMenu($depth, $spaces + 4, $dropdir, $bp, $level + 1), $dropdown);
-
-        $html .= $dropdown;
-
-        if ($dropdir === 'start' && $extra_links) {
-            $html .= "\n" . list_item($indent, 'nav', 'Link');
-            $html .= "\n" . list_item($indent, 'nav', 'Another link');
-        }
-
-        return $html;
-    }
-
-    $spaces_dd = $spaces + 4;
-    $indent_dd = str_repeat(' ', $spaces_dd);
-
-    if ($level < $depth) {
-        $dropdown = DROPDOWN;
-        $dropdown = str_replace('{indent}', $indent_dd, $dropdown);
-        $dropdown = str_replace('{class_li}', '', $dropdown);
-        $dropdown = str_replace('{dropdown_dir}', $dropdown_dir, $dropdown);
-        $dropdown = str_replace('{class_a}', 'dropdown-item', $dropdown);
-        $dropdown = str_replace('{title}', $dropdown_toggle_title, $dropdown);
-        $dropdown = str_replace('{submenu}', renderDropdownMenu($depth, $spaces_dd + 4, '', $bp, $level + 1), $dropdown);
-    } else {
-        $dropdown = $indent_dd . '    <li><a class="dropdown-item" href="#">Stop here</a></li>';
-    }
-    $dropdown = ltrim($dropdown);
-
-    $menu = MENU;
-    $menu = str_replace('{indent}', $indent, $menu);
-    $menu = str_replace('{dropdown_menu_dir}', $dropdown_menu_dir, $menu);
-    $menu = str_replace('{dropdown_dir}', $dropdown_dir, $menu);
-    $menu = str_replace('{dropdown}', $dropdown, $menu);
-
-    $html .= ltrim($menu);
-
-    return $html;
-}
 
 $n = 0;
 
@@ -159,13 +43,13 @@ $_rtl = $rtl ? ".rtl" : "";
 
         <title>pine3ree bootstrap multilevel navbar menus</title>
 
-        <link rel="stylesheet" href="./css/bootstrap<?=$_rtl?>.min.css">
+        <link rel="stylesheet" href="./css/bootstrap<?=$_rtl?>.min.css?v=5.3.0">
         <link href="../dist/css/pine3ree-bs-navbar<?=$_rtl?>.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
         <link href="../dist/css/pine3ree-bs-navbar.inherit<?=$_rtl?>.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
         <link href="../dist/css/pine3ree-bs-navbar.blend<?=$_rtl?>.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
         <link href="../dist/css/pine3ree-bs-navbar.flat<?=$_rtl?>.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
 
-        <link rel="icon" href="./favicon.ico" type="image/png">
+        <link rel="icon" href="./img/favicon.ico" type="image/png">
 
         <style>
             body {
@@ -178,15 +62,17 @@ $_rtl = $rtl ? ".rtl" : "";
             <div class="container-sm">
                 <header class="mb-4 text-center">
                     <h1 class="display-4">
-                        <span>multilevel-menu navbar</span>
+                        <span><?= e('multilevel-menu navbar') ?></span>
                         <small class="d-block fs-3 text-body-secondary">for bootstrap</small>
                     </h1>
-                    <h3 class="fs-6 fst-italic mt-3">by <a href="https://github.com/pine3ree" class="btn-link" target="_blank">pine3ree</a></h3>
+                    <h3 class="fs-6 fst-italic mt-3 text-body-tertiary d-flex justify-content-center align-items-center">
+                        <?= byPine3ree( 6 * 4) ?>
+                    </h3>
                 </header>
                 <div class="intro my-5 text-start">
                     <p class="description">
-                        The examples that follow show the behaviour with various combinations of
-                        <code>.navbar-expand-(sm|md|lg)</code> breakpoints with<code>.navbar</code>
+                        The examples that follow demonstrates the library behaviour using various combinations
+                        of <code>.navbar-expand-(sm|md|lg)</code> breakpoints with<code>.navbar</code>
                         and <code>.navbar-collapse</code> themes, and <code>.bg-(dark|light|primary)</code>
                         navbar backgrounds.
                     </p>
@@ -211,10 +97,11 @@ $_rtl = $rtl ? ".rtl" : "";
                         RESIZE your browser and/or activate the developer tools "device mode" (...refresh the page after that) to test the navbar.
                     </p>
                     <p class="text-end">
+                        <a href="./simple.html" class="btn btn-outline-primary">Simple demo</a>
 <?php if($rtl): ?>
-                        <a href="./index.html" class="btn btn-link">LTR version</a>
+                        <a href="./index.html" class="btn btn-outline-primary">LTR demos</a>
 <?php else: ?>
-                        <a href="./index.rtl.html" class="btn btn-link">RTL version</a>
+                        <a href="./index.rtl.html" class="btn btn-outline-primary">RTL demos</a>
 <?php endif ?>
                     </p>
                 </div>
@@ -223,7 +110,7 @@ $_rtl = $rtl ? ".rtl" : "";
 <?php $p3_bs_navbar = $variant === 'default' ? '' : " p3-bs-navbar-{$variant}" ?>
             <div class="container-sm text-center">
                 <h2><?= "\"{$variant}\" variants" ?></h2>
-                <p><?= htmlspecialchars($description)?></p>
+                <p><?= e($description)?></p>
                 <dl class="d-block my-2 text-body-tertiary font-monospace">
                     <dt class="text-nowrap">css files</dt>
                     <dd class="text-nowrap">
@@ -245,7 +132,7 @@ $_rtl = $rtl ? ".rtl" : "";
                 <div class="container-sm">
                     <div class="d-block my-2 text-center text-body-tertiary font-monospace small">
                         <dl>
-                            <dt class="text-nowrap"><?="&lt;navbar&gt;"?></dt>
+                            <dt class="text-nowrap"><?=e("<navbar>")?></dt>
                             <dd>
                                 <span class="text-nowrap"><?="navbar-expand-{$bp}"?></span>
 <?php if($bg_color): ?>
@@ -258,7 +145,7 @@ $_rtl = $rtl ? ".rtl" : "";
                             </dd>
                         </dl>
                         <dl>
-                            <dt class="text-nowrap"><?="&lt;navbar-collapse&gt;"?></dt>
+                            <dt class="text-nowrap"><?=e("<navbar-collapse>")?></dt>
                             <dd>
                                 <span class="text-nowrap"><?="data-bs-theme={$nav_theme}"?></span>
                             </dd>
@@ -293,11 +180,11 @@ $_rtl = $rtl ? ".rtl" : "";
                             data-bs-theme="<?=$nav_theme?>"
                             >
                             <ul class="navbar-nav me-auto mb-0">
-<?= renderDropdownMenu(9, 8 * 4, 'start', $bp) ?>
+<?= renderDropdownMenu($depth, 8 * 4, 'start', $bp) ?>
 
                             </ul>
                             <ul class="navbar-nav ms-auto mb-0">
-<?= renderDropdownMenu(9, 8 * 4, 'end', $bp) ?>
+<?= renderDropdownMenu($depth, 8 * 4, 'end', $bp) ?>
 
                             </ul>
                         </div>
@@ -313,7 +200,7 @@ $_rtl = $rtl ? ".rtl" : "";
         </main>
         <script src="./js/jquery.slim.min.js?v=3.7.0"></script>
         <script src="./js/bootstrap.bundle.min.js?v=5.3.0"></script>
-        <script src="../dist/js/pine3ree.bs.navbar.min.js?v=5.3-<?=$ts?>"></script>
+        <script src="../dist/js/pine3ree.bs.navbar.min.js?v=5.3.0-<?=$ts?>"></script>
         <script>
             pine3ree.bs.navbar(document.querySelectorAll('.navbar'));
         </script>
