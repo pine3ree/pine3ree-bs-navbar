@@ -38,14 +38,14 @@ CSS assets
 
 ```html
 <link href="path/or/css/url/bootstrap.min.css?v=5.3.0" rel="stylesheet">
-<link href="path/or/url/to/css/pine3ree-bs-navbar.min.css?v=5.3.0-1.0.0" rel="stylesheet">
+<link href="path/or/url/to/css/pine3ree-bs-navbar.min.css?v=5.3.0-1.0.x" rel="stylesheet">
 ```
 Javascript assets
 
 ```html
 <script src="path/or/url/to/js/jquery.slim.min.js?v=3.7.0"></script> <!-- optional -->
 <script src="path/or/url/to/js/bootstrap.bundle.min.js?v=5.3.0"></script>
-<script src="path/or/url/to/js/pine3ree.bs.navbar.min.js?v=5.3.0-1.0.0"></script>
+<script src="path/or/url/to/js/pine3ree.bs.navbar.min.js?v=5.3.0-1.0.x"></script>
 ```
 
 Online examples available at https://pine3ree.github.io/pine3ree-bs-navbar for
