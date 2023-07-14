@@ -1,0 +1,21 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "google",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "indent": ["error", 4],
+        "max-len": ["error", 120],
+        "padded-blocks": "off",
+        "object-curly-spacing": "off",
+        "no-unused-vars": "off",
+        "comma-dangle": "off",
+        "operator-linebreak": "off",
+        "spaced-comment": ["error", "always", { "markers": ["!"] }]
+
+    }
+}
