@@ -191,7 +191,10 @@ gulp.task('sass:blend:ltr', function() {
 gulp.task('sass:flat:ltr', function() {
     return compile_sass('pine3ree-bs-navbar.flat.scss');
 });
-gulp.task('sass:ltr', gulp.series('sass:common:ltr', 'sass:inherit:ltr', 'sass:blend:ltr', 'sass:flat:ltr'));
+gulp.task('sass:simple:ltr', function() {
+    return compile_sass('pine3ree-bs-navbar.simple.scss');
+});
+gulp.task('sass:ltr', gulp.series('sass:common:ltr', 'sass:inherit:ltr', 'sass:blend:ltr', 'sass:flat:ltr', 'sass:simple:ltr'));
 
 gulp.task('sass:common:rtl', function() {
     return compile_sass('pine3ree-bs-navbar.scss', null, null, null, true);
