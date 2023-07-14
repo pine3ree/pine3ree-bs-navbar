@@ -39,7 +39,7 @@ const PACKAGE = require(`${CUR_DIR}package.json`);
 
 const SRC  = `${CUR_DIR}src/`;
 const DIST =`${CUR_DIR}dist/`;
-const DOWNLOAD =`${CUR_DIR}download/`;
+const ARCHIVES =`${CUR_DIR}zip/`;
 
 const SRC_SCSS = `${SRC}scss/`;
 const SRC_JS = `${SRC}js/`;
@@ -260,14 +260,14 @@ gulp.task('watch:js', function() {
 // ZIP
 //==============================================================================
 function zip_src(destDir) {
-    destDir = destDir || DOWNLOAD;
+    destDir = destDir || ARCHIVES;
     return gulp.src(SRC + '{scss/*.scss,js/*.js}')
         .pipe(gp.zip(`${PACKAGE.name}-${PACKAGE.version}-src.zip`))
         .pipe(gulp.dest(destDir))
 }
 
 function zip_dist(destDir) {
-    destDir = destDir || DOWNLOAD;
+    destDir = destDir || ARCHIVES;
     return gulp.src(DIST + '{css/*.css,css/*.map,js/*.js,js/*.map}')
         .pipe(gp.zip(`${PACKAGE.name}-${PACKAGE.version}-dist.zip`))
         .pipe(gulp.dest(destDir))
@@ -275,10 +275,10 @@ function zip_dist(destDir) {
 
 // JS tasks
 gulp.task('zip:src', function() {
-    return zip_src(DOWNLOAD);
+    return zip_src(ARCHIVES);
 });
 gulp.task('zip:dist', function() {
-    return zip_dist(DOWNLOAD);
+    return zip_dist(ARCHIVES);
 });
 
 gulp.task('zip', gulp.series('zip:src', 'zip:dist'));
