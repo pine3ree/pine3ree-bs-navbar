@@ -248,7 +248,7 @@ $ npm run build-css
 You can also run gulp to update the builds automatically on file change:
 
 ```bash
-$ gulp watch:sass
+$ gulp watch:sass # if you have gulp-cli installed globally
 ```
 
 or the npm script alias
