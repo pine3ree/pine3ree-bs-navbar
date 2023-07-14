@@ -13,6 +13,7 @@
 
 /html/*.php
 /download/
+/zip/
 
 .DS_Store
 error_log
