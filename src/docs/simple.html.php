@@ -19,8 +19,8 @@ header('cache-control: no-cache');
         <title>pine3ree bootstrap multilevel navbar menus</title>
 
         <link rel="stylesheet" href="./css/bootstrap.min.css?v=5.3.0">
-        <link href="../dist/css/pine3ree-bs-navbar.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
-        <link href="../dist/css/pine3ree-bs-navbar.simple.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
+        <link href="./css/pine3ree-bs-navbar.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
+        <link href="./css/pine3ree-bs-navbar.simple.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
 
         <link rel="icon" href="./img/favicon.ico" type="image/png">
 
@@ -120,7 +120,7 @@ header('cache-control: no-cache');
         </main>
         <script src="./js/jquery.slim.min.js?v=3.7.0"></script>
         <script src="./js/bootstrap.bundle.min.js?v=5.3.0"></script>
-        <script src="../dist/js/pine3ree.bs.navbar.min.js?v=5.3.0-<?=$ts?>"></script>
+        <script src="./js/pine3ree.bs.navbar.min.js?v=5.3.0-<?=$ts?>"></script>
         <script>
             $('#navbar-simple').p3bsNavbar({
                 // hover: true,

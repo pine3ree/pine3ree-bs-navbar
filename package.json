@@ -53,10 +53,10 @@
         "postcss-cli": "^9.1.0"
     },
     "scripts": {
-        "build": "npm run build-css && npm run build-js && npm run build-html",
+        "build": "npm run build-css && npm run build-js && npm run build-docs",
         "build-css": "gulp sass",
         "build-js": "gulp js",
-        "build-html": "php src/html/_build.php",
+        "build-docs": "php src/docs/_build.php",
         "watch": "gulp watch",
         "watch-sass": "gulp watch:sass",
         "watch-js": "gulp watch:js",
