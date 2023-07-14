@@ -1,0 +1,194 @@
+/*!
+ * pine3ree-bs-navbar A multilevel-menu navbar for bootstrap 5.3.x (https://github.com/pine3ree/pine3ree-bs-navbar/)
+ * Copyright 2023-today pine3ree
+ * Licensed under BSD-3 Clear License (https://github.com/pine3ree/pine3ree-bs-navbar/blob/master/LICENSE)
+ */
+
+@charset "UTF-8";
+
+@use "sass:math";
+@use "sass:color";
+
+@import "node_modules/bootstrap/scss/functions";
+
+//==============================================================================
+// IMPORT variables and mixins
+//==============================================================================
+@import "_variables";
+@import "_mixins";
+//==============================================================================
+
+//==============================================================================
+// LOCAL VARS
+//==============================================================================
+$flatui-clouds: #ecf0f1;
+$flatui-silver: #bdc3c7;
+$flatui-concrete: #95A5A6;
+$flatui-asbestos: #7F8C8D;
+$flatui-wetasphalt: #34495E;
+$flatui-midnightblue: #2C3E50;
+
+$nb-navbar-collapsed-blend-bg-color: rgba($black, 0.1);
+$nb-navbar-bg-color: $flatui-midnightblue;
+$nb-navbar-dropdown-menu-bg-color: $flatui-midnightblue;
+$nb-navbar-color: $white; // Set white/light or black/dark based on previous bg-color
+$nb-navbar-link-color:          $flatui-silver;
+$nb-navbar-link-hover-color:    tint-color($nb-navbar-color, 6%) !default;
+$nb-navbar-link-active-color:   tint-color($nb-navbar-color, 12%) !default;
+$nb-navbar-link-disabled-color: rgba($nb-navbar-color, .24) !default;
+//==============================================================================
+
+//==============================================================================
+.navbar {
+    &.p3-bs-navbar-simple {
+        background: $nb-navbar-bg-color !important;
+        .navbar-nav {
+            .nav-link,
+            .dropdown-item {
+                color: $nb-navbar-link-color;
+                &:hover {
+                    color: $nb-navbar-link-hover-color;
+                }
+                &:focus {
+                    color: $nb-navbar-link-active-color;
+                }
+                &:focus-visible {
+                    outline: 0;
+                }
+                .disabled, [disabled] {
+                    color: $nb-navbar-link-disabled-color;
+                }
+            }
+            .dropdown-menu {
+                background: $nb-navbar-dropdown-menu-bg-color;
+                // Alt version with increasing darkness
+                //background: shade-color($nb-navbar-bg-color, 16%);
+                //.dropdown-menu {
+                //    background: shade-color($nb-navbar-bg-color, 24%);
+                //    .dropdown-menu {
+                //        background: shade-color($nb-navbar-bg-color, 32%);
+                //        .dropdown-menu {
+                //            background: shade-color($nb-navbar-bg-color, 40%);
+                //            .dropdown-menu {
+                //                background: shade-color($nb-navbar-bg-color, 48%);
+                //                .dropdown-menu {
+                //                    background: shade-color($nb-navbar-bg-color, 56%);
+                //                    .dropdown-menu {
+                //                        background: shade-color($nb-navbar-bg-color, 64%);
+                //                        .dropdown-menu {
+                //                            background: shade-color($nb-navbar-bg-color, 72%);
+                //                            .dropdown-menu {
+                //                                background: shade-color($nb-navbar-bg-color, 80%);
+                //                            }
+                //                        }
+                //                    }
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+                .dropdown-item {
+                    &:focus-visible {
+                        //background: $dropdown-link-active-bg;
+                        background: $nb-navbar-collapsed-blend-bg-color;
+                    }
+                }
+            }
+        }
+    }
+}
+//==============================================================================
+
+//==============================================================================
+// COLLAPSED NAVBAR styles
+//==============================================================================
+@each $breakpoint in map-keys($nb-breakpoints) {
+    $next: breakpoint-next($breakpoint, $nb-breakpoints);
+    $infix: breakpoint-infix($next, $nb-breakpoints);
+
+    @include media-breakpoint-down($next) {
+        .navbar-expand#{$infix} {
+            &.p3-bs-navbar-simple {
+                .navbar-nav {
+                    .nav-link,
+                    .dropdown-item {
+                        color: $gray-200;
+                        &:hover {
+                            color: $gray-100;
+                        }
+                        &:focus {
+                            color: $white;
+                        }
+                        &:focus-visible {
+                            outline: 0;
+                        }
+                        background: transparent;
+                        &.dropdown-toggle.show {
+                            background: $nb-navbar-collapsed-blend-bg-color !important;
+                        }
+                    }
+                    .dropdown-menu {
+                        background: $nb-navbar-collapsed-blend-bg-color !important;
+                        li {
+                            background: transparent;
+                        }
+                        .dropdown-item {
+                            &:focus-visible {
+                                //background: $dropdown-link-active-bg;
+                                background: $nb-navbar-collapsed-blend-bg-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+//==============================================================================
+
+
+//==============================================================================
+// EXPANDED NAVBAR styles
+//==============================================================================
+@each $breakpoint in map-keys($nb-breakpoints) {
+    $next: breakpoint-next($breakpoint, $nb-breakpoints);
+    $infix: breakpoint-infix($next, $nb-breakpoints);
+
+    @include media-breakpoint-up($next) {
+        .navbar-expand#{$infix} {
+            &.p3-bs-navbar-simple {
+                padding: 0;
+                .navbar-nav {
+                    .nav-link {
+                        // Re-add here the padding amount removed from the navbar
+                        padding-top: $nav-link-padding-y+ $navbar-padding-y;
+                        padding-bottom: $nav-link-padding-y + $navbar-padding-y;
+                        &:hover,
+                        &:focus {
+                          background: transparent;
+                        }
+                    }
+                    .dropdown-item {
+                        padding: 0.5 * $dropdown-item-padding-x $dropdown-item-padding-x;
+                        &:hover,
+                        &:focus {
+                          background: transparent;
+                        }
+                    }
+                    .dropdown-menu {
+                        border-radius: 0;
+                        border: 0;
+                        padding: 0;
+                        margin: 0;
+                        max-width: 1.25*$dropdown-min-width;
+                        // nested dd-menus
+                        .dropdown-menu {
+                            margin-top: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+//==============================================================================
