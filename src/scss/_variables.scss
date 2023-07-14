@@ -34,9 +34,8 @@ $nb-transition: all .2s linear;
 $nb-dropdown-menu-has-transition: true;
 $nb-transition-duration: .2s;
 $nb-dropdown-menu-transition-duration: .75s;
-$nb-dropdown-menu-max-height: 1024px;
+$nb-dropdown-menu-max-height: 1400px;
 $nb-dropdown-menu-transition-show: max-height $nb-dropdown-menu-transition-duration linear;
-$nb-dropdown-menu-transition-hide: max-height, visibility .33 * $nb-dropdown-menu-transition-duration linear;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
