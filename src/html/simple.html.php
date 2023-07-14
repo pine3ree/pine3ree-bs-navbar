@@ -22,7 +22,7 @@ header('cache-control: no-cache');
         <link href="../dist/css/pine3ree-bs-navbar.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
         <link href="../dist/css/pine3ree-bs-navbar.simple.min.css?v=5.3.0-<?=$ts?>" rel="stylesheet">
 
-        <link rel="icon" href="./favicon.ico" type="image/png">
+        <link rel="icon" href="./img/favicon.ico" type="image/png">
 
         <style>
             body {
