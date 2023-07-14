@@ -24,54 +24,54 @@ $caret-width: $nb-caret-width;
 //------------------------------------------------------------------------------
 // BREAKPOINTS (Usually only a couple are needed, here we keep 3: sm, md, lg)
 //------------------------------------------------------------------------------
-$nb-breakpoints: map-remove($grid-breakpoints, xl, xxl);
+$nb-breakpoints: map-remove($grid-breakpoints, xl, xxl) !default;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // TRANSITIONS
 //------------------------------------------------------------------------------
-$nb-transition: all .2s linear;
-$nb-dropdown-menu-has-transition: true;
-$nb-transition-duration: .2s;
-$nb-dropdown-menu-transition-duration: .75s;
-$nb-dropdown-menu-max-height: 1400px;
-$nb-dropdown-menu-transition-show: max-height $nb-dropdown-menu-transition-duration linear;
+$nb-transition: all .2s linear !default;
+$nb-dropdown-menu-has-transition: true !default;
+$nb-transition-duration: .2s !default;
+$nb-dropdown-menu-transition-duration: .75s !default;
+$nb-dropdown-menu-max-height: 1400px !default;
+$nb-dropdown-menu-transition-show: max-height $nb-dropdown-menu-transition-duration linear !default;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 
-$nb-item-line-height: 1.5em;
+$nb-item-line-height: 1.5em !default;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-$nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size;
-$nb-border-width: $border-width;
-$nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem);
+$nb-toggler-icon-size: 1.5 * $navbar-toggler-font-size !default;
+$nb-border-width: $border-width !default;
+$nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.div(1, 16) * 1rem) !default;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // CARET
 //------------------------------------------------------------------------------
 
-$nb-caret-animate: true;
+$nb-caret-animate: true !default;
 
 // caret size
-$nb-caret-size: .75rem;
-$nb-caret-size: 2*$nb-caret-width;
+$nb-caret-size: .75rem !default;
+$nb-caret-size: 2*$nb-caret-width !default;
 // horizontal border-triangle
-$nb-caret-v-width: $nb-caret-size;
-$nb-caret-v-height: $nb-caret-width;
+$nb-caret-v-width: $nb-caret-size !default;
+$nb-caret-v-height: $nb-caret-width !default;
 // vertical border-triangle
-$nb-caret-h-width: $nb-caret-v-height;
-$nb-caret-h-height: $nb-caret-v-width;
+$nb-caret-h-width: $nb-caret-v-height !default;
+$nb-caret-h-height: $nb-caret-v-width !default;
 
-$nb-caret-h-distance: 0.25rem;
+$nb-caret-h-distance: 0.25rem !default;
 
 // Caret direction and rotation
-$nb-caret-dir: down;
-$nb-caret-rotation: -180deg;
+$nb-caret-dir: down !default;
+$nb-caret-rotation: -180deg !default;
 // Caret direction and rotation for collapsed navbar
-$nb-caret-collapse-dir: end;
-$nb-caret-collapse-rotation: 90deg;
+$nb-caret-collapse-dir: end !default;
+$nb-caret-collapse-rotation: 90deg !default;
 //==============================================================================
 
