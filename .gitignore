@@ -12,6 +12,7 @@
 .buildpath
 
 /html/*.php
+/download/
 
 .DS_Store
 error_log
