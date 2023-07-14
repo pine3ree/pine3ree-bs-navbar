@@ -1,4 +1,4 @@
-!.browserslistrc*
+!.browserslistrc
 !.eslintrc.json
 
 /node_modules/
