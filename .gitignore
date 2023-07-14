@@ -19,6 +19,7 @@ php-error.log
 *.bak
 
 *.zip
-*.tar.gz
+*.tar.*
+*.tbz
 *.tgz
 *.txz
