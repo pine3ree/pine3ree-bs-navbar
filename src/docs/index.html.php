@@ -116,7 +116,7 @@ $_rtl = $rtl ? ".rtl" : "";
                     <dd class="text-nowrap">
                         <span class="text-nowrap d-block"><?= "pine3ree-bs-navbar(.min).css"?></span>
 <?php if ($variant !== 'default'): ?>
-                        <span class="text-nowrap d-block"><?= "pine3ree-bs-navbar-{$variant}(.min).css"?></span>
+                        <span class="text-nowrap d-block"><?= "pine3ree-bs-navbar.{$variant}(.min).css"?></span>
 <?php endif ?>
                     </dd>
                 </dl>

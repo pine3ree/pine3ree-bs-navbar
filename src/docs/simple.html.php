@@ -113,7 +113,7 @@ header('cache-control: no-cache');
                     <dt class="text-nowrap">css files</dt>
                     <dd class="text-nowrap">
                         <span class="text-nowrap d-block">pine3ree-bs-navbar(.min).css</span>
-                        <span class="text-nowrap d-block">pine3ree-bs-navbar-simple(.min).css</span>
+                        <span class="text-nowrap d-block">pine3ree-bs-navbar.simple(.min).css</span>
                     </dd>
                 </dl>
             </div>
