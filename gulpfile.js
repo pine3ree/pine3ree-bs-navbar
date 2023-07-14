@@ -1,7 +1,8 @@
+//==============================================================================
+// IMPORTS
+//==============================================================================
 const gulp = require('gulp');
-
 const path = require('path');
-
 // const nodesass = require('node-sass');
 const dartsass = require('sass');
 
@@ -24,13 +25,21 @@ const gp = {
     //watch: require('gulp-watch'),
     // uglify: require('gulp-uglify'), // Replaced by terser
     // uncss: require('gulp-uncss'),
+    zip: require('gulp-zip'),
     '_': null
 };
+//==============================================================================
 
+//==============================================================================
+// constants
+//==============================================================================
 const CUR_DIR = `${__dirname}/`
 
+const PACKAGE = require(`${CUR_DIR}package.json`);
+
 const SRC  = `${CUR_DIR}src/`;
-const DIST =`${CUR_DIR}dist/`;;
+const DIST =`${CUR_DIR}dist/`;
+const DOWNLOAD =`${CUR_DIR}download/`;
 
 const SRC_SCSS = `${SRC}scss/`;
 const SRC_JS = `${SRC}js/`;
@@ -111,6 +120,7 @@ const TERSER_OPTIONS = {
         comments: "some"
     }
 };
+//==============================================================================
 
 //==============================================================================
 // SASS
@@ -207,7 +217,11 @@ gulp.task('sass', gulp.series('sass:ltr', 'sass:rtl'));
 gulp.task('watch:sass', function() {
     gulp.watch(SRC_SCSS + '*.scss', gulp.task('sass'));
 });
+//==============================================================================
 
+//==============================================================================
+// Javascript
+//==============================================================================
 function compile_js(
     sourceDir,
     destDir,
@@ -240,7 +254,39 @@ gulp.task('js', function() {
 gulp.task('watch:js', function() {
     gulp.watch(SRC_JS + '*.js', gulp.task('js'));
 });
+//==============================================================================
 
+//==============================================================================
+// ZIP
+//==============================================================================
+function zip_src(destDir) {
+    destDir = destDir || DOWNLOAD;
+    return gulp.src(SRC + '{scss/*.scss,js/*.js}')
+        .pipe(gp.zip(`${PACKAGE.name}-${PACKAGE.version}-src.zip`))
+        .pipe(gulp.dest(destDir))
+}
+
+function zip_dist(destDir) {
+    destDir = destDir || DOWNLOAD;
+    return gulp.src(DIST + '{css/*.css,css/*.map,js/*.js,js/*.map}')
+        .pipe(gp.zip(`${PACKAGE.name}-${PACKAGE.version}-dist.zip`))
+        .pipe(gulp.dest(destDir))
+}
+
+// JS tasks
+gulp.task('zip:src', function() {
+    return zip_src(DOWNLOAD);
+});
+gulp.task('zip:dist', function() {
+    return zip_dist(DOWNLOAD);
+});
+
+gulp.task('zip', gulp.series('zip:src', 'zip:dist'));
+//==============================================================================
+
+//==============================================================================
 // GLOBAL tasks
+//==============================================================================
 gulp.task('default', gulp.series('sass', 'js'));
 gulp.task('watch', gulp.parallel('watch:sass', 'watch:js'));
+//==============================================================================
