@@ -3,8 +3,6 @@
 
 /node_modules/
 
-/html/*.php
-
 ### IDEs ###
 /nbproject/
 .idea/
@@ -12,6 +10,8 @@
 .settings
 .project
 .buildpath
+
+/html/*.php
 
 .DS_Store
 error_log
