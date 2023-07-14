@@ -1,3 +1,8 @@
+/*!
+ * pine3ree-bs-navbar A multilevel-menu navbar for bootstrap 5.3.x (https://github.com/pine3ree/pine3ree-bs-navbar/)
+ * Copyright 2023-today pine3ree
+ * Licensed under BSD-3 Clear License (https://github.com/pine3ree/pine3ree-bs-navbar/blob/master/LICENSE)
+ */
 @media (max-width: 575.98px) {
     .navbar-expand-sm.p3-bs-navbar-blend[data-bs-theme=dark] .navbar-nav .nav-link,
     .navbar-expand-sm.p3-bs-navbar-blend[data-bs-theme=dark] .navbar-nav .dropdown-item, .navbar-expand-sm.p3-bs-navbar-blend.navbar-dark .navbar-nav .nav-link,
