@@ -78,8 +78,11 @@
         top: calc(50% - 0.3125em);
     }
     .navbar-expand-sm .navbar-nav .dropdown-toggle.show:after {
-        transform: rotateZ(90deg);
+        -webkit-transform: rotateZ(90deg);
+                transform: rotateZ(90deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
 }
 @media (max-width: 767.98px) {
@@ -139,8 +142,11 @@
         top: calc(50% - 0.3125em);
     }
     .navbar-expand-md .navbar-nav .dropdown-toggle.show:after {
-        transform: rotateZ(90deg);
+        -webkit-transform: rotateZ(90deg);
+                transform: rotateZ(90deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
 }
 @media (max-width: 991.98px) {
@@ -200,8 +206,11 @@
         top: calc(50% - 0.3125em);
     }
     .navbar-expand-lg .navbar-nav .dropdown-toggle.show:after {
-        transform: rotateZ(90deg);
+        -webkit-transform: rotateZ(90deg);
+                transform: rotateZ(90deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
 }
 .navbar-expand .navbar-nav li {
@@ -260,8 +269,11 @@
     top: calc(50% - 0.3125em);
 }
 .navbar-expand .navbar-nav .dropdown-toggle.show:after {
-    transform: rotateZ(90deg);
+    -webkit-transform: rotateZ(90deg);
+            transform: rotateZ(90deg);
+    transition: -webkit-transform 0.2s linear;
     transition: transform 0.2s linear;
+    transition: transform 0.2s linear, -webkit-transform 0.2s linear;
 }
 
 @media (min-width: 576px) {
@@ -290,8 +302,11 @@
         top: calc(50% - 0.15625em);
     }
     .navbar-expand-sm .navbar-nav .dropdown-toggle.nav-link.show:after {
-        transform: rotateZ(-180deg);
+        -webkit-transform: rotateZ(-180deg);
+                transform: rotateZ(-180deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
     .navbar-expand-sm .navbar-nav .dropdown-toggle.dropdown-item:before {
         border-top: 0.3125em solid transparent;
@@ -344,8 +359,11 @@
         top: calc(50% - 0.15625em);
     }
     .navbar-expand-md .navbar-nav .dropdown-toggle.nav-link.show:after {
-        transform: rotateZ(-180deg);
+        -webkit-transform: rotateZ(-180deg);
+                transform: rotateZ(-180deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
     .navbar-expand-md .navbar-nav .dropdown-toggle.dropdown-item:before {
         border-top: 0.3125em solid transparent;
@@ -398,8 +416,11 @@
         top: calc(50% - 0.15625em);
     }
     .navbar-expand-lg .navbar-nav .dropdown-toggle.nav-link.show:after {
-        transform: rotateZ(-180deg);
+        -webkit-transform: rotateZ(-180deg);
+                transform: rotateZ(-180deg);
+        transition: -webkit-transform 0.2s linear;
         transition: transform 0.2s linear;
+        transition: transform 0.2s linear, -webkit-transform 0.2s linear;
     }
     .navbar-expand-lg .navbar-nav .dropdown-toggle.dropdown-item:before {
         border-top: 0.3125em solid transparent;
@@ -451,8 +472,11 @@
     top: calc(50% - 0.15625em);
 }
 .navbar-expand .navbar-nav .dropdown-toggle.nav-link.show:after {
-    transform: rotateZ(-180deg);
+    -webkit-transform: rotateZ(-180deg);
+            transform: rotateZ(-180deg);
+    transition: -webkit-transform 0.2s linear;
     transition: transform 0.2s linear;
+    transition: transform 0.2s linear, -webkit-transform 0.2s linear;
 }
 .navbar-expand .navbar-nav .dropdown-toggle.dropdown-item:before {
     border-top: 0.3125em solid transparent;
