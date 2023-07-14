@@ -239,6 +239,21 @@ You can limit the compiled breakpoints by modifing the sass variable and rebuild
 $nb-breakpoints: map-remove($grid-breakpoints, sm, xl, xxl); // Here only md and lg are included
 ```
 
+Rebuild css (make sure you are at the repo's root path in all the terminal examples):
+
 ```bash
 $ npm run build-css
 ```
+
+You can also run gulp to update the builds automatically on file change:
+
+```bash
+$ gulp watch:sass
+```
+
+or the npm script alias
+
+```bash
+$ npm run watch-sass
+```
+
