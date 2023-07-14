@@ -56,7 +56,6 @@ $nb-toggler-width: $nb-toggler-icon-size + 2*($navbar-toggler-padding-x + math.d
 $nb-caret-animate: true !default;
 
 // caret size
-$nb-caret-size: .75rem !default;
 $nb-caret-size: 2*$nb-caret-width !default;
 // horizontal border-triangle
 $nb-caret-v-width: $nb-caret-size !default;
