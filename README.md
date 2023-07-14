@@ -50,6 +50,22 @@ Javascript assets
 Online examples available at https://pine3ree.github.io/pine3ree-bs-navbar for
 further yet simple customization suggestions.
 
+To run the examples locally clone this repo and run the following commands at its root:
+
+node v.16.x is required
+
+Install the dependencies:
+
+```bash
+myself@mycomputer:/my/local/repo/path$ npm install
+```
+
+Run a local webserver at http://127.0.0.1:8080
+
+```bash
+myself@myconputer:/my/local/repo/path$ npm serve
+```
+
 Add multilevel-menu behaviour to a navbar with `my-navbar` id attribute by including
 the following code:
 
@@ -94,4 +110,135 @@ p3bsNavbar(document.getElementById('my-navbar', navbarOptions));
 // 4. Using jquery plugin and selectors, if jQuery was loaded before this library
 $('#my-navbar').p3bsNavbar(navbarOptions)); // with an uppercase "N"
 </script>
+```
+
+Example navbar html code for navigation starting from the "start" side and opening towards "end" side:
+
+```html
+<nav id="my-navbar" class="navbar navbar-expand-sm bg-dark" data-bs-theme="dark">
+    <div class="container-sm">
+        <a class="navbar-brand fs-5" href="#">
+            <span class="fst-italic font-monospace">p3</span> navbar-expand-sm
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#my-navbar-nav-wrapper" aria-controls="my-navbar" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="my-navbar-nav-wrapper" class="collapse navbar-collapse mt-3 mt-sm-0" data-bs-theme="dark">
+            <ul class="navbar-nav me-auto mb-0">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-start">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li class="dropdown dropend">
+                            <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown 1
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown 2
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Action</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Dropdown 3
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                <li><a class="dropdown-item" href="#">Stop here</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+```
+
+
+Example navbar html code for navigation starting from the "end" side and opening towards the "start" side:
+
+```html
+<nav id="my-navbar" class="navbar navbar-expand-sm bg-dark" data-bs-theme="dark">
+    <div class="container-sm">
+        <a class="navbar-brand fs-5" href="#">
+            <span class="fst-italic font-monospace">p3</span> navbar-expand-sm
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#my-navbar-nav-wrapper" aria-controls="my-navbar" aria-expanded="false" aria-label="Toggle Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="my-navbar-nav-wrapper" class="collapse navbar-collapse mt-3 mt-sm-0" data-bs-theme="dark">
+            <ul class="navbar-nav ms-auto mb-0">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li class="dropdown dropstart">
+                            <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown 1
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dropdown 2
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Action</a></li>
+                                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Dropdown 3
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                                <li><a class="dropdown-item" href="#">Stop here</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+```
+
+
+## Navbar expand breakpoints
+
+The navbar css code is by default compiled for 3 breakpoints: `sm`, `md` and `lg`.
+
+In fact you usually need just 1 or 2 breakpoints for a project navbars.
+
+You can limit the compiled breakpoints by modifing the sass variable and rebuilding the css assets:
+
+```scss
+// file: src/scss/_variables
+$nb-breakpoints: map-remove($grid-breakpoints, sm, xl, xxl); // Here only md and lg are included
+```
+
+```bash
+$ npm run build-css
 ```
