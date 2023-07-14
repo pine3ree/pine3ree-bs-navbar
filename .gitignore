@@ -1,6 +1,19 @@
 !.browserslistrc*
 !.eslintrc.json
 
+/node_modules/
+
 /html/*.php
 
+### IDEs ###
 /nbproject/
+.idea/
+.vscode/*
+.settings
+.project
+.buildpath
+
+.DS_Store
+error_log
+php-error.log
+*.bak
