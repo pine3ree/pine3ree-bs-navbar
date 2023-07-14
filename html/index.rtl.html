@@ -8,13 +8,13 @@
 
         <title>pine3ree bootstrap multilevel navbar menus</title>
 
-        <link rel="stylesheet" href="./css/bootstrap.rtl.min.css">
-        <link href="../dist/css/pine3ree-bs-navbar.rtl.min.css?v=5.3.0-28153609" rel="stylesheet">
-        <link href="../dist/css/pine3ree-bs-navbar.inherit.rtl.min.css?v=5.3.0-28153609" rel="stylesheet">
-        <link href="../dist/css/pine3ree-bs-navbar.blend.rtl.min.css?v=5.3.0-28153609" rel="stylesheet">
-        <link href="../dist/css/pine3ree-bs-navbar.flat.rtl.min.css?v=5.3.0-28153609" rel="stylesheet">
+        <link rel="stylesheet" href="./css/bootstrap.rtl.min.css?v=5.3.0">
+        <link href="../dist/css/pine3ree-bs-navbar.rtl.min.css?v=5.3.0-28155009" rel="stylesheet">
+        <link href="../dist/css/pine3ree-bs-navbar.inherit.rtl.min.css?v=5.3.0-28155009" rel="stylesheet">
+        <link href="../dist/css/pine3ree-bs-navbar.blend.rtl.min.css?v=5.3.0-28155009" rel="stylesheet">
+        <link href="../dist/css/pine3ree-bs-navbar.flat.rtl.min.css?v=5.3.0-28155009" rel="stylesheet">
 
-        <link rel="icon" href="./favicon.ico" type="image/png">
+        <link rel="icon" href="./img/favicon.ico" type="image/png">
 
         <style>
             body {
@@ -30,12 +30,16 @@
                         <span>multilevel-menu navbar</span>
                         <small class="d-block fs-3 text-body-secondary">for bootstrap</small>
                     </h1>
-                    <h3 class="fs-6 fst-italic mt-3">by <a href="https://github.com/pine3ree" class="btn-link" target="_blank">pine3ree</a></h3>
+                    <h3 class="fs-6 fst-italic mt-3 text-body-tertiary d-flex justify-content-center align-items-center">
+                        <span class="d-inline-block mt-1 me-1">by</span>
+                        <a href="https://github.com/pine3ree" class="d-inline-block" target="_blank" title="pine3ree">
+                        <img src="./img/p3-logo.png" class="img-fluid" style="width:1.75rem;" alt="pine3ree">
+                        </a>                    </h3>
                 </header>
                 <div class="intro my-5 text-start">
                     <p class="description">
-                        The examples that follow show the behaviour with various combinations of
-                        <code>.navbar-expand-(sm|md|lg)</code> breakpoints with<code>.navbar</code>
+                        The examples that follow demonstrates the library behaviour using various combinations
+                        of <code>.navbar-expand-(sm|md|lg)</code> breakpoints with<code>.navbar</code>
                         and <code>.navbar-collapse</code> themes, and <code>.bg-(dark|light|primary)</code>
                         navbar backgrounds.
                     </p>
@@ -60,7 +64,8 @@
                         RESIZE your browser and/or activate the developer tools "device mode" (...refresh the page after that) to test the navbar.
                     </p>
                     <p class="text-end">
-                        <a href="./index.html" class="btn btn-link">LTR version</a>
+                        <a href="./simple.html" class="btn btn-outline-primary">Simple demo</a>
+                        <a href="./index.html" class="btn btn-outline-primary">LTR demos</a>
                     </p>
                 </div>
             </div>
@@ -948,7 +953,7 @@
             </div>
             <div class="container-sm text-center">
                 <h2>"default" variants</h2>
-                <p>Using the default bootstrap dropdown styles and using combinations of '.navbar' and '.navbar-collapse' dark/light theme</p>
+                <p>Using the default bootstrap dropdown styles and using combinations of &apos;.navbar&apos; and &apos;.navbar-collapse&apos; dark/light theme</p>
                 <dl class="d-block my-2 text-body-tertiary font-monospace">
                     <dt class="text-nowrap">css files</dt>
                     <dd class="text-nowrap">
@@ -16695,7 +16700,7 @@
         </main>
         <script src="./js/jquery.slim.min.js?v=3.7.0"></script>
         <script src="./js/bootstrap.bundle.min.js?v=5.3.0"></script>
-        <script src="../dist/js/pine3ree.bs.navbar.min.js?v=5.3-28153609"></script>
+        <script src="../dist/js/pine3ree.bs.navbar.min.js?v=5.3.0-28155009"></script>
         <script>
             pine3ree.bs.navbar(document.querySelectorAll('.navbar'));
         </script>
