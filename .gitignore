@@ -17,3 +17,8 @@
 error_log
 php-error.log
 *.bak
+
+*.zip
+*.tar.gz
+*.tgz
+*.txz
