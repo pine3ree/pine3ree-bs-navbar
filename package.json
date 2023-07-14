@@ -4,9 +4,9 @@
     "description": "pine3ree multilevel navbar for bootstrap",
     "author": "pine3ree https://github.com/pine3ree",
     "license": "BSD-3-Clause-Clear",
-    "homepage": "pine3ree https://github.com/pine3ree/pine3ree-bs-navbar",
+    "homepage": "https://pine3ree.github.io/pine3ree-bs-navbar/index.html",
     "bugs": {
-        "url": "pine3ree https://github.com/pine3ree/pine3ree-bs-navbar/issues"
+        "url": "https://github.com/pine3ree/pine3ree-bs-navbar/issues"
     },
     "main": "''",
     "dependencies": {
