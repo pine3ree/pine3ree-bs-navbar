@@ -1,6 +1,6 @@
 {
     "name": "pine3ree-bs-navbar",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "pine3ree multilevel navbar for bootstrap",
     "keywords": [
         "menu",
@@ -11,6 +11,10 @@
     "author": "pine3ree https://github.com/pine3ree",
     "license": "BSD-3-Clause-Clear",
     "homepage": "https://pine3ree.github.io/pine3ree-bs-navbar/index.html",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pine3ree/pine3ree-bs-navbar"
+    },
     "bugs": {
         "url": "https://github.com/pine3ree/pine3ree-bs-navbar/issues"
     },
