@@ -139,6 +139,7 @@ $_rtl = $rtl ? ".rtl" : "";
 <?php $bg_color = $variant === 'flat' ? '' : " bg-{$color}" ?>
 <?php foreach($nav_themes as $nav_theme): ?>
 <?php foreach(array_reverse($breakpoints) as $bp): ?>
+<?php if ($variant !== 'flat' && $bp !== 'md') continue; ?>
 <?php $n += 1 ?>
 <?php $combination_id = sprintf('%02d', $n) ?>
 <?php //$combination_id = trim("{$variant}-{$color}-{$theme}-{$nav_theme}", '- ') . "-{$combination_id}" ?>
