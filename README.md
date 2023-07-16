@@ -77,8 +77,9 @@ pine3ree.bs.navbar(document.getElementById('my-navbar'));
 
 // Custom options, used here with default values to explain what they do
 const navbarOptions = {
-    // The default navbar breakpoint, it will be determined from the :root styles
-    // and
+    // The default navbar breakpoint, as a fallback value
+    // This will in fact be determined from the :root css variables injected by
+    // this library main css asset
     breakpoint: 768,
 
     // Enable opening menus on mouse hover
@@ -258,3 +259,12 @@ or the npm script alias
 $ npm run watch-sass
 ```
 
+## TODO
+
+- Improve documentation and examples (make them prettier and more readable)
+- Re-add custom caret symbols (e.g +/-/arrows) from older private version (implemented for bootstrap 4.5)
+- Add better solution for transition (borrow code from boostrap Accordion component?)
+
+## Whislist
+- Create a responsive navigation with different modes at different breakpoints like
+  zurb-foundation 6.x responsive navigation (dropdown/accordion/drilldown)
