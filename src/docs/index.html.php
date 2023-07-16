@@ -103,6 +103,20 @@ $_rtl = $rtl ? ".rtl" : "";
 <?php else: ?>
                         <a href="./index.rtl.html" class="btn btn-outline-primary">RTL demos</a>
 <?php endif ?>
+                        <a
+                            href="https://github.com/pine3ree/pine3ree-bs-navbar/blob/master/README.md"
+                            target="_blank"
+                            class="btn btn-outline-secondary"
+                            >
+                            Docs
+                        </a>
+                        <a
+                            href="https://github.com/pine3ree/pine3ree-bs-navbar"
+                            target="_blank"
+                            class="btn btn-outline-secondary"
+                            >
+                            Repo&nbsp;/&nbsp;source
+                        </a>
                     </p>
                 </div>
             </div>
