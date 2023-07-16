@@ -259,7 +259,7 @@ or the npm script alias
 $ npm run watch-sass
 ```
 
-## TODO
+## TODO(s)
 
 - Improve documentation and examples (make them prettier and more readable)
 - Re-add custom caret symbols (e.g +/-/arrows) from older private version (implemented for bootstrap 4.5)
