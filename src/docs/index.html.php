@@ -161,7 +161,7 @@ $_rtl = $rtl ? ".rtl" : "";
                         <dl>
                             <dt class="text-nowrap"><?=e("<navbar-collapse>")?></dt>
                             <dd>
-                                <span class="text-nowrap"><?="data-bs-theme={$nav_theme}"?></span>
+                                <span class="text-nowrap"><?="data-bs-theme=\"{$nav_theme}\""?></span>
                             </dd>
                         </dl>
                     </div>
