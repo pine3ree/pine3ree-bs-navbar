@@ -39,7 +39,8 @@ header('cache-control: no-cache');
                 >
                 <div class="container-sm">
                     <a class="navbar-brand fs-5" href="#">
-                        <span class="fst-italic font-monospace">p3</span> navbar-expand-<?=$bp?>
+                        <span class="fst-italic font-monospace">p3</span>navbar-expand-<?=$bp?>
+
                     </a>
                     <button
                         class="navbar-toggler"
@@ -59,10 +60,12 @@ header('cache-control: no-cache');
                         data-bs-theme="dark"
                         >
                         <ul class="navbar-nav me-auto mb-0">
-                            <?= renderDropdownMenu($depth, 8 * 4, 'start', $bp) ?>
+<?= renderDropdownMenu($depth, 7 * 4, 'start', $bp) ?>
+
                         </ul>
                         <ul class="navbar-nav ms-auto mb-0">
-                            <?= renderDropdownMenu($depth, 8 * 4, 'end', $bp) ?>
+<?= renderDropdownMenu($depth, 7 * 4, 'end', $bp) ?>
+
                         </ul>
                     </div>
                 </div>
@@ -94,7 +97,7 @@ header('cache-control: no-cache');
                 </div>
                 <div class="d-block my-2 text-center text-body-tertiary font-monospace small">
                     <dl>
-                        <dt class="text-nowrap">&lt;navbar&gt;</dt>
+                        <dt class="text-nowrap"><?=e("<navbar>")?></dt>
                         <dd>
                             <span class="text-nowrap">navbar-expand-<?=$bp?></span>
                             <span class="text-nowrap"> bg-dark</span>
@@ -103,9 +106,9 @@ header('cache-control: no-cache');
                         </dd>
                     </dl>
                     <dl>
-                        <dt class="text-nowrap">&lt;navbar-collapse&gt;</dt>
+                        <dt class="text-nowrap"><?=e("<navbar-collapse>")?></dt>
                         <dd>
-                            <span class="text-nowrap">data-bs-theme=dark</span>
+                            <span class="text-nowrap">data-bs-theme="dark"</span>
                         </dd>
                     </dl>
                 </div>
