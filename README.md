@@ -58,13 +58,13 @@ node v.16.x is required
 Install the dependencies:
 
 ```bash
-myself@mycomputer:/my/local/repo/path$ npm install
+myself@mycomputer:~/my/cloned/repo/path$ npm install
 ```
 
 Run a local webserver at http://127.0.0.1:8080
 
 ```bash
-myself@myconputer:/my/local/repo/path$ npm serve
+myself@mycomputer:~/my/cloned/repo/path$ npm serve
 ```
 
 Add multilevel-menu behaviour to a navbar with `my-navbar` id attribute by including
@@ -114,7 +114,7 @@ $('#my-navbar').p3bsNavbar(navbarOptions)); // with an uppercase "N"
 </script>
 ```
 
-Example navbar html code for navigation starting from the "start" side and opening towards "end" side:
+Example navbar html code for navigation nested menus opening from the "start" towards "end" side:
 
 ```html
 <nav id="my-navbar" class="navbar navbar-expand-sm bg-dark" data-bs-theme="dark">
@@ -134,7 +134,7 @@ Example navbar html code for navigation starting from the "start" side and openi
                     <ul class="dropdown-menu dropdown-menu-start">
                         <li><a class="dropdown-item" href="#">Action</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li class="dropdown dropend">
+                        <li class="dropdown">
                             <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown 1
                             </a>
@@ -171,7 +171,7 @@ Example navbar html code for navigation starting from the "start" side and openi
 ```
 
 
-Example navbar html code for navigation starting from the "end" side and opening towards the "start" side:
+Example navbar html code for navigation nested menus opening from the "end" towards the "start" side:
 
 ```html
 <nav id="my-navbar" class="navbar navbar-expand-sm bg-dark" data-bs-theme="dark">
@@ -191,7 +191,7 @@ Example navbar html code for navigation starting from the "end" side and opening
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="#">Action</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li class="dropdown dropstart">
+                        <li class="dropdown">
                             <a href="#" class="dropdown-item dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown 1
                             </a>
@@ -230,9 +230,8 @@ Example navbar html code for navigation starting from the "end" side and opening
 
 ## Navbar expand breakpoints
 
-The navbar css code is by default compiled for 3 breakpoints: `sm`, `md` and `lg`.
-
-In fact you usually need just 1 or 2 breakpoints for a project navbars.
+By default the navbar css code is compiled with 3 breakpoints: `sm`, `md` and `lg`.
+In fact you usually need just one or two breakpoints for a typical project navbars.
 
 You can limit the compiled breakpoints by modifing the sass variable and rebuilding the css assets:
 
