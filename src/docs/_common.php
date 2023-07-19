@@ -86,7 +86,7 @@ function renderDropdownMenu(
     $dropdown_menu_dir = '';
     if ($dropdir !== '') {
         $dropdown_menu_dir = " dropdown-menu-{$dropdir}";
-        $dropdown_dir = $dropdir === 'start' ? " dropend" : " dropstart";
+        //$dropdown_dir = $dropdir === 'start' ? " dropend" : " dropstart";
     }
 
     $level = max(0, (int)$level);
