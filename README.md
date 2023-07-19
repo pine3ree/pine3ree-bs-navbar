@@ -11,18 +11,24 @@ menus will behave like a set of nested accordion elements.
 The inner level dropdown direction is set using the following rules:
 
 - if the parent `dropdown` list-item has a `dropend` entry in its class list it
-  will try to continue opening the inner `dropdown-menu` towards the `end` direction
+  will try to open the inner `dropdown-menu`s towards the `end` direction;
 
-- if the parent `dropdown-menu` list a `dropdown-menu-end` entry in its class list
-  the `dropdown` list-item  will try to continue opening the inner `dropdown-menu`
-  towards the end direction
+- otherwise, if the parent `dropdown` list-item has a `dropstart` entry in its class 
+  list it will try to open the inner `dropdown-menu`s towards the `start` direction;
 
-- The same applies for `dropdown` list-items with a `dropstart`class entry and
-  for `dropdown-menu` lists  with a `dropdown-menu-start`class entry but in the
-  opposite `start` direction
+- otherwise, if the parent `dropdown-menu` has a `dropdown-menu-end` entry in its
+  class-list the `dropdown` list-item  will try to open the inner `dropdown-menu`s
+  towards the `start` direction. This is used on the first-level `dropdown-menu`s
+  to set both the menu horizontal position (bootstrap) and initial dropdown direction;
 
-In any case if there is not enough space in the current preferred direction, the
-next direction will be set to the opposite.
+- otherwise, the initial dropdown direction will be set by default to `end`.
+
+In any case if there is not enough space for the current or preferred direction,
+the next direction will be set to the its opposite.
+
+Note: You should not add `dropdown-menu-(start|end)` classes to inner `dropdown-menu`(s).
+
+## Keyboard navigation
 
 Keyboard navigation is supported using the following keys:
 
@@ -30,7 +36,7 @@ Keyboard navigation is supported using the following keys:
 - `ENTER`: open dropdown-menu
 - `ESC`: close current dropdown-menu
 
-## Basic usage:
+## Basic usage
 
 The following assets are required:
 
