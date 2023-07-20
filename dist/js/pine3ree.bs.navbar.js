@@ -9,86 +9,79 @@
 
 'use strict';
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 if (!window.bootstrap || !window.bootstrap.Dropdown) {
   throw new Error('bootstrap.Dropdown library was not found');
 }
 (function (bootstrap, $) {
-  var P3_NAME = 'p3bsNavbar';
-  var P3_DATA_KEY = 'p3.navbar.dropdown';
-  var P3_EVENT_KEY = ".".concat(P3_DATA_KEY);
-  var P3_EVENT_OPTS = {
+  const P3_NAME = 'p3bsNavbar';
+  const P3_DATA_KEY = 'p3.navbar.dropdown';
+  const P3_EVENT_KEY = ".".concat(P3_DATA_KEY);
+  const P3_EVENT_OPTS = {
     bubbles: true,
     cancelable: true
   };
-  var P3_EVENT_CLICK = "click".concat(P3_EVENT_KEY);
-  var P3_EVENT_HIDE = "hide".concat(P3_EVENT_KEY);
-  var P3_EVENT_HIDDEN = "hidden".concat(P3_EVENT_KEY);
-  var P3_EVENT_SHOW = "show".concat(P3_EVENT_KEY);
-  var P3_EVENT_SHOWN = "shown".concat(P3_EVENT_KEY);
-  var P3_EVENT_KEYDOWN = "keydown".concat(P3_EVENT_KEY);
-  var P3_EVENT_KEYUP = "keyup".concat(P3_EVENT_KEY);
-  var P3_DATA_TIMEOUT_ID = "timeoutID.".concat(P3_DATA_KEY);
-  var BS_NAME = 'dropdown';
-  var BS_DATA_KEY = 'bs.dropdown';
-  var BS_EVENT_KEY = ".".concat(BS_DATA_KEY);
-  var BS_DATA_API_KEY = '.data-api';
-  var ENTER_KEY = 'Enter';
-  var ESCAPE_KEY = 'Escape';
-  var TAB_KEY = 'Tab';
-  var ARROW_UP_KEY = 'ArrowUp';
-  var ARROW_DOWN_KEY = 'ArrowDown';
-  var RIGHT_MOUSE_BUTTON = 2; 
+  const P3_EVENT_CLICK = "click".concat(P3_EVENT_KEY);
+  const P3_EVENT_HIDE = "hide".concat(P3_EVENT_KEY);
+  const P3_EVENT_HIDDEN = "hidden".concat(P3_EVENT_KEY);
+  const P3_EVENT_SHOW = "show".concat(P3_EVENT_KEY);
+  const P3_EVENT_SHOWN = "shown".concat(P3_EVENT_KEY);
+  const P3_EVENT_KEYDOWN = "keydown".concat(P3_EVENT_KEY);
+  const P3_EVENT_KEYUP = "keyup".concat(P3_EVENT_KEY);
+  const P3_DATA_TIMEOUT_ID = "timeoutID.".concat(P3_DATA_KEY);
+  const BS_NAME = 'dropdown';
+  const BS_DATA_KEY = 'bs.dropdown';
+  const BS_EVENT_KEY = ".".concat(BS_DATA_KEY);
+  const BS_DATA_API_KEY = '.data-api';
+  const ENTER_KEY = 'Enter';
+  const ESCAPE_KEY = 'Escape';
+  const TAB_KEY = 'Tab';
+  const ARROW_UP_KEY = 'ArrowUp';
+  const ARROW_DOWN_KEY = 'ArrowDown';
+  const RIGHT_MOUSE_BUTTON = 2; 
 
-  var BS_EVENT_HIDE = "hide".concat(BS_EVENT_KEY);
-  var BS_EVENT_HIDDEN = "hidden".concat(BS_EVENT_KEY);
-  var BS_EVENT_SHOW = "show".concat(BS_EVENT_KEY);
-  var BS_EVENT_SHOWN = "shown".concat(BS_EVENT_KEY);
-  var BS_EVENT_CLICK_DATA_API = "click".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
-  var BS_EVENT_KEYDOWN_DATA_API = "keydown".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
-  var BS_EVENT_KEYUP_DATA_API = "keyup".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
-  var BS_CLASS_SHOW = 'show';
-  var BS_CLASS_DROPUP = 'dropup';
-  var BS_CLASS_DROPEND = 'dropend';
-  var BS_CLASS_DROPSTART = 'dropstart';
-  var BS_CLASS_DROPUP_CENTER = 'dropup-center';
-  var BS_CLASS_DROPDOWN_CENTER = 'dropdown-center';
-  var BS_SELECTOR_DATA_TOGGLE = '[data-bs-toggle="dropdown"]:not(.disabled):not(:disabled)';
-  var BS_SELECTOR_DATA_TOGGLE_SHOWN = "".concat(BS_SELECTOR_DATA_TOGGLE, ".").concat(BS_CLASS_SHOW);
-  var BS_SELECTOR_DROPDOWN = '.dropdown';
-  var BS_SELECTOR_DROPDOWN_SHOWN = "".concat(BS_SELECTOR_DROPDOWN, ".").concat(BS_CLASS_SHOW);
-  var BS_CLASS_DROPDOWN_ITEM = 'dropdown-item';
-  var BS_CLASS_MENU = 'dropdown-menu';
-  var BS_SELECTOR_MENU = ".".concat(BS_CLASS_MENU);
-  var BS_SELECTOR_MENU_SHOWN = "".concat(BS_SELECTOR_MENU, ".").concat(BS_CLASS_SHOW);
-  var BS_CLASS_NAVBAR = 'navbar';
-  var BS_SELECTOR_NAVBAR = ".".concat(BS_CLASS_NAVBAR);
-  var BS_CLASS_MENU_END = "".concat(BS_CLASS_MENU, "-end");
-  var BS_SELECTOR_MENU_END = "".concat(BS_SELECTOR_MENU, ".").concat(BS_CLASS_MENU_END);
-  var BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
-  var BS_SELECTOR_VISIBLE_ITEMS = ".dropdown-menu .".concat(BS_CLASS_DROPDOWN_ITEM, ":not(.disabled):not(:disabled)");
-  var P3_SELECTOR_VISIBLE_ITEMS = ".".concat(BS_CLASS_DROPDOWN_ITEM, ":not(.disabled):not(:disabled)");
+  const BS_EVENT_HIDE = "hide".concat(BS_EVENT_KEY);
+  const BS_EVENT_HIDDEN = "hidden".concat(BS_EVENT_KEY);
+  const BS_EVENT_SHOW = "show".concat(BS_EVENT_KEY);
+  const BS_EVENT_SHOWN = "shown".concat(BS_EVENT_KEY);
+  const BS_EVENT_CLICK_DATA_API = "click".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
+  const BS_EVENT_KEYDOWN_DATA_API = "keydown".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
+  const BS_EVENT_KEYUP_DATA_API = "keyup".concat(BS_EVENT_KEY).concat(BS_DATA_API_KEY);
+  const BS_CLASS_SHOW = 'show';
+  const BS_CLASS_DROPUP = 'dropup';
+  const BS_CLASS_DROPEND = 'dropend';
+  const BS_CLASS_DROPSTART = 'dropstart';
+  const BS_CLASS_DROPUP_CENTER = 'dropup-center';
+  const BS_CLASS_DROPDOWN_CENTER = 'dropdown-center';
+  const BS_SELECTOR_DATA_TOGGLE = '[data-bs-toggle="dropdown"]:not(.disabled):not(:disabled)';
+  const BS_SELECTOR_DATA_TOGGLE_SHOWN = "".concat(BS_SELECTOR_DATA_TOGGLE, ".").concat(BS_CLASS_SHOW);
+  const BS_SELECTOR_DROPDOWN = '.dropdown';
+  const BS_SELECTOR_DROPDOWN_SHOWN = "".concat(BS_SELECTOR_DROPDOWN, ".").concat(BS_CLASS_SHOW);
+  const BS_CLASS_DROPDOWN_ITEM = 'dropdown-item';
+  const BS_CLASS_MENU = 'dropdown-menu';
+  const BS_SELECTOR_MENU = ".".concat(BS_CLASS_MENU);
+  const BS_SELECTOR_MENU_SHOWN = "".concat(BS_SELECTOR_MENU, ".").concat(BS_CLASS_SHOW);
+  const BS_CLASS_NAVBAR = 'navbar';
+  const BS_SELECTOR_NAVBAR = ".".concat(BS_CLASS_NAVBAR);
+  const BS_CLASS_MENU_END = "".concat(BS_CLASS_MENU, "-end");
+  const BS_SELECTOR_MENU_END = "".concat(BS_SELECTOR_MENU, ".").concat(BS_CLASS_MENU_END);
+  const BS_SELECTOR_NAVBAR_NAV = '.navbar-nav';
+  const BS_SELECTOR_VISIBLE_ITEMS = ".dropdown-menu .".concat(BS_CLASS_DROPDOWN_ITEM, ":not(.disabled):not(:disabled)");
+  const P3_SELECTOR_VISIBLE_ITEMS = ".".concat(BS_CLASS_DROPDOWN_ITEM, ":not(.disabled):not(:disabled)");
 
-  var menuEndRegex = new RegExp("".concat(BS_CLASS_MENU, "(?:-[a-z]{2,3})?-end"));
-  var isRTL = document.documentElement.dir === 'rtl';
-  var isTouchDevice = ('ontouchstart' in window);
-  var BsDropdown = bootstrap.Dropdown;
+  const menuEndRegex = new RegExp("".concat(BS_CLASS_MENU, "(?:-[a-z]{2,3})?-end"));
+  const isRTL = document.documentElement.dir === 'rtl';
+  const isTouchDevice = ('ontouchstart' in window);
+  const BsDropdown = bootstrap.Dropdown;
 
   function getClientWidth() {
     return Math.max(window.innerWidth, document.documentElement.clientWidth);
   }
 
   function getSiblings(element) {
-    var selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '*';
-    var siblings = [];
+    let selector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '*';
+    const siblings = [];
     if (element instanceof HTMLElement) {
-      var parent = element.parentElement;
+      const parent = element.parentElement;
       if (parent instanceof HTMLElement) {
         parent.querySelectorAll(":scope > ".concat(selector)).forEach(function (child) {
           if (child !== element && child instanceof HTMLElement) {
@@ -108,8 +101,8 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function handleShownEvent(e, breakpoint, closeOthers) {
-    var stopPropagation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-    var target = e.relatedTarget || e.target;
+    let stopPropagation = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    const target = e.relatedTarget || e.target;
     if (!isEnabledToggle(target)) {
       return;
     }
@@ -117,9 +110,9 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     if (stopPropagation) {
       e.stopPropagation();
     }
-    var dropdown = target.closest(BS_SELECTOR_DROPDOWN);
+    const dropdown = target.closest(BS_SELECTOR_DROPDOWN);
     if (dropdown instanceof HTMLElement) {
-      var clientWidth = getClientWidth();
+      const clientWidth = getClientWidth();
       dropdown.classList.add(BS_CLASS_SHOW);
       setChildrenDropDirection(dropdown, clientWidth, breakpoint);
       if (closeOthers || clientWidth >= breakpoint) {
@@ -132,9 +125,9 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function handleHiddenEvent(e) {
-    var stopPropagation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var dispatchCustomEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var target = e.relatedTarget || e.target;
+    let stopPropagation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    let dispatchCustomEvent = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    const target = e.relatedTarget || e.target;
     if (!isEnabledToggle(target)) {
       return;
     }
@@ -142,7 +135,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     if (stopPropagation) {
       e.stopPropagation();
     }
-    var dropdown = target.parentElement.closest(BS_SELECTOR_DROPDOWN);
+    const dropdown = target.parentElement.closest(BS_SELECTOR_DROPDOWN);
     if (dropdown instanceof HTMLElement) {
       dropdown.classList.remove(BS_CLASS_SHOW);
       closeInnerDropdowns(dropdown);
@@ -154,8 +147,8 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function handleClickDataApiEvent(e, hover, timeout) {
-    var dispatchCustomEvent = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-    var target = e.relatedTarget || e.target;
+    let dispatchCustomEvent = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    const target = e.relatedTarget || e.target;
     if (!isEnabledToggle(target)) {
       return;
     }
@@ -163,7 +156,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     e.stopPropagation();
 
     if (hover && timeout > 0) {
-      var timeoutID = target.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
+      const timeoutID = target.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
       if (timeoutID > 0) {
         clearTimeout(timeoutID);
       }
@@ -180,7 +173,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     }
     document.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function (toggleElement) {
       if (!navbar.contains(toggleElement)) {
-        var toggle = BsDropdown.getOrCreateInstance(toggleElement);
+        const toggle = BsDropdown.getOrCreateInstance(toggleElement);
         if (toggle instanceof BsDropdown) {
           toggle.hide();
         }
@@ -189,8 +182,8 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function closeInnerDropdowns(container, event) {
-    var stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var containers = [];
+    let stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    const containers = [];
     if (container instanceof Array || container instanceof NodeList) {
       container.forEach(function (c) {
         if (c instanceof HTMLElement) {
@@ -203,7 +196,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     if (containers.length > 0) {
       containers.forEach(function (container) {
         container.querySelectorAll(BS_SELECTOR_DATA_TOGGLE_SHOWN).forEach(function (toggleElement) {
-          var toggle = BsDropdown.getOrCreateInstance(toggleElement);
+          const toggle = BsDropdown.getOrCreateInstance(toggleElement);
           if (toggle instanceof BsDropdown) {
             toggle.hide();
           }
@@ -216,11 +209,11 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function closeSiblingDropdowns(dropdown, event) {
-    var stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    let stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     getSiblings(dropdown, BS_SELECTOR_DROPDOWN).forEach(function (sibling) {
-      var toggleElement = sibling.querySelector(BS_SELECTOR_DATA_TOGGLE_SHOWN);
+      const toggleElement = sibling.querySelector(BS_SELECTOR_DATA_TOGGLE_SHOWN);
       if (toggleElement) {
-        var toggle = BsDropdown.getOrCreateInstance(toggleElement);
+        const toggle = BsDropdown.getOrCreateInstance(toggleElement);
         if (toggle instanceof BsDropdown) {
           toggle.hide();
         }
@@ -229,9 +222,9 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function closeOtherNavs(dropdown, event) {
-    var stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var otherNavs = document.querySelectorAll("".concat(BS_SELECTOR_NAVBAR, " ").concat(BS_SELECTOR_NAVBAR_NAV));
-    var currentNav = dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV);
+    let stopPropagation = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    const otherNavs = document.querySelectorAll("".concat(BS_SELECTOR_NAVBAR, " ").concat(BS_SELECTOR_NAVBAR_NAV));
+    const currentNav = dropdown.parentElement.closest(BS_SELECTOR_NAVBAR_NAV);
     otherNavs.forEach(function (otherNav) {
       if (otherNav !== currentNav) {
         closeInnerDropdowns(otherNav, event, stopPropagation);
@@ -240,7 +233,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function setChildrenDropDirection(dropdown, clientWidth, breakpoint) {
-    var menu = dropdown.querySelector(":scope > ".concat(BS_SELECTOR_MENU));
+    const menu = dropdown.querySelector(":scope > ".concat(BS_SELECTOR_MENU));
     if (!(menu instanceof HTMLElement)) {
       return;
     }
@@ -251,20 +244,20 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
       });
       return;
     }
-    var left = menu.getBoundingClientRect().left;
-    var right = left + menu.offsetWidth;
-    var isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || !dropdown.classList.contains(BS_CLASS_DROPEND) && menuEndRegex.test(menu.className);
+    const left = menu.getBoundingClientRect().left;
+    const right = left + menu.offsetWidth;
+    const isDropStart = dropdown.classList.contains(BS_CLASS_DROPSTART) || !dropdown.classList.contains(BS_CLASS_DROPEND) && menuEndRegex.test(menu.className);
     menu.querySelectorAll(":scope > ".concat(BS_SELECTOR_DROPDOWN)).forEach(function (menuItem) {
-      var submenu = menuItem.querySelector(":scope > ".concat(BS_SELECTOR_MENU));
+      const submenu = menuItem.querySelector(":scope > ".concat(BS_SELECTOR_MENU));
       if (!submenu) {
         return;
       }
       submenu.style.visibility = 'hidden';
       submenu.classList.add(BS_CLASS_SHOW);
-      var subwidth = submenu.offsetWidth;
+      const subwidth = submenu.offsetWidth;
       submenu.classList.remove(BS_CLASS_SHOW);
       submenu.style.visibility = null;
-      var classList = menuItem.classList;
+      const classList = menuItem.classList;
       if (isRTL) {
         if (isDropStart) {
           if (right + subwidth > clientWidth) {
@@ -306,7 +299,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function handleBreakpointCrossing(navbar, breakpoint, previousWidth) {
-    var currentWidth = getClientWidth();
+    const currentWidth = getClientWidth();
     if (previousWidth < breakpoint && currentWidth >= breakpoint) {
       closeInnerDropdowns(navbar);
     } else if (previousWidth >= breakpoint && currentWidth < breakpoint) {
@@ -320,8 +313,8 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function getNextElement(list, element, shouldGetNext, cycle) {
-    var listLength = list.length;
-    var index = list.indexOf(element);
+    const listLength = list.length;
+    let index = list.indexOf(element);
     if (index === -1) {
       return list[0];
     }
@@ -337,11 +330,11 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
       return;
     }
 
-    var isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key);
+    const isValidKeyEvent = [ENTER_KEY, ARROW_UP_KEY, ARROW_DOWN_KEY].includes(e.key);
     if (!isValidKeyEvent) {
       return;
     }
-    var target = e.target;
+    const target = e.target;
     if (!target || !target.classList.contains(BS_CLASS_DROPDOWN_ITEM)) {
       return;
     }
@@ -355,19 +348,18 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
       if (target.matches(BS_SELECTOR_DATA_TOGGLE)) {
         e.preventDefault();
         target.click();
-        var subItem = target.parentElement.querySelector(":scope ".concat(BS_SELECTOR_VISIBLE_ITEMS));
+        const subItem = target.parentElement.querySelector(":scope ".concat(BS_SELECTOR_VISIBLE_ITEMS));
         if (subItem) {
           subItem.focus();
         }
       }
     } else {
-      var menu = target.closest(BS_SELECTOR_MENU);
+      const menu = target.closest(BS_SELECTOR_MENU);
       if (menu instanceof HTMLElement) {
-        var _ref;
-        var items = (_ref = []).concat.apply(_ref, _toConsumableArray(menu.querySelectorAll(":scope > li > ".concat(P3_SELECTOR_VISIBLE_ITEMS))));
-        var isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
+        const items = [].concat(...menu.querySelectorAll(":scope > li > ".concat(P3_SELECTOR_VISIBLE_ITEMS)));
+        const isNavKeyEvent = e.key === ARROW_DOWN_KEY || e.key === ARROW_UP_KEY;
         if (isNavKeyEvent) {
-          var nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
+          const nextItem = getNextElement(items, target, e.key !== ARROW_UP_KEY, true);
           if (nextItem) {
             nextItem.focus();
             closeSiblingDropdowns(nextItem.parentElement);
@@ -382,7 +374,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function activateHover(navbar, breakpoint, timeout) {
-    var dropdowns = navbar.querySelectorAll(BS_SELECTOR_DROPDOWN);
+    const dropdowns = navbar.querySelectorAll(BS_SELECTOR_DROPDOWN);
     dropdowns.forEach(function (menuItem) {
       menuItem.addEventListener('mouseenter', function (e) {
         handleMouseEnter(menuItem, breakpoint, timeout);
@@ -397,16 +389,16 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     if (getClientWidth() < breakpoint) {
       return;
     }
-    var toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
+    const toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
     if (toggleElement instanceof HTMLElement) {
       if (timeout > 0) {
-        var timeoutID = toggleElement.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
+        const timeoutID = toggleElement.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
         if (timeoutID > 0) {
           clearTimeout(timeoutID);
         }
       }
       if (!toggleElement.classList.contains(BS_CLASS_SHOW)) {
-        var toggle = BsDropdown.getOrCreateInstance(toggleElement);
+        const toggle = BsDropdown.getOrCreateInstance(toggleElement);
         if (toggle instanceof BsDropdown) {
           toggle.show();
         }
@@ -418,17 +410,17 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
     if (getClientWidth() < breakpoint) {
       return;
     }
-    var toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
+    const toggleElement = menuItem.querySelector(BS_SELECTOR_DATA_TOGGLE);
     if (toggleElement instanceof HTMLElement) {
       if (toggleElement.classList.contains(BS_CLASS_SHOW) && timeout > 0) {
-        var timeoutID = toggleElement.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
+        const timeoutID = toggleElement.getAttribute("data-".concat(P3_DATA_TIMEOUT_ID));
         if (timeoutID > 0) {
           clearTimeout(timeoutID);
         }
       }
       toggleElement.setAttribute("data-".concat(P3_DATA_TIMEOUT_ID), setTimeout(function () {
         if (toggleElement.classList.contains(BS_CLASS_SHOW)) {
-          var toggle = BsDropdown.getOrCreateInstance(toggleElement);
+          const toggle = BsDropdown.getOrCreateInstance(toggleElement);
           if (toggle instanceof BsDropdown) {
             toggle.hide();
           }
@@ -438,28 +430,19 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
   }
 
   function getExpandBreakpoint(navbar) {
-    var _iterator = _createForOfIteratorHelper(navbar.classList),
-      _step;
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var nc = _step.value;
-        var rootStyle = window.getComputedStyle(document.documentElement);
-        var breakpoint = parseInt(rootStyle.getPropertyValue("--p3-bs-".concat(nc)));
-        if (Number.isInteger(breakpoint)) {
-          return breakpoint;
-        }
+    for (const nc of navbar.classList) {
+      const rootStyle = window.getComputedStyle(document.documentElement);
+      const breakpoint = parseInt(rootStyle.getPropertyValue("--p3-bs-".concat(nc)));
+      if (Number.isInteger(breakpoint)) {
+        return breakpoint;
       }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
     }
     return null;
   }
 
-  var p3bsNavbar = function p3bsNavbar(selector, options) {
-    var OPTIONS = Object.assign({}, p3bsNavbar.defaults, options);
-    var navbars = [];
+  const p3bsNavbar = function (selector, options) {
+    const OPTIONS = Object.assign({}, p3bsNavbar.defaults, options);
+    let navbars = [];
     if (typeof selector === 'string') {
       navbars = document.querySelectorAll(selector);
     } else if (selector instanceof HTMLElement) {
@@ -472,20 +455,20 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
       });
     }
     navbars.forEach(function (navbar) {
-      var OPT = Object.assign({}, OPTIONS);
+      const OPT = Object.assign({}, OPTIONS);
 
-      var breakpoint = getExpandBreakpoint(navbar);
+      const breakpoint = getExpandBreakpoint(navbar);
       if (breakpoint > 0) {
         OPT.breakpoint = breakpoint;
       }
       if (OPT.customEvents) {
         navbar.addEventListener(BS_EVENT_SHOW, function (e) {
-          var target = e.relatedTarget || e.target;
+          const target = e.relatedTarget || e.target;
           target.dispatchEvent(new Event(P3_EVENT_SHOW, P3_EVENT_OPTS));
         });
 
         navbar.addEventListener(BS_EVENT_HIDE, function (e) {
-          var target = e.relatedTarget || e.target;
+          const target = e.relatedTarget || e.target;
           target.dispatchEvent(new Event(P3_EVENT_HIDE, P3_EVENT_OPTS));
         });
       }
@@ -506,7 +489,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
         handleKeydown(e, navbar, OPT.customEvents);
       }, true); 
 
-      var previousWidth = getClientWidth();
+      let previousWidth = getClientWidth();
       window.addEventListener('resize', function (e) {
         previousWidth = handleBreakpointCrossing(navbar, breakpoint, previousWidth);
       });
@@ -541,7 +524,7 @@ if (!window.bootstrap || !window.bootstrap.Dropdown) {
 
   if (typeof $ === 'function' && $().fn === $.jquery) {
     $.fn.p3bsNavbar = function (options) {
-      var opts = $.extend($.fn.p3bsNavbar.defaults, options);
+      const opts = $.extend($.fn.p3bsNavbar.defaults, options);
       p3bsNavbar(this.get(), opts);
     };
     $.fn.p3bsNavbar.defaults = p3bsNavbar.defaults;
