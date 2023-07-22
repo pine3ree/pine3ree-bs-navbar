@@ -67,7 +67,7 @@ Install the dependencies:
 myself@mycomputer:~/my/cloned/repo/path$ npm install
 ```
 
-Run a local webserver at http://127.0.0.1:8080
+Run a local webserver at http://localhost:8080
 
 ```bash
 myself@mycomputer:~/my/cloned/repo/path$ npm serve
@@ -266,7 +266,6 @@ $ npm run watch-sass
 
 ## TODO(s)
 
-- Improve documentation and examples (make them prettier and more readable)
 - Re-add custom caret symbols (e.g +/-/arrows) from older private version (implemented for bootstrap 4.5)
 - Add better solution for transition (borrow code from boostrap Accordion component?)
 
